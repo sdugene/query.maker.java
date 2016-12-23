@@ -1,30 +1,33 @@
 package com.query.maker;
 
-public class QueryMaker {
-
-
+public class QueryMaker extends QueryCore
+{
     public QueryMaker select(Class entity)
     {
-
+        // TODO recupérer les annotations de la classe en fonction de son nom (ex : com.siteoffice.Entities.UserModule) => user_module
+        this.className = "toto";
+        this.method = "select";
         return this;
     }
 
-
     public QueryMaker delete(Class name)
     {
-
+        this.className = "toto";
+        this.method = "delete";
         return this;
     }
 
     public QueryMaker update(Class name)
     {
-
+        this.className = "toto";
+        this.method = "update";
         return this;
     }
 
     public QueryMaker insert(Class name)
     {
-
+        this.className = "toto";
+        this.method = "insert";
         return this;
     }
 
