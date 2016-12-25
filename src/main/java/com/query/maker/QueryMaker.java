@@ -4,29 +4,28 @@ public class QueryMaker extends QueryCore
 {
     public QueryMaker select(Entity entity)
     {
-        // TODO recupérer les annotations de la classe en fonction de son nom (ex : com.siteoffice.Entities.UserModule) => user_module
         this.className = entity.getClassName();
         this.method = "select";
         return this;
     }
 
-    public QueryMaker delete(Class name)
+    public QueryMaker delete(Entity entity)
     {
-        this.className = "toto";
+        this.className = entity.getClassName();
         this.method = "delete";
         return this;
     }
 
-    public QueryMaker update(Class name)
+    public QueryMaker update(Entity entity)
     {
-        this.className = "toto";
+        this.className = entity.getClassName();
         this.method = "update";
         return this;
     }
 
-    public QueryMaker insert(Class name)
+    public QueryMaker insert(Entity entity)
     {
-        this.className = "toto";
+        this.className = entity.getClassName();
         this.method = "insert";
         return this;
     }
@@ -55,7 +54,7 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker join(Class entity, Criteria criteria)
+    public QueryMaker join(Entity entity, Criteria criteria)
     {
 
         return this;

@@ -6,6 +6,6 @@ package com.query.maker;
 public abstract class Entity {
     public String getClassName()
     {
-        return "user";
+        return this.getClass().getSimpleName();
     }
 }
