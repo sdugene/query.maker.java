@@ -84,4 +84,9 @@ public class QueryMaker extends QueryCore
 
         return this;
     }
+
+    public String test()
+    {
+        return this.className;
+    }
 }
