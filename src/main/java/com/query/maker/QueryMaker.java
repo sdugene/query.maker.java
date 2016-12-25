@@ -1,12 +1,7 @@
 package com.query.maker;
 
 import com.query.maker.Core.QueryCore;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import java.lang.reflect.Field;
 
 public class QueryMaker extends QueryCore
 {
