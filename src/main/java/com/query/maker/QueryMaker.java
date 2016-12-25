@@ -1,5 +1,13 @@
 package com.query.maker;
 
+import com.query.maker.Core.QueryCore;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import java.lang.reflect.Field;
+
 public class QueryMaker extends QueryCore
 {
     public QueryMaker select(Entity entity)
@@ -42,9 +50,10 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker where(int id)
+    public QueryMaker where(Long id)
     {
-
+        this.criteria = new Criteria();
+        this.criteria.addValue("id", id.toString());
         return this;
     }
 
@@ -82,6 +91,17 @@ public class QueryMaker extends QueryCore
     {
 
         return this;
+    }
+
+    public Entity exec()
+    {
+        List<Entity> queryList = this.daoManager.setEntityName(this.className).findByCriteria(this.criteria.getValues(), 1);
+
+        if (queryList == null) {
+            return null;
+        } else {
+            return queryList.get(0);
+        }
     }
 
     public String test()
