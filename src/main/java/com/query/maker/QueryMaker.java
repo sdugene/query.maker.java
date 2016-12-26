@@ -1,5 +1,6 @@
 package com.query.maker;
 
+import com.query.maker.Core.DaoManager;
 import com.query.maker.Core.QueryCore;
 
 import java.util.HashMap;
@@ -81,7 +82,7 @@ public class QueryMaker extends QueryCore
 
     public QueryMaker limit(int limit)
     {
-
+        this.limit = limit;
         return this;
     }
 
@@ -103,14 +104,29 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public Entity exec()
+    public List<Entity> exec()
     {
-        List<Entity> queryList = this.daoManager.setEntityName(this.className).findByCriteria(this.criteria.getValues(), 1);
+        this.daoManager.setEntityName(this.className);
+        List<Entity> queryList;
 
-        // Destroy object
-        this.className = null;
-        this.method = null;
-        this.criteria = null;
+        if (this.criteria.getValues().isEmpty()) {
+            queryList = this.daoManager.findAll();
+        } else {
+            queryList = this.daoManager.findByCriteria(this.criteria.getValues(), limit);
+        }
+
+        this.clean();
+
+        if (queryList == null) {
+            return null;
+        } else {
+            return queryList;
+        }
+    }
+
+    public Entity one()
+    {
+        List<Entity> queryList = this.limit(1).exec();
 
         if (queryList == null) {
             return null;
