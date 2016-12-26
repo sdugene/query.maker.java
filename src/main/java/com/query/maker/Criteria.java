@@ -3,22 +3,11 @@ package com.query.maker;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Criteria {
-    private Map<String, String> values = new HashMap();
+public class Criteria
+{
+    private Map<String, String> values;
 
-    private Criteria() {}
-
-    private static class SingletonHolder
-    {
-        private final static Criteria instance = new Criteria();
-    }
-
-    public static Criteria getInstance()
-    {
-        Criteria criteria = SingletonHolder.instance;
-        criteria.values = new HashMap();
-        return criteria;
-    }
+    public Criteria() { this.values = new HashMap(); }
 
     public Criteria addValue(String key, String value)
     {

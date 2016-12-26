@@ -17,9 +17,6 @@ public class QueryMaker extends QueryCore
     public static QueryMaker getInstance()
     {
         QueryMaker queryMaker = QueryMaker.SingletonHolder.instance;
-        queryMaker.className = null;
-        queryMaker.method = null;
-        queryMaker.criteria = null;
         return queryMaker;
     }
 
@@ -65,7 +62,7 @@ public class QueryMaker extends QueryCore
 
     public QueryMaker where(Long id)
     {
-        this.criteria = Criteria.getInstance();
+        this.criteria = new Criteria();
         this.criteria.addValue("id", id.toString());
         return this;
     }
@@ -109,6 +106,11 @@ public class QueryMaker extends QueryCore
     public Entity exec()
     {
         List<Entity> queryList = this.daoManager.setEntityName(this.className).findByCriteria(this.criteria.getValues(), 1);
+
+        // Destroy object
+        this.className = null;
+        this.method = null;
+        this.criteria = null;
 
         if (queryList == null) {
             return null;
