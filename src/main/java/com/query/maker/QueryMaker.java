@@ -1,9 +1,6 @@
 package com.query.maker;
 
-import com.query.maker.Core.DaoManager;
-import com.query.maker.Core.QueryCore;
-
-import java.util.HashMap;
+import com.query.maker.Core.*;
 import java.util.List;
 
 public class QueryMaker extends QueryCore
@@ -23,28 +20,28 @@ public class QueryMaker extends QueryCore
 
     public QueryMaker select(Entity entity)
     {
-        this.className = entity.getClassName();
+        this.setEntity(entity);
         this.method = "select";
         return this;
     }
 
     public QueryMaker delete(Entity entity)
     {
-        this.className = entity.getClassName();
+        this.setEntity(entity);
         this.method = "delete";
         return this;
     }
 
     public QueryMaker update(Entity entity)
     {
-        this.className = entity.getClassName();
+        this.setEntity(entity);
         this.method = "update";
         return this;
     }
 
     public QueryMaker insert(Entity entity)
     {
-        this.className = entity.getClassName();
+        this.setEntity(entity);
         this.method = "insert";
         return this;
     }
@@ -131,7 +128,8 @@ public class QueryMaker extends QueryCore
         if (queryList == null) {
             return null;
         } else {
-            return queryList.get(0);
+            this.entity = queryList.get(0);
+            return this.entity;
         }
     }
 
