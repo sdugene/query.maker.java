@@ -29,6 +29,8 @@
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-commons-annotations:3.2.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.8" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-entitymanager:5.2.5.Final" level="project" />
+    <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.5.4" level="project" />
     <orderEntry type="library" name="Maven: com.crygier:SpringUtils:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:3.1.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-asm:3.1.1.RELEASE" level="project" />

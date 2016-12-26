@@ -25,6 +25,11 @@
             <version>3.5.6-Final</version>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.2.5.Final</version>
+        </dependency>
+        <dependency>
             <groupId>com.crygier</groupId>
             <artifactId>SpringUtils</artifactId>
             <version>1.0.1</version>
