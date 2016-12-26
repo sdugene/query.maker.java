@@ -109,7 +109,7 @@ public class QueryMaker extends QueryCore
         this.daoManager.setEntityName(this.className);
         List<Entity> queryList;
 
-        if (this.criteria.isNullOrEmpty()) {
+        if (this.criteria == null || this.criteria.getValues().isEmpty()) {
             queryList = this.daoManager.findAll();
         } else {
             queryList = this.daoManager.findByCriteria(this.criteria.getValues(), limit);
