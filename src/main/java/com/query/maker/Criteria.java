@@ -19,4 +19,8 @@ public class Criteria
     {
         return this.values;
     }
+
+    public boolean isNullOrEmpty() {
+        return this.values == null || this.values.isEmpty();
+    }
 }
