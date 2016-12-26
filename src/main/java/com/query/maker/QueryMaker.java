@@ -1,10 +1,28 @@
 package com.query.maker;
 
 import com.query.maker.Core.QueryCore;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class QueryMaker extends QueryCore
 {
+    private QueryMaker() {}
+
+    private static class SingletonHolder
+    {
+        private final static QueryMaker instance = new QueryMaker();
+    }
+
+    public static QueryMaker getInstance()
+    {
+        QueryMaker queryMaker = QueryMaker.SingletonHolder.instance;
+        queryMaker.className = null;
+        queryMaker.method = null;
+        queryMaker.criteria = null;
+        return queryMaker;
+    }
+
     public QueryMaker select(Entity entity)
     {
         this.className = entity.getClassName();
@@ -41,13 +59,13 @@ public class QueryMaker extends QueryCore
 
     public QueryMaker where(Criteria criteria)
     {
-
+        this.criteria = criteria;
         return this;
     }
 
     public QueryMaker where(Long id)
     {
-        this.criteria = new Criteria();
+        this.criteria = Criteria.getInstance();
         this.criteria.addValue("id", id.toString());
         return this;
     }
