@@ -61,7 +61,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker where(Long id)
     {
         this.criteria = new Criteria();
-        this.criteria.addValue("id", id.toString());
+        this.criteria.addValue("id", id);
         return this;
     }
 

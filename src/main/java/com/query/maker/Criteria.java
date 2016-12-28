@@ -9,7 +9,7 @@ public class Criteria
 
     public Criteria() { this.values = new HashMap(); }
 
-    public Criteria addValue(String key, String value)
+    public Criteria addValue(String key, Object value)
     {
         this.values.put(key, value);
         return this;
