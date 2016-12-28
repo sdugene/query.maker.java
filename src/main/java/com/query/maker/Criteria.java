@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Criteria
 {
-    private Map<String, String> values;
+    private Map<String, Object> values;
 
     public Criteria() { this.values = new HashMap(); }
 
@@ -15,7 +15,7 @@ public class Criteria
         return this;
     }
 
-    public Map<String, String> getValues()
+    public Map<String, Object> getValues()
     {
         return this.values;
     }

@@ -39,7 +39,7 @@ public class DaoManager
         }
     }
 
-    public List<Entity> findByCriteria(Map<String, String> criteria, int limit)
+    public List<Entity> findByCriteria(Map<String, Object> criteria, int limit)
     {
         try {
             Query query = criteria (criteria, limit);
@@ -55,7 +55,7 @@ public class DaoManager
         }
     }
 
-    private Query criteria (Map<String, String> criteria, int limit)
+    private Query criteria (Map<String, Object> criteria, int limit)
     {
         String querySql = "";
         for (Object key: criteria.keySet()){
@@ -63,12 +63,7 @@ public class DaoManager
         }
         Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
-            String type = getAttribute(key.toString());
-            if (type.equals("long")) {
-                query.setParameter(key.toString(), Long.parseLong(criteria.get(key)));
-            } else {
-                query.setParameter(key.toString(), criteria.get(key));
-            }
+            query.setParameter(key.toString(), criteria.get(key));
         }
 
         query.setMaxResults(limit);
