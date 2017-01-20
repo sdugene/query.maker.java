@@ -62,11 +62,18 @@ public class DaoManager
             if (querySql != "") {
                 querySql += " and ";
             }
-            querySql += "s."+key.toString()+" = :"+key.toString();
+
+            if (criteria.get(key) == null) {
+                querySql += "s." + key.toString() + " is null";
+            } else {
+                querySql += "s." + key.toString() + " = :" + key.toString();
+            }
         }
         Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
-            query.setParameter(key.toString(), criteria.get(key));
+            if (criteria.get(key) != null) {
+                query.setParameter(key.toString(), criteria.get(key));
+            }
         }
 
         query.setMaxResults(limit);
