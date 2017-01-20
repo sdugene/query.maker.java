@@ -59,6 +59,9 @@ public class DaoManager
     {
         String querySql = "";
         for (Object key: criteria.keySet()){
+            if (querySql == "") {
+                querySql += " AND ";
+            }
             querySql += "s."+key.toString()+" = :"+key.toString();
         }
         Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
