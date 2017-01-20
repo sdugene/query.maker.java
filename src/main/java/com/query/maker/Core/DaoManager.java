@@ -59,8 +59,8 @@ public class DaoManager
     {
         String querySql = "";
         for (Object key: criteria.keySet()){
-            if (querySql == "") {
-                querySql += " AND ";
+            if (querySql != "") {
+                querySql += " and ";
             }
             querySql += "s."+key.toString()+" = :"+key.toString();
         }
