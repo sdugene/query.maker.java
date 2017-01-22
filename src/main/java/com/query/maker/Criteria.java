@@ -19,4 +19,10 @@ public class Criteria
     {
         return this.values;
     }
+
+    public Criteria clear()
+    {
+        this.values = new HashMap();
+        return this;
+    }
 }
