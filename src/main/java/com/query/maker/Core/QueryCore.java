@@ -2,6 +2,7 @@ package com.query.maker.Core;
 
 import com.query.maker.Criteria;
 import com.query.maker.Entity;
+import com.query.maker.Group;
 
 public class QueryCore {
     protected DaoManager daoManager = new DaoManager();
@@ -9,6 +10,7 @@ public class QueryCore {
     protected String className = null;
     protected String method = null;
     protected Criteria criteria = null;
+    protected Group group = null;
     protected int limit = 50;
 
     protected void clean()
