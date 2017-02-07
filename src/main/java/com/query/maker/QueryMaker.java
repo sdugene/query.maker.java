@@ -65,18 +65,6 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker join(QueryMaker query, Criteria criteria)
-    {
-
-        return this;
-    }
-
-    public QueryMaker join(Entity entity, Criteria criteria)
-    {
-
-        return this;
-    }
-
     public QueryMaker limit(int limit)
     {
         this.limit = limit;
