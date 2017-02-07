@@ -108,7 +108,7 @@ public class QueryMaker extends QueryCore
 
         if (this.criteria == null || this.criteria.getValues().isEmpty()) {
             queryList = this.daoManager.findAll();
-        } else if (this.group != null || !this.group.getValues().isEmpty()) {
+        } else if (this.group != null && !this.group.getValues().isEmpty()) {
             queryList = this.daoManager.findByCriteria(this.criteria.getValues(), limit, this.group.getValues());
         } else {
             queryList = this.daoManager.findByCriteria(this.criteria.getValues(), limit);
