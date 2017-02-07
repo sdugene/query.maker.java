@@ -42,7 +42,7 @@ public class DaoManager
     public List<Entity> findByCriteria(Map<String, Object> criteria, int limit)
     {
         try {
-            Query query = criteria (criteria, limit);
+            Query query = queryExec (criteria, limit);
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
                 return null;
@@ -55,9 +55,39 @@ public class DaoManager
         }
     }
 
-    private Query criteria (Map<String, Object> criteria, int limit)
+    public List<Entity> findByCriteria(Map<String, Object> criteria, int limit, Map<String, String> group)
+    {
+        try {
+            Query query = queryExec (criteria, limit, group);
+            List queryList = query.list();
+            if (queryList != null && queryList.isEmpty()) {
+                return null;
+            } else {
+                return (List<Entity>) queryList;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Query queryExec (Map<String, Object> criteria, int limit)
     {
         String querySql = "";
+        querySql = criteria(criteria, querySql);
+        return query(criteria, limit, querySql);
+    }
+
+    private Query queryExec (Map<String, Object> criteria, int limit, Map<String, String> group)
+    {
+        String querySql = "";
+        querySql = criteria(criteria, querySql);
+        querySql = group(group, querySql);
+        return query(criteria, limit, querySql);
+    }
+
+    private String criteria (Map<String, Object> criteria, String querySql)
+    {
         for (Object key: criteria.keySet()){
             if (querySql != "") {
                 querySql += " and ";
@@ -69,6 +99,30 @@ public class DaoManager
                 querySql += "s." + key.toString() + " = :" + key.toString();
             }
         }
+
+        return querySql;
+    }
+
+    private String group (Map<String, String> group, String querySql)
+    {
+        for (Object key: group.keySet()){
+            querySql += " group by ";
+            if (querySql != "") {
+                querySql += ", ";
+            }
+
+            if (group.get(key) == null) {
+                querySql += "s." + key.toString();
+            } else {
+                querySql += "s." + key.toString() + " " + group.get(key);
+            }
+        }
+
+        return querySql;
+    }
+
+    private Query query (Map<String, Object> criteria, int limit, String querySql)
+    {
         Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
             if (criteria.get(key) != null) {
