@@ -18,6 +18,7 @@ public class QueryCore {
         this.className = null;
         this.method = null;
         this.criteria = null;
+        this.group = null;
         this.limit = 50;
     }
 
