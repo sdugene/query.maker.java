@@ -88,36 +88,38 @@ public class DaoManager
 
     private String criteria (Map<String, Object> criteria, String querySql)
     {
+        String criteriaSql = "";
         for (Object key: criteria.keySet()){
-            if (querySql != "") {
-                querySql += " and ";
+            if (criteriaSql != "") {
+                criteriaSql += " and ";
             }
 
             if (criteria.get(key) == null) {
-                querySql += "s." + key.toString() + " is null";
+                criteriaSql += "s." + key.toString() + " is null";
             } else {
-                querySql += "s." + key.toString() + " = :" + key.toString();
+                criteriaSql += "s." + key.toString() + " = :" + key.toString();
             }
         }
-
+        querySql += criteriaSql;
         return querySql;
     }
 
     private String group (Map<String, String> group, String querySql)
     {
+        String groupSql = "";
         for (Object key: group.keySet()){
-            querySql += " group by ";
-            if (querySql != "") {
-                querySql += ", ";
+            groupSql += " group by ";
+            if (groupSql != "") {
+                groupSql += ", ";
             }
 
             if (group.get(key) == null) {
-                querySql += "s." + key.toString();
+                groupSql += "s." + key.toString();
             } else {
-                querySql += "s." + key.toString() + " " + group.get(key);
+                groupSql += "s." + key.toString() + " " + group.get(key);
             }
         }
-
+        querySql += groupSql;
         return querySql;
     }
 
