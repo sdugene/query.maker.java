@@ -108,7 +108,6 @@ public class DaoManager
     {
         String groupSql = "";
         for (Object key: group.keySet()){
-            groupSql += " group by ";
             if (groupSql != "") {
                 groupSql += ", ";
             }
@@ -119,7 +118,9 @@ public class DaoManager
                 groupSql += "s." + key.toString() + " " + group.get(key);
             }
         }
-        querySql += groupSql;
+        if (!groupSql.equals("")) {
+            querySql += " group by " + groupSql;
+        }
         return querySql;
     }
 
