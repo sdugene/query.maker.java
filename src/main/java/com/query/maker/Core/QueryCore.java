@@ -27,6 +27,4 @@ public class QueryCore {
         this.entity = entity;
         this.className = entity.getClassName();
     }
-
-    public void clearCache() { this.daoManager.clearCache(); }
 }

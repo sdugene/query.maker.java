@@ -18,6 +18,12 @@ public class QueryMaker extends QueryCore
         return queryMaker;
     }
 
+    public QueryMaker clearCache()
+    {
+        this.daoManager.clearCache();
+        return this;
+    }
+
     public QueryMaker select(Entity entity)
     {
         this.setEntity(entity);
