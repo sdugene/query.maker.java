@@ -25,6 +25,7 @@ public class DaoManager
     public List<Entity> findAll()
     {
         try {
+            this.session.clear();
             Query query = this.session.createQuery("from "+this.entityName+" s");
 
             List queryList = query.list();
@@ -126,6 +127,7 @@ public class DaoManager
 
     private Query query (Map<String, Object> criteria, int limit, String querySql)
     {
+        this.session.clear();
         Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
             if (criteria.get(key) != null) {
