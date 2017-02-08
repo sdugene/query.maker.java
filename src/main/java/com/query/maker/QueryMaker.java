@@ -18,12 +18,6 @@ public class QueryMaker extends QueryCore
         return queryMaker;
     }
 
-    public QueryMaker closeSession()
-    {
-        this.daoManager.closeSession();
-        return this;
-    }
-
     public QueryMaker select(Entity entity)
     {
         this.setEntity(entity);

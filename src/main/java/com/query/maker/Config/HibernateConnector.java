@@ -35,12 +35,6 @@ public class HibernateConnector {
         return session;
     }
 
-    public void closeSession()
-    {
-        sessionFactory.close();
-        sessionFactory.openSession();
-    }
-
     private void reconnect() throws HibernateException
     {
         this.sessionFactory = cfg.buildSessionFactory();

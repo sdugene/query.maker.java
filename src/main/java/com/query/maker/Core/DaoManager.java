@@ -22,11 +22,6 @@ public class DaoManager
         return this;
     }
 
-    public void closeSession()
-    {
-        HibernateConnector.getInstance().closeSession();
-    }
-
     public List<Entity> findAll()
     {
         try {
