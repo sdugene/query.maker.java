@@ -38,6 +38,7 @@ public class HibernateConnector {
     public void closeSession()
     {
         sessionFactory.close();
+        this.reconnect();
     }
 
     private void reconnect() throws HibernateException
