@@ -18,9 +18,9 @@ public class QueryMaker extends QueryCore
         return queryMaker;
     }
 
-    public QueryMaker clearCache()
+    public QueryMaker closeSession()
     {
-        this.daoManager.clearCache();
+        this.daoManager.closeSession();
         return this;
     }
 
