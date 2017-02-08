@@ -28,11 +28,16 @@ public class HibernateConnector {
 
     public Session getSession() throws HibernateException
     {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         if (!session.isConnected()) {
             this.reconnect();
         }
         return session;
+    }
+
+    public void closeSession()
+    {
+        sessionFactory.close();
     }
 
     private void reconnect() throws HibernateException
