@@ -22,7 +22,7 @@ public class DaoManager
         return this;
     }
 
-    public void clearCache()
+    public void closeSession()
     {
         HibernateConnector.getInstance().closeSession();
     }
