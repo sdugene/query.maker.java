@@ -31,6 +31,7 @@ public class DaoManager
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
+                clearSession();
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
@@ -47,6 +48,7 @@ public class DaoManager
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
+                clearSession();
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
