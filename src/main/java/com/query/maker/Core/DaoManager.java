@@ -134,7 +134,9 @@ public class DaoManager
                 query.setParameter(key.toString(), criteria.get(key));
             }
         }
-
+        session.flush();
+        session.clear();
+        session.close();
         query.setMaxResults(limit);
         return query;
     }
