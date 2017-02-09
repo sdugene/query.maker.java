@@ -127,7 +127,7 @@ public class DaoManager
 
     private Query query (Map<String, Object> criteria, int limit, String querySql)
     {
-        Session session =  connector.getSessionFactory().openSession();
+        Session session =  connector.getSession();
         Query query = session.createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
             if (criteria.get(key) != null) {
