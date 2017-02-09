@@ -14,7 +14,7 @@ import static org.springframework.util.StringUtils.capitalize;
 public class DaoManager
 {
     private String entityName = null;
-    private Session session = HibernateConnector.getInstance().getSession();
+    private HibernateConnector connector = HibernateConnector.getInstance();
 
     public DaoManager setEntityName(String entityName)
     {
@@ -25,7 +25,8 @@ public class DaoManager
     public List<Entity> findAll()
     {
         try {
-            Query query = this.session.createQuery("from "+this.entityName+" s");
+            Session session =  connector.getSessionFactory().openSession();
+            Query query = session.createQuery("from "+this.entityName+" s");
 
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
@@ -126,7 +127,8 @@ public class DaoManager
 
     private Query query (Map<String, Object> criteria, int limit, String querySql)
     {
-        Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
+        Session session =  connector.getSessionFactory().openSession();
+        Query query = session.createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
             if (criteria.get(key) != null) {
                 query.setParameter(key.toString(), criteria.get(key));
