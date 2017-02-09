@@ -26,11 +26,6 @@ public class HibernateConnector {
         return me;
     }
 
-    public SessionFactory getSessionFactory()
-    {
-        return this.sessionFactory;
-    }
-
     public Session getSession() throws HibernateException
     {
         Session session = sessionFactory.openSession();

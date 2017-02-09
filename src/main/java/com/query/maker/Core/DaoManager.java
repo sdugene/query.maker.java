@@ -14,7 +14,7 @@ import static org.springframework.util.StringUtils.capitalize;
 public class DaoManager
 {
     private String entityName = null;
-    private HibernateConnector connector = HibernateConnector.getInstance();
+    private Session session = HibernateConnector.getInstance().getSession();
 
     public DaoManager setEntityName(String entityName)
     {
@@ -25,8 +25,7 @@ public class DaoManager
     public List<Entity> findAll()
     {
         try {
-            Session session =  connector.getSessionFactory().openSession();
-            Query query = session.createQuery("from "+this.entityName+" s");
+            Query query = this.session.createQuery("from "+this.entityName+" s");
 
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
@@ -64,6 +63,7 @@ public class DaoManager
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
+                clearSession();
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
@@ -127,16 +127,13 @@ public class DaoManager
 
     private Query query (Map<String, Object> criteria, int limit, String querySql)
     {
-        Session session =  connector.getSession();
-        Query query = session.createQuery("from "+this.entityName+" s where "+querySql);
+        Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
             if (criteria.get(key) != null) {
                 query.setParameter(key.toString(), criteria.get(key));
             }
         }
-        session.flush();
-        session.clear();
-        session.close();
+
         query.setMaxResults(limit);
         return query;
     }
@@ -193,5 +190,13 @@ public class DaoManager
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void clearSession()
+    {
+        this.session.flush();
+        this.session.clear();
+        this.session.close();
+        this.session = HibernateConnector.getInstance().getSession();
     }
 }
