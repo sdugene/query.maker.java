@@ -119,7 +119,7 @@ public class QueryMaker extends QueryCore
             return null;
         } else {
             this.entity = queryList.get(0);
-            return this.entity;
+            return this.daoManager.refresh(this.entity);
         }
     }
 

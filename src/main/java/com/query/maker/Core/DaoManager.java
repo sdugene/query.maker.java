@@ -32,7 +32,6 @@ public class DaoManager
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
-                clearSession();
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
@@ -45,14 +44,11 @@ public class DaoManager
     {
         System.out.println("findByCriteria");
         try {
-            this.clearSession();
             Query query = queryExec (criteria, limit);
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
-                this.session.refresh(queryList);
-                System.out.println("refresh");
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
@@ -70,8 +66,6 @@ public class DaoManager
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
-                this.session.refresh(queryList);
-                System.out.println("refresh");
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
@@ -200,9 +194,10 @@ public class DaoManager
         return null;
     }
 
-    private void clearSession()
+    public Entity refresh(Entity entity)
     {
-        /*this.session.refresh;
-        System.out.println("refresh");*/
+        this.session.refresh(entity);
+        System.out.println("refresh entity");
+        return entity;
     }
 }
