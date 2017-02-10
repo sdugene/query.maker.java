@@ -51,6 +51,8 @@ public class DaoManager
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
+                this.session.refresh(queryList);
+                System.out.println("refresh");
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
