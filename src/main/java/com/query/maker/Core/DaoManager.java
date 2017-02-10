@@ -197,8 +197,12 @@ public class DaoManager
     private void clearSession()
     {
         this.session.flush();
+        System.out.println("flush");
         this.session.clear();
+        System.out.println("clear");
         this.session.close();
+        System.out.println("close");
         this.session = HibernateConnector.getInstance().getSession();
+        System.out.println("get");
     }
 }
