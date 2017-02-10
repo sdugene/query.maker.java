@@ -24,6 +24,7 @@ public class DaoManager
 
     public List<Entity> findAll()
     {
+        System.out.println("findAll");
         try {
             Query query = this.session.createQuery("from "+this.entityName+" s");
 
@@ -42,6 +43,7 @@ public class DaoManager
 
     public List<Entity> findByCriteria(Map<String, Object> criteria, int limit)
     {
+        System.out.println("findByCriteria");
         try {
             Query query = queryExec (criteria, limit);
             List queryList = query.list();
@@ -59,6 +61,7 @@ public class DaoManager
 
     public List<Entity> findByCriteria(Map<String, Object> criteria, int limit, Map<String, String> group)
     {
+        System.out.println("findByCriteria group");
         try {
             Query query = queryExec (criteria, limit, group);
             List queryList = query.list();
