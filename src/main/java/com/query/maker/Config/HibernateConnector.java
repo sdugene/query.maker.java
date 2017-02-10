@@ -35,6 +35,15 @@ public class HibernateConnector {
         return session;
     }
 
+    public Session newSession() throws HibernateException
+    {
+        Session session = sessionFactory.openSession();
+        if (!session.isConnected()) {
+            this.reconnect();
+        }
+        return session;
+    }
+
     private void reconnect() throws HibernateException
     {
         this.sessionFactory = cfg.buildSessionFactory();

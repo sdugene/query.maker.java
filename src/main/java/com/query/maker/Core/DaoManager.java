@@ -196,7 +196,8 @@ public class DaoManager
 
     public Entity refresh(Entity entity)
     {
-        this.session.refresh(entity);
+        Session session2 = HibernateConnector.getInstance().newSession();
+        session2.refresh(entity);
         System.out.println("refresh entity");
         return entity;
     }
