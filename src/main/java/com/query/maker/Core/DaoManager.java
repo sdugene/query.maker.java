@@ -45,12 +45,12 @@ public class DaoManager
     {
         System.out.println("findByCriteria");
         try {
+            this.clearSession();
             Query query = queryExec (criteria, limit);
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
-                clearSession();
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
