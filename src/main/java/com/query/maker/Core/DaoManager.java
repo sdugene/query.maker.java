@@ -68,7 +68,8 @@ public class DaoManager
             if (queryList != null && queryList.isEmpty()) {
                 return null;
             } else {
-                clearSession();
+                this.session.refresh(queryList);
+                System.out.println("refresh");
                 return (List<Entity>) queryList;
             }
         } catch (Exception e) {
@@ -199,13 +200,7 @@ public class DaoManager
 
     private void clearSession()
     {
-        this.session.flush();
-        System.out.println("flush");
-        this.session.clear();
-        System.out.println("clear");
-        this.session.close();
-        System.out.println("close");
-        this.session = HibernateConnector.getInstance().getSession();
-        System.out.println("get");
+        /*this.session.refresh;
+        System.out.println("refresh");*/
     }
 }
