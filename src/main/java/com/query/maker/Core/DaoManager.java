@@ -15,8 +15,6 @@ import static org.springframework.util.StringUtils.capitalize;
 public class DaoManager
 {
     private String entityName = null;
-    //private Hibernate hibernate = new Hibernate();
-
     public DaoManager setEntityName(String entityName)
     {
         this.entityName = capitalize(entityName);
