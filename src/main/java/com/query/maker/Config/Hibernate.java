@@ -5,9 +5,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-/**
- * Created by sdugene on 13/02/17.
- */
 public class Hibernate
 {
     private Configuration cfg;

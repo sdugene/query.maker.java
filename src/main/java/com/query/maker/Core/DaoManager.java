@@ -195,13 +195,13 @@ public class DaoManager
         return null;
     }
 
-    /*public Entity refresh(Entity entity)
+    public Entity refresh(Entity entity)
     {
-        Session session2 = HibernateConnector.getInstance().newSession();
+        /*Session session2 = HibernateConnector.getInstance().newSession();
         session2.refresh(entity);
-        System.out.println("refresh entity");
+        System.out.println("refresh entity");*/
         return entity;
-    }*/
+    }
 
     private Session session()
     {
