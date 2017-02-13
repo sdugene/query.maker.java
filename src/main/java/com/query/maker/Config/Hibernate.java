@@ -10,15 +10,16 @@ public class Hibernate
     private Configuration cfg;
     private SessionFactory sessionFactory;
 
-    public void Hibernate() throws HibernateException
+    public SessionFactory sessionFactory() throws HibernateException
     {
-        cfg = new Configuration().configure();
-        sessionFactory = cfg.buildSessionFactory();
+        this.cfg = new Configuration().configure();
+        this.sessionFactory = this.cfg.buildSessionFactory();
+        return this.sessionFactory;
     }
 
-    public Session newSession() throws HibernateException
+    /*public Session newSession() throws HibernateException
     {
-        Session session = sessionFactory.openSession();
+        Session session = this.sessionFactory.openSession();
         if (!session.isConnected()) {
             this.reconnect();
         }
@@ -27,6 +28,6 @@ public class Hibernate
 
     private void reconnect() throws HibernateException
     {
-        this.sessionFactory = cfg.buildSessionFactory();
-    }
+        this.sessionFactory = this.cfg.buildSessionFactory();
+    }*/
 }

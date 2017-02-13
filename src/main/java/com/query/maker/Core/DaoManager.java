@@ -1,10 +1,10 @@
 package com.query.maker.Core;
 
-import com.query.maker.Config.Hibernate;
-//import com.query.maker.Config.HibernateConnector;
 import com.query.maker.Entity;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -15,7 +15,7 @@ import static org.springframework.util.StringUtils.capitalize;
 public class DaoManager
 {
     private String entityName = null;
-    private Hibernate hibernate = new Hibernate();
+    //private Hibernate hibernate = new Hibernate();
 
     public DaoManager setEntityName(String entityName)
     {
@@ -205,6 +205,8 @@ public class DaoManager
 
     private Session session()
     {
-        return this.hibernate.newSession();
+        Configuration cfg = new Configuration().configure();
+        SessionFactory sessionFactory = cfg.buildSessionFactory();
+        return sessionFactory.openSession();
     }
 }
