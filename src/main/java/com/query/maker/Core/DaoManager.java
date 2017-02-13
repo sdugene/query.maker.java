@@ -1,6 +1,7 @@
 package com.query.maker.Core;
 
-import com.query.maker.Config.HibernateConnector;
+import com.query.maker.Config.Hibernate;
+//import com.query.maker.Config.HibernateConnector;
 import com.query.maker.Entity;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -14,7 +15,7 @@ import static org.springframework.util.StringUtils.capitalize;
 public class DaoManager
 {
     private String entityName = null;
-    private Session session = HibernateConnector.getInstance().getSession();
+    private Hibernate hibernate = new Hibernate();
 
     public DaoManager setEntityName(String entityName)
     {
@@ -26,7 +27,7 @@ public class DaoManager
     {
         System.out.println("findAll");
         try {
-            Query query = this.session.createQuery("from "+this.entityName+" s");
+            Query query = this.session().createQuery("from "+this.entityName+" s");
 
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
@@ -44,7 +45,7 @@ public class DaoManager
     {
         System.out.println("findByCriteria");
         try {
-            Query query = queryExec (criteria, limit);
+            Query query = queryExec(criteria, limit);
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
                 return null;
@@ -61,7 +62,7 @@ public class DaoManager
     {
         System.out.println("findByCriteria group");
         try {
-            Query query = queryExec (criteria, limit, group);
+            Query query = queryExec(criteria, limit, group);
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
                 return null;
@@ -129,7 +130,7 @@ public class DaoManager
 
     private Query query (Map<String, Object> criteria, int limit, String querySql)
     {
-        Query query = this.session.createQuery("from "+this.entityName+" s where "+querySql);
+        Query query = this.session().createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
             if (criteria.get(key) != null) {
                 query.setParameter(key.toString(), criteria.get(key));
@@ -194,11 +195,16 @@ public class DaoManager
         return null;
     }
 
-    public Entity refresh(Entity entity)
+    /*public Entity refresh(Entity entity)
     {
         Session session2 = HibernateConnector.getInstance().newSession();
         session2.refresh(entity);
         System.out.println("refresh entity");
         return entity;
+    }*/
+
+    private Session session()
+    {
+        return this.hibernate.newSession();
     }
 }
