@@ -210,9 +210,13 @@ public class DaoManager
 
     private Session session()
     {
+        return this.sessionFactory.openSession();
+    }
+
+    public void createSession()
+    {
         Configuration cfg = new Configuration().configure();
         this.sessionFactory = cfg.buildSessionFactory();
-        return this.sessionFactory.openSession();
     }
 
     public void closeSession()

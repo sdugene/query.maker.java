@@ -28,6 +28,11 @@ public class QueryCore {
         this.className = entity.getClassName();
     }
 
+    public void createSession()
+    {
+        this.daoManager.createSession();
+    }
+
     public void closeSession()
     {
         this.daoManager.closeSession();
