@@ -25,8 +25,7 @@ public class DaoManager
     {
         System.out.println("findAll");
         try {
-            Query query = this.session().createQuery("from "+this.entityName+" s");
-
+            Query query = queryExec();
             List queryList = query.list();
             if (queryList != null && queryList.isEmpty()) {
                 return null;
@@ -39,7 +38,7 @@ public class DaoManager
         }
     }
 
-    public List<Entity> findByCriteria(Map<String, Object> criteria, int limit)
+    public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit)
     {
         System.out.println("findByCriteria");
         try {
@@ -56,7 +55,7 @@ public class DaoManager
         }
     }
 
-    public List<Entity> findByCriteria(Map<String, Object> criteria, int limit, Map<String, String> group)
+    public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
         System.out.println("findByCriteria group");
         try {
@@ -73,19 +72,24 @@ public class DaoManager
         }
     }
 
-    private Query queryExec (Map<String, Object> criteria, int limit)
+    private Query queryExec ()
+    {
+        return query(null, null, "from "+this.entityName+" s");
+    }
+
+    private Query queryExec (Map<String, Object> criteria, Integer limit)
     {
         String querySql = "";
         querySql = criteria(criteria, querySql);
-        return query(criteria, limit, querySql);
+        return query(criteria, limit, "from "+this.entityName+" s where "+querySql);
     }
 
-    private Query queryExec (Map<String, Object> criteria, int limit, Map<String, String> group)
+    private Query queryExec (Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
         String querySql = "";
         querySql = criteria(criteria, querySql);
         querySql = group(group, querySql);
-        return query(criteria, limit, querySql);
+        return query(criteria, limit, "from "+this.entityName+" s where "+querySql);
     }
 
     private String criteria (Map<String, Object> criteria, String querySql)
@@ -126,7 +130,28 @@ public class DaoManager
         return querySql;
     }
 
-    private Query query (Map<String, Object> criteria, int limit, String querySql)
+    private Query query(Map<String, Object> criteria, Integer limit, String queryString)
+    {
+        SessionFactory sessionFactory = session();
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(queryString);
+
+        if (criteria != null) {
+            for (Object key: criteria.keySet()){
+                if (criteria.get(key) != null) {
+                    query.setParameter(key.toString(), criteria.get(key));
+                }
+            }
+        }
+
+        if (limit != null)
+        query.setMaxResults(limit);
+        sessionFactory.close();
+        return  query;
+
+    }
+
+    /*private Query query (Map<String, Object> criteria, int limit, String querySql)
     {
         Query query = this.session().createQuery("from "+this.entityName+" s where "+querySql);
         for (Object key: criteria.keySet()){
@@ -137,7 +162,7 @@ public class DaoManager
 
         query.setMaxResults(limit);
         return query;
-    }
+    }*/
 
     /*public void updateUser(User user) {
         Session session = null;
@@ -193,10 +218,10 @@ public class DaoManager
         return null;
     }
 
-    private Session session()
+    private SessionFactory session()
     {
         Configuration cfg = new Configuration().configure();
-        SessionFactory sessionFactory = cfg.buildSessionFactory();
-        return sessionFactory.openSession();
+        return cfg.buildSessionFactory();
+
     }
 }
