@@ -27,4 +27,9 @@ public class QueryCore {
         this.entity = entity;
         this.className = entity.getClassName();
     }
+
+    public void closeSession()
+    {
+        this.daoManager.closeSession();
+    }
 }

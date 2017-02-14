@@ -15,6 +15,7 @@ import static org.springframework.util.StringUtils.capitalize;
 public class DaoManager
 {
     private String entityName = null;
+    private SessionFactory sessionFactory = null;
     public DaoManager setEntityName(String entityName)
     {
         this.entityName = capitalize(entityName);
@@ -210,7 +211,12 @@ public class DaoManager
     private Session session()
     {
         Configuration cfg = new Configuration().configure();
-        SessionFactory sessionFactory = cfg.buildSessionFactory();
-        return sessionFactory.openSession();
+        this.sessionFactory = cfg.buildSessionFactory();
+        return this.sessionFactory.openSession();
+    }
+
+    public void closeSession()
+    {
+        this.sessionFactory.close();
     }
 }
