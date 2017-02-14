@@ -132,9 +132,11 @@ public class DaoManager
 
         List queryList = query.list();
         if (queryList != null && queryList.isEmpty()) {
+            session.clear();
             sessionFactory.close();
             return null;
         } else {
+            session.clear();
             sessionFactory.close();
             return (List<Entity>) queryList;
         }
