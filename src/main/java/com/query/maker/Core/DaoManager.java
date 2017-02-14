@@ -114,8 +114,7 @@ public class DaoManager
 
     private List<Entity> query(Map<String, Object> criteria, Integer limit, String queryString)
     {
-        SessionFactory sessionFactory = session();
-        Session session = sessionFactory.openSession();
+        Session session = this.session();
         Query query = session.createQuery(queryString);
 
         if (criteria != null) {
@@ -133,11 +132,9 @@ public class DaoManager
         List queryList = query.list();
         if (queryList != null && queryList.isEmpty()) {
             session.clear();
-            sessionFactory.close();
             return null;
         } else {
             session.clear();
-            sessionFactory.close();
             return (List<Entity>) queryList;
         }
 
@@ -210,10 +207,10 @@ public class DaoManager
         return null;
     }
 
-    private SessionFactory session()
+    private Session session()
     {
         Configuration cfg = new Configuration().configure();
-        return cfg.buildSessionFactory();
-
+        SessionFactory sessionFactory = cfg.buildSessionFactory();
+        return sessionFactory.openSession();
     }
 }
