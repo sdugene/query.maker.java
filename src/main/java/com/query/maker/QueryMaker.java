@@ -112,9 +112,9 @@ public class QueryMaker extends QueryCore
         }
     }
 
-    public Integer exec(Input input)
+    public Entity exec(Input input)
     {
-        Integer result = null;
+        Entity result = null;
         if (this.method == null) { return null; }
         if (this.method.equals("insert") && input == null) { return null; }
 
