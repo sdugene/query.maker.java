@@ -25,26 +25,21 @@ public class DaoManager
 
 
 
-    public Integer insert(Object entity, Map<String, Object> input)
+    public Entity insert(Entity entity, Map<String, Object> input)
     {
-        System.out.println("select");
-        System.out.println(entity);
         try {
             BeanUtils.populate(entity, input);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Session session = this.session();
+        session.save(entity);
 
-        System.out.println(entity);
-        /*Session session = this.session();
-        session.save(entity);*/
-
-        return null;
+        return entity;
     }
 
     public List<Entity> findAll()
     {
-        System.out.println("findAll");
         try {
             return queryExec();
         } catch (Exception e) {
@@ -55,7 +50,6 @@ public class DaoManager
 
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit)
     {
-        System.out.println("findByCriteria");
         try {
             return queryExec(criteria, limit);
         } catch (Exception e) {
@@ -66,7 +60,6 @@ public class DaoManager
 
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
-        System.out.println("findByCriteria group");
         try {
             return queryExec(criteria, limit, group);
         } catch (Exception e) {
