@@ -20,7 +20,7 @@ public class Input
         return this.values;
     }
 
-    public void setValues(Map<String, Object> values) { this.values = values; }
+    public Input setValues(Map<String, Object> values) { this.values = values; return this; }
 
     public Input clear()
     {

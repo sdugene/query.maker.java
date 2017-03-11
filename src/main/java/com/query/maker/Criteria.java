@@ -20,7 +20,7 @@ public class Criteria
         return this.values;
     }
 
-    public void setValues(Map<String, Object> values) { this.values = values; }
+    public Criteria setValues(Map<String, Object> values) { this.values = values; return this; }
 
     public Criteria clear()
     {
