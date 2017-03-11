@@ -31,10 +31,11 @@ public class DaoManager
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
-        String result = session.save(entity).getClass().getName();
-        System.out.println(result);
+        int id = (Integer) session.save(entity);
+        System.out.println(id);
         transaction.commit();
         return entity;
     }
