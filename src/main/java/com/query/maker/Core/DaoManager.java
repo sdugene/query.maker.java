@@ -4,6 +4,7 @@ import com.query.maker.Entity;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -31,7 +32,10 @@ public class DaoManager
             e.printStackTrace();
         }
         Session session = this.session();
+        Transaction transaction = session.beginTransaction();
         session.save(entity);
+
+        transaction.commit();
 
         return entity;
     }
