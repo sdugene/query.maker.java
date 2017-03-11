@@ -35,9 +35,12 @@ public class DaoManager
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
         Long id = (Long) session.save(entity);
-        System.out.println(id);
         transaction.commit();
-        return entity;
+
+        if (id != null && id > 0) {
+            return entity;
+        }
+        return null;
     }
 
     public List<Entity> findAll()
