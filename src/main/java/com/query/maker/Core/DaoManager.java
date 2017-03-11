@@ -36,7 +36,6 @@ public class DaoManager
         }
 
         System.out.println(entity);
-
         /*Session session = this.session();
         session.save(entity);*/
 
