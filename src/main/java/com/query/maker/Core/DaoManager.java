@@ -33,7 +33,8 @@ public class DaoManager
         }
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
-        session.save(entity);
+        String result = session.save(entity).getClass().getName();
+        System.out.println(result);
         transaction.commit();
         return entity;
     }
