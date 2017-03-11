@@ -32,8 +32,9 @@ public class DaoManager
             e.printStackTrace();
         }
         Session session = this.session();
+        Transaction transaction = session.beginTransaction();
         session.save(entity);
-        session.flush();
+        transaction.commit();
         return entity;
     }
 
