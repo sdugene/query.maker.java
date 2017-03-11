@@ -23,8 +23,6 @@ public class DaoManager
         return this;
     }
 
-
-
     public Entity insert(Entity entity, Map<String, Object> input)
     {
         try {
