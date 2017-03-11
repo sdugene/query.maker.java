@@ -5,6 +5,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -20,6 +21,26 @@ public class DaoManager
     {
         this.entityName = capitalize(entityName);
         return this;
+    }
+
+
+
+    public Integer insert(Object entity, Map<String, Object> input)
+    {
+        System.out.println("select");
+        System.out.println(entity);
+        try {
+            BeanUtils.populate(entity, input);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(entity);
+
+        /*Session session = this.session();
+        session.save(entity);*/
+
+        return null;
     }
 
     public List<Entity> findAll()

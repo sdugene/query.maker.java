@@ -3,13 +3,13 @@ package com.query.maker;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Criteria
+public class Input
 {
     private Map<String, Object> values;
 
-    public Criteria() { this.values = new HashMap(); }
+    public Input() { this.values = new HashMap(); }
 
-    public Criteria addValue(String key, Object value)
+    public Input addValue(String key, Object value)
     {
         this.values.put(key, value);
         return this;
@@ -22,7 +22,7 @@ public class Criteria
 
     public void setValues(Map<String, Object> values) { this.values = values; }
 
-    public Criteria clear()
+    public Input clear()
     {
         this.values = new HashMap();
         return this;

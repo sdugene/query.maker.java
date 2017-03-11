@@ -94,6 +94,7 @@ public class QueryMaker extends QueryCore
         this.daoManager.setEntityName(this.className);
         List<Entity> queryList;
 
+        if (this.method == null) { return null; }
         if (this.criteria == null || this.criteria.getValues().isEmpty()) {
             queryList = this.daoManager.findAll();
         } else if (this.group != null && !this.group.getValues().isEmpty()) {
@@ -109,6 +110,19 @@ public class QueryMaker extends QueryCore
         } else {
             return queryList;
         }
+    }
+
+    public Integer exec(Input input)
+    {
+        Integer result = null;
+        if (this.method == null) { return null; }
+        if (this.method.equals("insert") && input == null) { return null; }
+
+        if (this.method.equals("insert")) {
+            result = this.daoManager.insert(this.entity, input.getValues());
+        }
+
+        return result;
     }
 
     public Entity one()
