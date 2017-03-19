@@ -178,11 +178,10 @@ public class DaoManager
         }
 
         for (Object key: criteria.keySet()){
-            if (joinSql != "") {
-                joinSql += " and ";
-            }
-
             if (key != "ON" && key != "on") {
+                if (joinSql != "") {
+                    joinSql += " and ";
+                }
                 joinSql += "t." + key.toString() + " = :" + key.toString();
             }
         }
