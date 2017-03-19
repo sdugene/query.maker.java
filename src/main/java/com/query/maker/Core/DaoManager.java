@@ -120,10 +120,10 @@ public class DaoManager
         String querySql = "";
         querySql = joinCriteria(joinCriteria, querySql);
         if (criteria == null) {
-            return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+            return query(joinCriteria, criteria, limit, "from "+this.entityName+" s "+querySql);
         } else {
             querySql = criteria(criteria, querySql);
-            return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+            return query(joinCriteria, criteria, limit, "from "+this.entityName+" s "+querySql);
         }
     }
 
@@ -134,11 +134,11 @@ public class DaoManager
         querySql = joinCriteria(joinCriteria, querySql);
         if (criteria == null) {
             querySql = group(group, querySql);
-            return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+            return query(joinCriteria, criteria, limit, "from "+this.entityName+" s "+querySql);
         } else {
             querySql = criteria(criteria, querySql);
             querySql = group(group, querySql);
-            return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+            return query(joinCriteria, criteria, limit, "from "+this.entityName+" s "+querySql);
         }
     }
 
@@ -162,15 +162,13 @@ public class DaoManager
 
     private String joinCriteria (Map<String, Object> joinCriteria, String querySql)
     {
-        System.out.println(joinCriteria);
         String joinSql = "";
         String method = (String) joinCriteria.keySet().toArray()[0];
         Map<String, Object> joinOn = (Map) joinCriteria.get(method);
-        System.out.println(joinOn);
+
         String EntityName = (String) joinOn.keySet().toArray()[0];
         String Entity = EntityName.substring(0, 1).toLowerCase() + EntityName.substring(1);
         Map<String, Object> criteria = (Map) joinOn.get(EntityName);
-        System.out.println(criteria);
 
         /*if (criteria.get("on") != null || (criteria.get("on") == null && criteria.containsKey("on"))) {
             joinSql += "on t." + criteria.get("on").toString() + " = s." + criteria.get("on").toString();
@@ -220,6 +218,42 @@ public class DaoManager
             for (Object key: criteria.keySet()){
                 if (criteria.get(key) != null) {
                     query.setParameter(key.toString(), criteria.get(key));
+                }
+            }
+        }
+
+        if (limit != null) {
+            query.setMaxResults(limit);
+        }
+
+        List queryList = query.list();
+        if (queryList != null && queryList.isEmpty()) {
+            session.clear();
+            return null;
+        } else {
+            session.clear();
+            return (List<Entity>) queryList;
+        }
+
+    }
+
+    private List<Entity> query(Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit, String queryString)
+    {
+        Session session = this.session();
+        Query query = session.createQuery(queryString);
+
+        if (criteria != null) {
+            for (Object key: criteria.keySet()){
+                if (criteria.get(key) != null) {
+                    query.setParameter(key.toString(), criteria.get(key));
+                }
+            }
+        }
+
+        if (joinCriteria != null) {
+            for (Object key: joinCriteria.keySet()){
+                if (joinCriteria.get(key) != null) {
+                    query.setParameter(key.toString(), joinCriteria.get(key));
                 }
             }
         }
