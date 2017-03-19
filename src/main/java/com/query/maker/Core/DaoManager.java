@@ -18,6 +18,8 @@ public class DaoManager
 {
     private String entityName = null;
     private SessionFactory sessionFactory = null;
+
+
     public DaoManager setEntityName(String entityName)
     {
         this.entityName = capitalize(entityName);
@@ -162,20 +164,22 @@ public class DaoManager
     {
         System.out.println(joinCriteria);
         String joinSql = "";
-        String table = (String) joinCriteria.keySet().toArray()[0];
-        Map<String, Object> joinOn = (Map) joinCriteria.get(table);
+        String method = (String) joinCriteria.keySet().toArray()[0];
+        Map<String, Object> joinOn = (Map) joinCriteria.get(method);
         System.out.println(joinOn);
-        String method = (String) joinOn.keySet().toArray()[0];
-        Map<String, Object> criteria = (Map) joinOn.get(method);
+        String table = (String) joinOn.keySet().toArray()[0];
+        Map<String, Object> criteria = (Map) joinOn.get(table);
         System.out.println(criteria);
+
+        joinSql += "on t." + criteria.get("on").toString() + " = s." + criteria.get("on").toString();
+        joinSql += "on t." + criteria.get("ON").toString() + " = s." + criteria.get("ON").toString();
+
         for (Object key: criteria.keySet()){
             if (joinSql != "") {
                 joinSql += " and ";
             }
 
-            if (joinCriteria.get(key) == "ON" || joinCriteria.get(key) == "on") {
-                joinSql += "on t." + key.toString() + " = s." + key.toString();
-            } else {
+            if (criteria.get(key) != "ON" && criteria.get(key) != "on") {
                 joinSql += "t." + key.toString() + " = :" + key.toString();
             }
         }
