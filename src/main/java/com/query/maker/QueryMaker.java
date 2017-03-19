@@ -139,21 +139,21 @@ public class QueryMaker extends QueryCore
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
                 && this.criteria != null && !this.criteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.criteria.getValues(), this.criteria.getValues(), this.limit, this.group.getValues());
+            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), this.criteria.getValues(), this.limit, this.group.getValues());
         }
 
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
                 && this.criteria != null && !this.criteria.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.criteria.getValues(), this.criteria.getValues(), this.limit);
+            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), this.criteria.getValues(), this.limit);
         }
 
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.criteria.getValues(), null, this.limit, this.group.getValues());
+            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), null, this.limit, this.group.getValues());
         }
 
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.criteria.getValues(), null, this.limit);
+            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), null, this.limit);
         }
 
         if (this.criteria != null && !this.criteria.getValues().isEmpty()
