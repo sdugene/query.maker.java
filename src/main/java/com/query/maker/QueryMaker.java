@@ -69,21 +69,6 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker join(Entity entity, String method, JoinCriteria joinCriteria)
-    {
-        this.joinEntity.put(entity.getClassName(), method);
-        this.joinCriteria = joinCriteria;
-        return this;
-    }
-
-    public QueryMaker join(Entity entity, String method, JoinCriteria joinCriteria, Criteria criteria)
-    {
-        this.joinEntity.put(entity.getClassName(), method);
-        this.joinCriteria = joinCriteria;
-        this.criteria = criteria;
-        return this;
-    }
-
     public QueryMaker limit(int limit)
     {
         this.limit = limit;
@@ -125,26 +110,6 @@ public class QueryMaker extends QueryCore
     private List<Entity> getQueryList()
     {
         if (this.method == null) { return null; }
-
-        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
-                && this.criteria != null && !this.criteria.getValues().isEmpty()
-                && this.group != null && !this.group.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), this.criteria.getValues(), this.limit, this.group.getValues());
-        }
-
-        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
-                && this.criteria != null && !this.criteria.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), this.criteria.getValues(), this.limit);
-        }
-
-        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
-                && this.group != null && !this.group.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), null, this.limit, this.group.getValues());
-        }
-
-        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), null, this.limit);
-        }
 
         if (this.criteria != null && !this.criteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {

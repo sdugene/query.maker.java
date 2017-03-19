@@ -2,17 +2,12 @@ package com.query.maker.Core;
 
 import com.query.maker.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class QueryCore {
     protected DaoManager daoManager = new DaoManager();
     protected Entity entity = null;
     protected String className = null;
     protected String method = null;
     protected Criteria criteria = null;
-    protected Map<String, String> joinEntity = new HashMap();
-    protected JoinCriteria joinCriteria = null;
     protected Input input = null;
     protected Group group = null;
     protected int limit = 50;
@@ -22,7 +17,6 @@ public class QueryCore {
         this.className = null;
         this.method = null;
         this.criteria = null;
-        this.joinCriteria = null;
         this.group = null;
         this.limit = 50;
     }
