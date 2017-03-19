@@ -186,7 +186,8 @@ public class DaoManager
             }
         }
         querySql += joinSql;
-        return method+" JOIN s."+table+" as t "+querySql;
+        //return method+" JOIN s."+table+" as t "+querySql;
+        return method+" JOIN s."+table+" as t ";
     }
 
     private String group (Map<String, String> group, String querySql)
