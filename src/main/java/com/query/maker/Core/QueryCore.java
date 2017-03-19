@@ -1,9 +1,6 @@
 package com.query.maker.Core;
 
-import com.query.maker.Criteria;
-import com.query.maker.Entity;
-import com.query.maker.Group;
-import com.query.maker.Input;
+import com.query.maker.*;
 
 public class QueryCore {
     protected DaoManager daoManager = new DaoManager();
@@ -11,6 +8,7 @@ public class QueryCore {
     protected String className = null;
     protected String method = null;
     protected Criteria criteria = null;
+    protected JoinCriteria joinCriteria = null;
     protected Input input = null;
     protected Group group = null;
     protected int limit = 50;
@@ -20,6 +18,7 @@ public class QueryCore {
         this.className = null;
         this.method = null;
         this.criteria = null;
+        this.joinCriteria = null;
         this.group = null;
         this.limit = 50;
     }

@@ -1,7 +1,11 @@
 package com.query.maker;
 
 import com.query.maker.Core.*;
+import org.aspectj.apache.bcel.util.ClassLoaderRepository;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QueryMaker extends QueryCore
 {
@@ -65,6 +69,31 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
+    public QueryMaker join(Entity entity, String method, Map<String, String> mJoinCriteria)
+    {
+        Map<String, Object> joinOn = new HashMap();
+        joinOn.put(entity.getClassName(), mJoinCriteria);
+
+        JoinCriteria joinCriteria = new JoinCriteria();
+        joinCriteria.addValue(method, joinOn);
+
+        this.joinCriteria = joinCriteria;
+        return this;
+    }
+
+    public QueryMaker join(Entity entity, String method, Map<String, String> mJoinCriteria, Criteria criteria)
+    {
+        Map<String, Object> joinOn = new HashMap();
+        joinOn.put(entity.getClassName(), mJoinCriteria);
+
+        JoinCriteria joinCriteria = new JoinCriteria();
+        joinCriteria.addValue(method, joinOn);
+
+        this.joinCriteria = joinCriteria;
+        this.criteria = criteria;
+        return this;
+    }
+
     public QueryMaker limit(int limit)
     {
         this.limit = limit;
@@ -92,16 +121,7 @@ public class QueryMaker extends QueryCore
     public List<Entity> exec()
     {
         this.daoManager.setEntityName(this.className);
-        List<Entity> queryList;
-
-        if (this.method == null) { return null; }
-        if (this.criteria == null || this.criteria.getValues().isEmpty()) {
-            queryList = this.daoManager.findAll();
-        } else if (this.group != null && !this.group.getValues().isEmpty()) {
-            queryList = this.daoManager.findByCriteria(this.criteria.getValues(), limit, this.group.getValues());
-        } else {
-            queryList = this.daoManager.findByCriteria(this.criteria.getValues(), limit);
-        }
+        List<Entity> queryList = getQueryList();
 
         this.clean();
 
@@ -110,6 +130,42 @@ public class QueryMaker extends QueryCore
         } else {
             return queryList;
         }
+    }
+
+    private List<Entity> getQueryList()
+    {
+        if (this.method == null) { return null; }
+
+        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
+                && this.criteria != null && !this.criteria.getValues().isEmpty()
+                && this.group != null && !this.group.getValues().isEmpty()) {
+            return this.daoManager.findWithJoin(this.criteria.getValues(), this.criteria.getValues(), this.limit, this.group.getValues());
+        }
+
+        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
+                && this.criteria != null && !this.criteria.getValues().isEmpty()) {
+            return this.daoManager.findWithJoin(this.criteria.getValues(), this.criteria.getValues(), this.limit);
+        }
+
+        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
+                && this.group != null && !this.group.getValues().isEmpty()) {
+            return this.daoManager.findWithJoin(this.criteria.getValues(), null, this.limit, this.group.getValues());
+        }
+
+        if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()) {
+            return this.daoManager.findWithJoin(this.criteria.getValues(), null, this.limit);
+        }
+
+        if (this.criteria != null && !this.criteria.getValues().isEmpty()
+                && this.group != null && !this.group.getValues().isEmpty()) {
+            return this.daoManager.findByCriteria(this.criteria.getValues(), this.limit, this.group.getValues());
+        }
+
+        if (this.criteria != null && !this.criteria.getValues().isEmpty()) {
+            return this.daoManager.findByCriteria(this.criteria.getValues(), this.limit);
+        }
+
+        return this.daoManager.findAll();
     }
 
     public Entity exec(Input input)
