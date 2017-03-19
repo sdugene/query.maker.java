@@ -182,7 +182,7 @@ public class DaoManager
                 joinSql += " and ";
             }
 
-            if (criteria.get(key) != "ON" && criteria.get(key) != "on") {
+            if (key != "ON" && key != "on") {
                 joinSql += "t." + key.toString() + " = :" + key.toString();
             }
         }
