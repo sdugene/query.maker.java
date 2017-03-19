@@ -75,20 +75,20 @@ public class DaoManager
         }
     }
 
-    public List<Entity> findWithJoin(Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit)
+    public List<Entity> findWithJoin(Map<String, String> joinEntity, Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit)
     {
         try {
-            return queryExec(joinCriteria, criteria, limit);
+            return queryExec(joinEntity, joinCriteria, criteria, limit);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public List<Entity> findWithJoin(Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit, Map<String, String> group)
+    public List<Entity> findWithJoin(Map<String, String> joinEntity, Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
         try {
-            return queryExec(joinCriteria, criteria, limit, group);
+            return queryExec(joinEntity, joinCriteria, criteria, limit, group);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -115,10 +115,10 @@ public class DaoManager
         return query(criteria, limit, "from "+this.entityName+" s "+querySql);
     }
 
-    private List<Entity> queryExec (Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit)
+    private List<Entity> queryExec (Map<String, String> joinEntity, Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit)
     {
         String querySql = "";
-        querySql = joinCriteria(joinCriteria, querySql);
+        querySql = joinCriteria(joinEntity, joinCriteria, querySql);
         if (criteria == null) {
             return query(joinCriteria, criteria, limit, "from "+this.entityName+" s "+querySql);
         } else {
@@ -127,11 +127,11 @@ public class DaoManager
         }
     }
 
-    private List<Entity> queryExec (Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit, Map<String, String> group)
+    private List<Entity> queryExec (Map<String, String> joinEntity, Map<String, Object> joinCriteria, Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
 
         String querySql = "";
-        querySql = joinCriteria(joinCriteria, querySql);
+        querySql = joinCriteria(joinEntity, joinCriteria, querySql);
         if (criteria == null) {
             querySql = group(group, querySql);
             return query(joinCriteria, criteria, limit, "from "+this.entityName+" s "+querySql);
@@ -160,17 +160,14 @@ public class DaoManager
         return "where "+querySql;
     }
 
-    private String joinCriteria (Map<String, Object> joinCriteria, String querySql)
+    private String joinCriteria (Map<String, String> joinEntity, Map<String, Object> joinCriteria, String querySql)
     {
         String joinSql = "";
-        String method = (String) joinCriteria.keySet().toArray()[0];
-        Map<String, Object> joinOn = (Map) joinCriteria.get(method);
-
-        String EntityName = (String) joinOn.keySet().toArray()[0];
+        String EntityName = (String) joinEntity.keySet().toArray()[0];
         String Entity = EntityName.substring(0, 1).toLowerCase() + EntityName.substring(1);
-        Map<String, Object> criteria = (Map) joinOn.get(EntityName);
+        String method = joinEntity.get(EntityName);
 
-        for (Object key: criteria.keySet()){
+        for (Object key: joinCriteria.keySet()){
             if (key != "ON" && key != "on") {
                 if (joinSql != "") {
                     joinSql += " and ";
@@ -180,7 +177,6 @@ public class DaoManager
         }
         querySql += joinSql;
         return method+" JOIN s."+Entity+" t where "+querySql;
-        //return method+" JOIN s."+Entity+" as t ";
     }
 
     private String group(Map<String, String> group, String querySql)
@@ -244,16 +240,10 @@ public class DaoManager
             }
         }
 
-        String method = (String) joinCriteria.keySet().toArray()[0];
-        Map<String, Object> joinOn = (Map) joinCriteria.get(method);
-
-        String EntityName = (String) joinOn.keySet().toArray()[0];
-        Map<String, Object> criteriaJoin = (Map) joinOn.get(EntityName);
-
-        if (criteriaJoin != null) {
-            for (Object key: criteriaJoin.keySet()){
-                if (criteriaJoin.get(key) != null) {
-                    query.setParameter(key.toString(), criteriaJoin.get(key));
+        if (joinCriteria != null) {
+            for (Object key: joinCriteria.keySet()){
+                if (joinCriteria.get(key) != null) {
+                    query.setParameter(key.toString(), joinCriteria.get(key));
                 }
             }
         }

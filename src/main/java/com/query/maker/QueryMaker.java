@@ -69,26 +69,16 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker join(Entity entity, String method, Map<String, Object> mJoinCriteria)
+    public QueryMaker join(Entity entity, String method, JoinCriteria joinCriteria)
     {
-        Map<String, Object> joinOn = new HashMap();
-        joinOn.put(entity.getClassName(), mJoinCriteria);
-
-        JoinCriteria joinCriteria = new JoinCriteria();
-        joinCriteria.addValue(method, joinOn);
-
+        this.joinEntity.put(entity.getClassName(), method);
         this.joinCriteria = joinCriteria;
         return this;
     }
 
-    public QueryMaker join(Entity entity, String method, Map<String, String> mJoinCriteria, Criteria criteria)
+    public QueryMaker join(Entity entity, String method, JoinCriteria joinCriteria, Criteria criteria)
     {
-        Map<String, Object> joinOn = new HashMap();
-        joinOn.put(entity.getClassName(), mJoinCriteria);
-
-        JoinCriteria joinCriteria = new JoinCriteria();
-        joinCriteria.addValue(method, joinOn);
-
+        this.joinEntity.put(entity.getClassName(), method);
         this.joinCriteria = joinCriteria;
         this.criteria = criteria;
         return this;
@@ -139,21 +129,21 @@ public class QueryMaker extends QueryCore
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
                 && this.criteria != null && !this.criteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), this.criteria.getValues(), this.limit, this.group.getValues());
+            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), this.criteria.getValues(), this.limit, this.group.getValues());
         }
 
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
                 && this.criteria != null && !this.criteria.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), this.criteria.getValues(), this.limit);
+            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), this.criteria.getValues(), this.limit);
         }
 
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), null, this.limit, this.group.getValues());
+            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), null, this.limit, this.group.getValues());
         }
 
         if (this.joinCriteria != null && !this.joinCriteria.getValues().isEmpty()) {
-            return this.daoManager.findWithJoin(this.joinCriteria.getValues(), null, this.limit);
+            return this.daoManager.findWithJoin(this.joinEntity, this.joinCriteria.getValues(), null, this.limit);
         }
 
         if (this.criteria != null && !this.criteria.getValues().isEmpty()
