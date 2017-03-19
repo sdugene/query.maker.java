@@ -69,7 +69,7 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker join(Entity entity, String method, Map<String, String> mJoinCriteria)
+    public QueryMaker join(Entity entity, String method, Map<String, Object> mJoinCriteria)
     {
         Map<String, Object> joinOn = new HashMap();
         joinOn.put(entity.getClassName(), mJoinCriteria);

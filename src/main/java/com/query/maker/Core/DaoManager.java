@@ -170,14 +170,12 @@ public class DaoManager
         for (Object key: criteria.keySet()){
             if (joinSql != "") {
                 joinSql += " and ";
-            } else {
-                joinSql += " on ";
             }
 
-            if (joinCriteria.get(key) == null) {
-                joinSql += "t." + key.toString() + " is null";
+            if (joinCriteria.get(key) == "ON" || joinCriteria.get(key) == "on") {
+                joinSql += "on t." + key.toString() + " = s." + key.toString();
             } else {
-                joinSql += "t." + key.toString() + " = s." + key.toString();
+                joinSql += "t." + key.toString() + " = :" + key.toString();
             }
         }
         querySql += joinSql;
