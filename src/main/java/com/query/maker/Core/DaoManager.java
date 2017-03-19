@@ -166,7 +166,7 @@ public class DaoManager
         Map<String, Object> joinOn = (Map) joinCriteria.get(table);
         System.out.println(joinOn);
         String method = (String) joinOn.keySet().toArray()[0];
-        Map<String, Object> criteria = (Map) joinCriteria.get(method);
+        Map<String, Object> criteria = (Map) joinOn.get(method);
         System.out.println(criteria);
         for (Object key: criteria.keySet()){
             if (joinSql != "") {
