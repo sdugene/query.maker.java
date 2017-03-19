@@ -167,8 +167,9 @@ public class DaoManager
         String method = (String) joinCriteria.keySet().toArray()[0];
         Map<String, Object> joinOn = (Map) joinCriteria.get(method);
         System.out.println(joinOn);
-        String table = (String) joinOn.keySet().toArray()[0];
-        Map<String, Object> criteria = (Map) joinOn.get(table);
+        String EntityName = (String) joinOn.keySet().toArray()[0];
+        String Entity = EntityName.substring(0, 1).toLowerCase() + EntityName.substring(1);
+        Map<String, Object> criteria = (Map) joinOn.get(EntityName);
         System.out.println(criteria);
 
         if (criteria.get("on") != null || (criteria.get("on") == null && criteria.containsKey("on"))) {
@@ -187,7 +188,7 @@ public class DaoManager
         }
         querySql += joinSql;
         //return method+" JOIN s."+table+" as t "+querySql;
-        return method+" JOIN s."+table+" as t ";
+        return method+" JOIN s."+Entity+" as t ";
     }
 
     private String group (Map<String, String> group, String querySql)
