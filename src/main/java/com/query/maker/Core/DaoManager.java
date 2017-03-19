@@ -187,7 +187,7 @@ public class DaoManager
             }
         }
         querySql += joinSql;
-        return method+" JOIN s."+Entity+" t "+querySql;
+        return method+" JOIN s."+Entity+" t where "+querySql;
         //return method+" JOIN s."+Entity+" as t ";
     }
 
