@@ -171,8 +171,11 @@ public class DaoManager
         Map<String, Object> criteria = (Map) joinOn.get(table);
         System.out.println(criteria);
 
-        joinSql += "on t." + criteria.get("on").toString() + " = s." + criteria.get("on").toString();
-        joinSql += "on t." + criteria.get("ON").toString() + " = s." + criteria.get("ON").toString();
+        if (criteria.get("on") != null || (criteria.get("on") == null && criteria.containsKey("on"))) {
+            joinSql += "on t." + criteria.get("on").toString() + " = s." + criteria.get("on").toString();
+        } else if (criteria.get("ON") != null || (criteria.get("ON") == null && criteria.containsKey("ON"))) {
+            joinSql += "on t." + criteria.get("ON").toString() + " = s." + criteria.get("ON").toString();
+        }
 
         for (Object key: criteria.keySet()){
             if (joinSql != "") {
