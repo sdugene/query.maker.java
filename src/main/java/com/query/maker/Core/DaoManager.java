@@ -186,7 +186,7 @@ public class DaoManager
             }
         }
         querySql += joinSql;
-        return method+" JOIN "+table+" t "+querySql;
+        return method+" JOIN "+"com.siteoffice.Entities."+table+" t "+querySql;
     }
 
     private String group (Map<String, String> group, String querySql)
