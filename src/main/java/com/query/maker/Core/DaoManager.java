@@ -45,6 +45,23 @@ public class DaoManager
         return null;
     }
 
+    public Entity update(Entity entity, Map<String, Object> input)
+    {
+        try {
+            BeanUtils.populate(entity, input);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Session session = this.session();
+        Transaction transaction = session.beginTransaction();
+        session.update(entity);
+        transaction.commit();
+
+        return entity;
+    }
+
     public List<Entity> findAll()
     {
         try {

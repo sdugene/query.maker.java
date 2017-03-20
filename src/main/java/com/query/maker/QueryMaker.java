@@ -133,6 +133,10 @@ public class QueryMaker extends QueryCore
             result = this.daoManager.insert(this.entity, input.getValues());
         }
 
+        if (this.method.equals("update")) {
+            result = this.daoManager.update(this.entity, input.getValues());
+        }
+
         return result;
     }
 
