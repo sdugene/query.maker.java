@@ -142,7 +142,7 @@ public class DaoManager
     private String criteriaSqlList(Map<String, List<String>> criteria, String criteriaSql)
     {
         for (Object key: criteria.keySet()) {
-            for (String value : criteria.get(key)) {
+            for (Object value : criteria.get(key)) {
                 criteriaSql += "s." + key.toString() + " = :" + key.toString();
             }
         }
