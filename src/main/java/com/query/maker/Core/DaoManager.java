@@ -127,17 +127,17 @@ public class DaoManager
             String keyName = key.replaceAll("(^[0-9]+KY)", "");
 
             if (criteria.get(key) == null) {
-                criteriaSql += operator(criteriaSql, operator);
+                criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
                 System.out.print("132 ");System.out.println(criteriaSql);
             } else if (criteria.get(key) instanceof Map<?,?>) {
                 Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
-                criteriaSql += operator(criteriaSql, key.toString());
+                criteriaSql = operator(criteriaSql, key.toString());
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
                 System.out.print("138 ");System.out.println(criteriaSql);
             } else {
-                criteriaSql += operator(criteriaSql, operator);
+                criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
                 System.out.print("142 ");System.out.println(criteriaSql);
             }
