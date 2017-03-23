@@ -23,7 +23,7 @@ public class Criteria
         orValue.put(key, value);
         System.out.println(orValue);
         this.values.put("or", orValue);
-        System.out.println(orValue);
+        System.out.println(this.values);
         return this;
     }
 
