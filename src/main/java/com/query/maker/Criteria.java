@@ -1,5 +1,6 @@
 package com.query.maker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,12 @@ public class Criteria
             System.out.println(this.values.get("or"));
             orValue = (Map) this.values.get("or");
         }
-        orValue.put(key, array(orValue.get(0), (String) value));
+
+        if (orValue.get(key) == null) {
+            orValue.put(key, new ArrayList<String>());
+        }
+
+        orValue.put(key, array(orValue.get(key), (String) value));
         System.out.println(orValue);
         this.values.put("or", orValue);
         System.out.println(this.values);
