@@ -20,7 +20,6 @@ public class DaoManager
     private String entityName = null;
     private SessionFactory sessionFactory = null;
 
-
     public DaoManager setEntityName(String entityName)
     {
         this.entityName = capitalize(entityName);
@@ -128,15 +127,15 @@ public class DaoManager
 
             if (criteria.get(key) == null) {
                 criteriaSql += operator(criteriaSql, operator);
-                criteriaSql += "s." + keyName.toString() + " is null";
-            } else if (key == "or" && criteria.get(key) instanceof Map<?,?>) {
+                criteriaSql += "130s." + keyName.toString() + " is null";
+            } else if (criteria.get(key) instanceof Map<?,?>) {
                 Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
                 criteriaSql += operator(criteriaSql, key.toString());
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
             } else {
-                //criteriaSql += operator(criteriaSql, operator);
-                criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
+                criteriaSql += operator(criteriaSql, operator);
+                criteriaSql += "138s." + keyName.toString() + " = :" + key.toString();
             }
         }
         return criteriaSql;
