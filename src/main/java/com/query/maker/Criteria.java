@@ -17,6 +17,7 @@ public class Criteria
     {
         Map<String, Object> orValue = new HashMap();
         if (this.values.get(key) != null) {
+            System.out.println(this.values.get(key));
             orValue = (Map) this.values.get(key);
         }
         orValue.put(key, value);
