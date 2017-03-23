@@ -123,7 +123,7 @@ public class DaoManager
     private String criteriaSql (Map<String, Object> criteria, String criteriaSql)
     {
         for (String key: criteria.keySet()){
-            key.replace("/^[0-9]+/", "");
+            key = key.replaceAll("(^[0-9]+#)", "");
 
             if (criteria.get(key) == null) {
                 criteriaSql += operator(criteriaSql, "and");
@@ -132,7 +132,7 @@ public class DaoManager
                 Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
                 criteriaSql += operator(criteriaSql, key.toString());
-                criteriaSql += "("+this.criteriaSql(orValue, criteriaSql)+")";
+                criteriaSql += "("+this.criteriaSql(orValue, "")+")";
             } else {
                 criteriaSql += operator(criteriaSql, "and");
                 criteriaSql += "s." + key.toString() + " = :" + key.toString();
