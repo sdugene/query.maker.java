@@ -115,27 +115,27 @@ public class DaoManager
 
     private String criteria (Map<String, Object> criteria, String querySql)
     {
-        String criteriaSql = "";
         System.out.println(criteria);
-        querySql += criteriaSql(criteria, criteriaSql);
+        querySql += criteriaSql(criteria, "", "and");
         return "where "+querySql;
     }
 
-    private String criteriaSql (Map<String, Object> criteria, String criteriaSql)
+    private String criteriaSql (Map<String, Object> criteria, String criteriaSql, String operator)
     {
+        System.out.println(criteria);
         for (String key: criteria.keySet()){
             String keyName = key.replaceAll("(^[0-9]+#)", "");
 
             if (criteria.get(key) == null) {
-                criteriaSql += operator(criteriaSql, "and");
+                criteriaSql += operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
             } else if (criteria.get(key) instanceof Map<?,?>) {
                 Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
-                criteriaSql += operator(criteriaSql, keyName.toString());
-                criteriaSql += "("+this.criteriaSql(orValue, "")+")";
+                criteriaSql += operator(criteriaSql, key.toString());
+                criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
             } else {
-                criteriaSql += operator(criteriaSql, "and");
+                criteriaSql += operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
             }
         }

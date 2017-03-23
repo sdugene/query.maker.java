@@ -17,14 +17,11 @@ public class Criteria
     {
         Map<String, Object> orValue = new HashMap();
         if (this.values.get("or") != null) {
-            System.out.println(this.values.get("or"));
             orValue = (Map) this.values.get("or");
         }
 
         orValue.put(orValue.size()+"#"+key, value);
-        System.out.println(orValue);
         this.values.put("or", orValue);
-        System.out.println(this.values);
         return this;
     }
 
