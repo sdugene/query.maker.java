@@ -20,6 +20,7 @@ public class Criteria
             orValue = (Map) this.values.get(key);
         }
         orValue.put(key, value);
+        System.out.println(orValue);
         this.values.put(key, orValue);
         return this;
     }
