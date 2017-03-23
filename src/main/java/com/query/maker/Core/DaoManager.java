@@ -122,7 +122,9 @@ public class DaoManager
 
     private String criteriaSql (Map<String, Object> criteria, String criteriaSql)
     {
-        for (Object key: criteria.keySet()){
+        for (String key: criteria.keySet()){
+            key.replace("\\^([0-9]+\\#)", "");
+
             if (criteria.get(key) == null) {
                 criteriaSql += operator(criteriaSql, "and");
                 criteriaSql += "s." + key.toString() + " is null";
