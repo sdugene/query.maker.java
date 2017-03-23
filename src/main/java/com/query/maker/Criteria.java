@@ -16,9 +16,9 @@ public class Criteria
     public Criteria orValue(String key, Object value)
     {
         Map<String, Object> orValue = new HashMap();
-        if (this.values.get(key) != null) {
-            System.out.println(this.values.get(key));
-            orValue = (Map) this.values.get(key);
+        if (this.values.get("or") != null) {
+            System.out.println(this.values.get("or"));
+            orValue = (Map) this.values.get("or");
         }
         orValue.put(key, value);
         System.out.println(orValue);
