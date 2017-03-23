@@ -1,6 +1,7 @@
 package com.query.maker;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Criteria
@@ -15,12 +16,12 @@ public class Criteria
 
     public Criteria orValue(String key, Object value)
     {
-        Map<String, Object> orValue = new HashMap();
+        Map<String, List<String>> orValue = new HashMap();
         if (this.values.get("or") != null) {
             System.out.println(this.values.get("or"));
             orValue = (Map) this.values.get("or");
         }
-        orValue.put(key, value);
+        orValue.put(key, array(orValue.get(0), (String) value));
         System.out.println(orValue);
         this.values.put("or", orValue);
         System.out.println(this.values);
@@ -38,5 +39,11 @@ public class Criteria
     {
         this.values = new HashMap();
         return this;
+    }
+
+    private List<String> array(List<String> array, String value)
+    {
+        array.add(value);
+        return array;
     }
 }
