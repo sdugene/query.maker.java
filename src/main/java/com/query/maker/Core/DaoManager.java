@@ -139,7 +139,7 @@ public class DaoManager
             } else {
                 criteriaSql += operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
-                System.out.print("125 ");System.out.println(criteriaSql);
+                System.out.print("142 ");System.out.println(criteriaSql);
             }
         }
         System.out.print("145 ");System.out.println(criteriaSql);
