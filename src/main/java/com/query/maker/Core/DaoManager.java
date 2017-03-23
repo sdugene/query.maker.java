@@ -124,7 +124,7 @@ public class DaoManager
     {
         System.out.println(criteria);
         for (String key: criteria.keySet()){
-            String keyName = key.replaceAll("(^[0-9]+ID)", "");
+            String keyName = key.replaceAll("(^[0-9]+KY)", "");
 
             if (criteria.get(key) == null) {
                 criteriaSql += operator(criteriaSql, operator);
@@ -135,7 +135,7 @@ public class DaoManager
                 criteriaSql += operator(criteriaSql, key.toString());
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
             } else {
-                criteriaSql += operator(criteriaSql, operator);
+                //criteriaSql += operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
             }
         }
