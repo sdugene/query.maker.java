@@ -213,10 +213,14 @@ public class DaoManager
 
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
+        System.out.print("216 ");System.out.println(criteria);
         for (Object key: criteria.keySet()){
+            System.out.print("218 ");System.out.println(key);
             if (criteria.get(key) instanceof Map<?,?>) {
+                System.out.print("220 ");System.out.println(criteria.get(key));
                 query = this.setParameters(query, (Map) criteria.get(key));
             } else if (criteria.get(key) != null) {
+                System.out.print("223 ");System.out.println(criteria.get(key));
                 query.setParameter(key.toString(), criteria.get(key));
             }
         }
