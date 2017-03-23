@@ -121,28 +121,22 @@ public class DaoManager
 
     private String criteriaSql (Map<String, Object> criteria, String criteriaSql, String operator)
     {
-
-        System.out.print("125 ");System.out.println(criteriaSql);
         for (String key: criteria.keySet()){
             String keyName = key.replaceAll("(^[0-9]+KY)", "");
 
             if (criteria.get(key) == null) {
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
-                System.out.print("132 ");System.out.println(criteriaSql);
             } else if (criteria.get(key) instanceof Map<?,?>) {
                 Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
                 criteriaSql = operator(criteriaSql, key.toString());
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
-                System.out.print("138 ");System.out.println(criteriaSql);
             } else {
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
-                System.out.print("142 ");System.out.println(criteriaSql);
             }
         }
-        System.out.print("145 ");System.out.println(criteriaSql);
         return criteriaSql;
     }
 
@@ -199,11 +193,7 @@ public class DaoManager
         Query query = session.createQuery(queryString);
 
         if (criteria != null) {
-            for (Object key: criteria.keySet()){
-                if (criteria.get(key) != null) {
-                    query.setParameter(key.toString(), criteria.get(key));
-                }
-            }
+            query = setParameters(query, criteria);
         }
 
         if (limit != null) {
@@ -219,6 +209,18 @@ public class DaoManager
             return (List<Entity>) queryList;
         }
 
+    }
+
+    private Query setParameters(Query query, Map<String, Object> criteria)
+    {
+        for (Object key: criteria.keySet()){
+            if (criteria.get(key) instanceof Map<?,?>) {
+                query = this.setParameters(query, (Map) criteria.get(key));
+            } else if (criteria.get(key) != null) {
+                query.setParameter(key.toString(), criteria.get(key));
+            }
+        }
+        return query;
     }
 
     /*public void deleteUser(int id) {
