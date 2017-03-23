@@ -5,13 +5,22 @@ import java.util.Map;
 
 public class Criteria
 {
-    private Map<String, Object> values;
-
-    public Criteria() { this.values = new HashMap(); }
+    private Map<String, Object> values = new HashMap();
 
     public Criteria addValue(String key, Object value)
     {
         this.values.put(key, value);
+        return this;
+    }
+
+    public Criteria orValue(String key, Object value)
+    {
+        Map<String, Object> orValue = new HashMap();
+        if (this.values.get(key) != null) {
+            orValue = (Map) this.values.get(key);
+        }
+        orValue.put(key, value);
+        this.values.put(key, orValue);
         return this;
     }
 

@@ -9,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,19 +116,35 @@ public class DaoManager
     private String criteria (Map<String, Object> criteria, String querySql)
     {
         String criteriaSql = "";
-        for (Object key: criteria.keySet()){
-            if (criteriaSql != "") {
-                criteriaSql += " and ";
-            }
+        querySql += criteriaSql(criteria, criteriaSql);
+        return "where "+querySql;
+    }
 
+    private String criteriaSql (Map<String, Object> criteria, String criteriaSql)
+    {
+        for (Object key: criteria.keySet()){
             if (criteria.get(key) == null) {
+                criteriaSql += operator(criteriaSql, "and");
                 criteriaSql += "s." + key.toString() + " is null";
+            } else if (criteria.get(key) instanceof Map<?,?>) {
+                Map<String, Object> orValue;
+                orValue = (Map) criteria.get(key);
+                criteriaSql += operator(criteriaSql, key.toString());
+                criteriaSql += "("+this.criteriaSql(orValue, criteriaSql)+")";
             } else {
+                criteriaSql += operator(criteriaSql, "and");
                 criteriaSql += "s." + key.toString() + " = :" + key.toString();
             }
         }
-        querySql += criteriaSql;
-        return "where "+querySql;
+        return criteriaSql;
+    }
+
+    private String operator (String criteriaSql, String operator)
+    {
+        if (criteriaSql != "") {
+            criteriaSql += " "+operator+" ";
+        }
+        return criteriaSql;
     }
 
     private String joinCriteria (Map<String, String> joinEntity, Map<String, Object> joinCriteria, String querySql)
@@ -197,47 +214,7 @@ public class DaoManager
 
     }
 
-    /*private Query query (Map<String, Object> criteria, int limit, String querySql)
-    {
-        Query query = this.session().createQuery("from "+this.entityName+" s where "+querySql);
-        for (Object key: criteria.keySet()){
-            if (criteria.get(key) != null) {
-                query.setParameter(key.toString(), criteria.get(key));
-            }
-        }
-
-        query.setMaxResults(limit);
-        return query;
-    }*/
-
-    /*public void updateUser(User user) {
-        Session session = null;
-        try {
-            session = HibernateConnector.getInstance().getSession();
-            session.saveOrUpdate(user);
-            session.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public User addUser(User user) {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = HibernateConnector.getInstance().getSession();
-            System.out.println("session : "+session);
-            transaction = session.beginTransaction();
-            session.save(user);
-            transaction.commit();
-            return user;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void deleteUser(int id) {
+    /*public void deleteUser(int id) {
         Session session = null;
         try {
             session = HibernateConnector.getInstance().getSession();
