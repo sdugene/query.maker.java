@@ -127,28 +127,16 @@ public class DaoManager
                 criteriaSql += operator(criteriaSql, "and");
                 criteriaSql += "s." + key.toString() + " is null";
             } else if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, List<String>> orValue;
+                Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
                 criteriaSql += operator(criteriaSql, key.toString());
-                criteriaSql += "("+this.criteriaSqlList(orValue, criteriaSql)+")";
+                criteriaSql += "("+this.criteriaSql(orValue, criteriaSql)+")";
             } else {
                 criteriaSql += operator(criteriaSql, "and");
                 criteriaSql += "s." + key.toString() + " = :" + key.toString();
             }
         }
         return criteriaSql;
-    }
-
-    private String criteriaSqlList(Map<String, List<String>> criteria, String criteriaSql)
-    {
-        String sql = "";
-        for (Object key: criteria.keySet()) {
-            for (Object value : criteria.get(key)) {
-                sql += operator(sql, "and");
-                sql += "s." + key.toString() + " = :" + key.toString();
-            }
-        }
-        return criteriaSql+sql;
     }
 
     private String operator (String criteriaSql, String operator)
