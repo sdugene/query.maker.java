@@ -129,7 +129,7 @@ public class DaoManager
             if (criteria.get(key) == null) {
                 criteriaSql += operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
-            } else if (criteria.get(key) instanceof Map<?,?>) {
+            } else if (key == "or" && criteria.get(key) instanceof Map<?,?>) {
                 Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
                 criteriaSql += operator(criteriaSql, key.toString());
