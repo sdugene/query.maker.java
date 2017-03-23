@@ -23,9 +23,9 @@ public class Criteria
             orValue = (Map) this.values.get("or");
         }
 
-        /*if (orValue.get(key) == null) {
+        if (orValue.get(key) == null) {
             orValue.put(key, new ArrayList<Object>());
-        }*/
+        }
 
         orValue.put(key, array(orValue.get(key), value));
         System.out.println(orValue);
