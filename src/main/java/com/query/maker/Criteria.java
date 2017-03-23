@@ -17,17 +17,17 @@ public class Criteria
 
     public Criteria orValue(String key, Object value)
     {
-        Map<String, List<String>> orValue = new HashMap();
+        Map<String, List<Object>> orValue = new HashMap();
         if (this.values.get("or") != null) {
             System.out.println(this.values.get("or"));
             orValue = (Map) this.values.get("or");
         }
 
-        if (orValue.get(key) == null) {
-            orValue.put(key, new ArrayList<String>());
-        }
+        /*if (orValue.get(key) == null) {
+            orValue.put(key, new ArrayList<Object>());
+        }*/
 
-        orValue.put(key, array(orValue.get(key), (String) value));
+        orValue.put(key, array(orValue.get(key), value));
         System.out.println(orValue);
         this.values.put("or", orValue);
         System.out.println(this.values);
@@ -47,7 +47,7 @@ public class Criteria
         return this;
     }
 
-    private List<String> array(List<String> array, String value)
+    private List<Object> array(List<Object> array, Object value)
     {
         array.add(value);
         return array;
