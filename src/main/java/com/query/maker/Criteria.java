@@ -21,7 +21,8 @@ public class Criteria
         }
         orValue.put(key, value);
         System.out.println(orValue);
-        this.values.put(key, orValue);
+        this.values.put("or", orValue);
+        System.out.println(orValue);
         return this;
     }
 
