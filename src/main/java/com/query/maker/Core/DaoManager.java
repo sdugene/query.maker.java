@@ -141,12 +141,14 @@ public class DaoManager
 
     private String criteriaSqlList(Map<String, List<String>> criteria, String criteriaSql)
     {
+        String sql = "";
         for (Object key: criteria.keySet()) {
             for (Object value : criteria.get(key)) {
-                criteriaSql += "s." + key.toString() + " = :" + key.toString();
+                sql += operator(sql, "and");
+                sql += "s." + key.toString() + " = :" + key.toString();
             }
         }
-        return criteriaSql;
+        return criteriaSql+sql;
     }
 
     private String operator (String criteriaSql, String operator)
