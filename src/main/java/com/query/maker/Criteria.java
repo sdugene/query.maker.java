@@ -20,7 +20,7 @@ public class Criteria
             orValue = (Map) this.values.get("or");
         }
 
-        orValue.put("K"+orValue.size()+"Y"+key, value);
+        orValue.put("KEY"+orValue.size()+"-"+key, value);
         this.values.put("or", orValue);
         return this;
     }

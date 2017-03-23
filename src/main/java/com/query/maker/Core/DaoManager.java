@@ -122,7 +122,7 @@ public class DaoManager
     private String criteriaSql (Map<String, Object> criteria, String criteriaSql, String operator)
     {
         for (String key: criteria.keySet()){
-            String keyName = key.replaceAll("(^K[0-9]+Y)", "");
+            String keyName = key.replaceAll("(^KEY[0-9]+-)", "");
 
             if (criteria.get(key) == null) {
                 criteriaSql = operator(criteriaSql, operator);
