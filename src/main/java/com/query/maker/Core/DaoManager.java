@@ -7,7 +7,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -257,17 +256,8 @@ public class DaoManager
 
     public void createSession()
     {
-        Configuration configuration = new Configuration();
-        configuration.configure("hibernate.cfg.xml");
-        ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(configuration
-                .getProperties());
-        this.sessionFactory = configuration
-                .buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());
-
-
-
-        /*Configuration cfg = new Configuration().configure();
-        this.sessionFactory = cfg.buildSessionFactory();*/
+        Configuration cfg = new Configuration().configure();
+        this.sessionFactory = cfg.buildSessionFactory();
     }
 
     public void closeSession()
