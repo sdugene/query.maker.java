@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -19,6 +20,15 @@ public class DaoManager
 {
     private String entityName = null;
     private SessionFactory sessionFactory = null;
+
+    @Value("${spring.datasource.url}")
+    private String datasourceUrl;
+
+    @Value("${spring.datasource.username}")
+    private String datasourceUsername;
+
+    @Value("${spring.datasource.password}")
+    private String datasourcePassword;
 
     public DaoManager setEntityName(String entityName)
     {
@@ -254,9 +264,13 @@ public class DaoManager
         return this.sessionFactory.openSession();
     }
 
+    @Value("${spring.datasource.url}")
     public void createSession()
     {
         Configuration cfg = new Configuration().configure();
+        cfg.setProperty("hibernate.connection.url", this.datasourceUrl);
+        cfg.setProperty("hibernate.connection.username", this.datasourceUsername);
+        cfg.setProperty("hibernate.connection.password", this.datasourcePassword);
         this.sessionFactory = cfg.buildSessionFactory();
     }
 
