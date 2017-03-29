@@ -267,7 +267,7 @@ public class DaoManager
     @Value("${spring.datasource.url}")
     public void createSession()
     {
-        Configuration cfg = new Configuration().configure();
+        Configuration cfg = new Configuration();
         cfg.setProperty("hibernate.connection.url", this.datasourceUrl);
         cfg.setProperty("hibernate.connection.username", this.datasourceUsername);
         cfg.setProperty("hibernate.connection.password", this.datasourcePassword);
