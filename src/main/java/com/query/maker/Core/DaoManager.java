@@ -254,9 +254,12 @@ public class DaoManager
         return this.sessionFactory.openSession();
     }
 
-    public void createSession()
+    public void createSession(Map<String, String> properties)
     {
         Configuration cfg = new Configuration().configure();
+        cfg.setProperty("hibernate.connection.url", properties.get("url"));
+        cfg.setProperty("hibernate.connection.username", properties.get("username"));
+        cfg.setProperty("hibernate.connection.password", properties.get("password"));
         this.sessionFactory = cfg.buildSessionFactory();
     }
 

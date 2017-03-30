@@ -2,6 +2,8 @@ package com.query.maker.Core;
 
 import com.query.maker.*;
 
+import java.util.Map;
+
 public class QueryCore {
     protected DaoManager daoManager = new DaoManager();
     protected Entity entity = null;
@@ -27,9 +29,9 @@ public class QueryCore {
         this.className = entity.getClassName();
     }
 
-    public void createSession()
+    public void createSession(Map<String, String> properties)
     {
-        this.daoManager.createSession();
+        this.daoManager.createSession(properties);
     }
 
     public void closeSession()
