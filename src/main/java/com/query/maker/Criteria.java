@@ -13,15 +13,30 @@ public class Criteria
         return this;
     }
 
+    public Criteria addValue(String key, Object value, String operator)
+    {
+        return addArrayValue(key, value, operator+"_not");
+    }
+
     public Criteria orValue(String key, Object value)
     {
-        Map<String, Object> orValue = new HashMap();
-        if (this.values.get("or") != null) {
-            orValue = (Map) this.values.get("or");
+        return addArrayValue(key, value, "or");
+    }
+
+    public Criteria notValue(String key, Object value)
+    {
+        return addArrayValue(key, value, "and_not");
+    }
+
+    private Criteria addArrayValue(String key, Object value, String operator)
+    {
+        Map<String, Object> notValue = new HashMap();
+        if (this.values.get(operator) != null) {
+            notValue = (Map) this.values.get(operator);
         }
 
-        orValue.put("KEY"+orValue.size()+key, value);
-        this.values.put("or", orValue);
+        notValue.put("KEY"+notValue.size()+key, value);
+        this.values.put(operator, notValue);
         return this;
     }
 

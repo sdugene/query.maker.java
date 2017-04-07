@@ -122,8 +122,14 @@ public class DaoManager
     {
         for (String key: criteria.keySet()){
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
+            String matches = null;
+            String patternNot = "(_not$)";
 
-            if (criteria.get(key) == null) {
+            if (criteria.get(key) == null && operator.matches(patternNot)) {
+                String operatorCut = key.replaceAll(patternNot, "");
+                criteriaSql = operator(criteriaSql, operatorCut);
+                criteriaSql += "s." + keyName.toString() + " is not null";
+            } else if (criteria.get(key) == null) {
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
             } else if (criteria.get(key) instanceof Map<?,?>) {
@@ -131,6 +137,10 @@ public class DaoManager
                 orValue = (Map) criteria.get(key);
                 criteriaSql = operator(criteriaSql, key.toString());
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
+            } else if (operator.matches(patternNot)) {
+                String operatorCut = key.replaceAll(patternNot, "");
+                criteriaSql = operator(criteriaSql, operatorCut);
+                criteriaSql += "s." + keyName.toString() + " != :" + key.toString();
             } else {
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
@@ -145,6 +155,11 @@ public class DaoManager
             criteriaSql += " "+operator+" ";
         }
         return criteriaSql;
+    }
+
+    private static boolean pregMatch(String pattern, String content, String matches) {
+        matches = content.replace(pattern, "");
+        return content.matches(pattern);
     }
 
     private String joinCriteria (Map<String, String> joinEntity, Map<String, Object> joinCriteria, String querySql)
