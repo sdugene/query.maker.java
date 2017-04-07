@@ -131,7 +131,7 @@ public class DaoManager
                 orValue = (Map) criteria.get(key);
                 criteriaSql = operator(criteriaSql, key.toString());
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
-            } else if (criteria.get(key) == null && operator.matches(patternNot)) {
+            } else if (criteria.get(key) == null && operator.matches(".*"+patternNot)) {
                 System.out.println("135");
                 String operatorCut = key.replaceAll(patternNot, "");
                 System.out.println("137 "+operatorCut);
@@ -141,7 +141,7 @@ public class DaoManager
                 System.out.println("141");
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
-            } else if (operator.matches(patternNot)) {
+            } else if (operator.matches(".*"+patternNot)) {
                 System.out.println("145");
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
