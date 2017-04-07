@@ -125,18 +125,18 @@ public class DaoManager
             String matches = null;
             String patternNot = "(_not$)";
 
-            if (criteria.get(key) == null && operator.matches(patternNot)) {
+            if (criteria.get(key) instanceof Map<?,?>) {
+                Map<String, Object> orValue;
+                orValue = (Map) criteria.get(key);
+                criteriaSql = operator(criteriaSql, key.toString());
+                criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
+            } else if (criteria.get(key) == null && operator.matches(patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
                 criteriaSql += "s." + keyName.toString() + " is not null";
             } else if (criteria.get(key) == null) {
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
-            } else if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, Object> orValue;
-                orValue = (Map) criteria.get(key);
-                criteriaSql = operator(criteriaSql, key.toString());
-                criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
             } else if (operator.matches(patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
