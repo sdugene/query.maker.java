@@ -124,7 +124,7 @@ public class DaoManager
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
             String matches = null;
             String patternNot = "(_not$)";
-            System.out.println(operator);
+            System.out.println("127 "+operator);
 
             if (criteria.get(key) instanceof Map<?,?>) {
                 Map<String, Object> orValue;
@@ -133,7 +133,7 @@ public class DaoManager
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
             } else if (criteria.get(key) == null && operator.matches(patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
-                System.out.println(operatorCut);
+                System.out.println("136 "+operatorCut);
                 criteriaSql = operator(criteriaSql, operatorCut);
                 criteriaSql += "s." + keyName.toString() + " is not null";
             } else if (criteria.get(key) == null) {
