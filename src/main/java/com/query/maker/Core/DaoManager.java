@@ -123,31 +123,24 @@ public class DaoManager
         for (String key: criteria.keySet()){
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
             String patternNot = "(_not$)";
-            System.out.println("126 "+operator);
 
             if (criteria.get(key) instanceof Map<?,?>) {
-                System.out.println("129");
                 Map<String, Object> orValue;
                 orValue = (Map) criteria.get(key);
                 criteriaSql = operator(criteriaSql, key.toString());
                 criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
             } else if (criteria.get(key) == null && operator.matches(".*"+patternNot)) {
-                System.out.println("135");
                 String operatorCut = key.replaceAll(patternNot, "");
-                System.out.println("137 "+operatorCut);
                 criteriaSql = operator(criteriaSql, operatorCut);
                 criteriaSql += "s." + keyName.toString() + " is not null";
             } else if (criteria.get(key) == null) {
-                System.out.println("141");
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " is null";
             } else if (operator.matches(".*"+patternNot)) {
-                System.out.println("145");
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
                 criteriaSql += "s." + keyName.toString() + " != :" + key.toString();
             } else {
-                System.out.println("150");
                 criteriaSql = operator(criteriaSql, operator);
                 criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
             }
