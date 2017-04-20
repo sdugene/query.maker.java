@@ -5,4 +5,6 @@ public abstract class Entity {
     {
         return this.getClass().getSimpleName();
     }
-}
+
+    public abstract Long getId();
+}s

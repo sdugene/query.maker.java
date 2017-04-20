@@ -1,6 +1,7 @@
 package com.query.maker.Core;
 
 import com.query.maker.Entity;
+import com.query.maker.Result;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,7 +10,6 @@ import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +24,23 @@ public class DaoManager
     {
         this.entityName = capitalize(entityName);
         return this;
+    }
+
+    public Entity delete(long id)
+    {
+        Result result = new Result();
+        try {
+            Session session = this.session();
+            Transaction beginTransaction = session.beginTransaction();
+            Query createQuery = session.createQuery("delete from "+this.entityName+" s where s.id =:id");
+            createQuery.setParameter("id", id);
+            createQuery.executeUpdate();
+            beginTransaction.commit();
+            return result.setBool(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result.setBool(false);
     }
 
     public Entity insert(Entity entity, Map<String, Object> input)
@@ -235,20 +252,6 @@ public class DaoManager
         }
         return query;
     }
-
-    /*public void deleteUser(int id) {
-        Session session = null;
-        try {
-            session = HibernateConnector.getInstance().getSession();
-            Transaction beginTransaction = session.beginTransaction();
-            Query createQuery = session.createQuery("delete from User s where s.id =:id");
-            createQuery.setParameter("id", id);
-            createQuery.executeUpdate();
-            beginTransaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     private String getAttribute(String name)
     {

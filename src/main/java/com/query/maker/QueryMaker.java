@@ -1,11 +1,7 @@
 package com.query.maker;
 
 import com.query.maker.Core.*;
-import org.aspectj.apache.bcel.util.ClassLoaderRepository;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class QueryMaker extends QueryCore
 {
@@ -135,6 +131,11 @@ public class QueryMaker extends QueryCore
 
         if (this.method.equals("update")) {
             result = this.daoManager.update(this.entity, input.getValues());
+        }
+
+        if (this.method.equals("delete")) {
+            this.daoManager.setEntityName(this.className);
+            result = this.daoManager.delete(this.entity.getId());
         }
 
         return result;
