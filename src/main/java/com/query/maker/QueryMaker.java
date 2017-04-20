@@ -58,13 +58,6 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker where(Long id)
-    {
-        this.criteria = new Criteria();
-        this.criteria.addValue("id", id);
-        return this;
-    }
-
     public QueryMaker limit(int limit)
     {
         this.limit = limit;
@@ -103,20 +96,18 @@ public class QueryMaker extends QueryCore
         }
     }
 
-    private List<Entity> getQueryList()
+    public Entity exec(Long id)
     {
-        if (this.method == null) { return null; }
+        this.criteria = new Criteria();
+        this.criteria.addValue("id", id);
+        List<Entity> queryList = this.limit(1).exec();
 
-        if (this.criteria != null && !this.criteria.getValues().isEmpty()
-                && this.group != null && !this.group.getValues().isEmpty()) {
-            return this.daoManager.findByCriteria(this.criteria.getValues(), this.limit, this.group.getValues());
+        if (queryList == null) {
+            return null;
+        } else {
+            this.entity = queryList.get(0);
+            return this.entity;
         }
-
-        if (this.criteria != null && !this.criteria.getValues().isEmpty()) {
-            return this.daoManager.findByCriteria(this.criteria.getValues(), this.limit);
-        }
-
-        return this.daoManager.findAll();
     }
 
     public Entity exec(Input input)
@@ -139,6 +130,22 @@ public class QueryMaker extends QueryCore
         }
 
         return result;
+    }
+
+    private List<Entity> getQueryList()
+    {
+        if (this.method == null) { return null; }
+
+        if (this.criteria != null && !this.criteria.getValues().isEmpty()
+                && this.group != null && !this.group.getValues().isEmpty()) {
+            return this.daoManager.findByCriteria(this.criteria.getValues(), this.limit, this.group.getValues());
+        }
+
+        if (this.criteria != null && !this.criteria.getValues().isEmpty()) {
+            return this.daoManager.findByCriteria(this.criteria.getValues(), this.limit);
+        }
+
+        return this.daoManager.findAll();
     }
 
     public Entity one()
