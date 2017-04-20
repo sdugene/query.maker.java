@@ -135,7 +135,7 @@ public class QueryMaker extends QueryCore
 
         if (this.method.equals("delete")) {
             this.daoManager.setEntityName(this.className);
-            result = this.daoManager.delete(this.entity.getId());
+            result = this.daoManager.delete((Long) input.get("id"));
         }
 
         return result;

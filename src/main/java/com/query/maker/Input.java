@@ -27,4 +27,9 @@ public class Input
         this.values = new HashMap();
         return this;
     }
+
+    public Object get(String name)
+    {
+        return this.values.get(name);
+    }
 }
