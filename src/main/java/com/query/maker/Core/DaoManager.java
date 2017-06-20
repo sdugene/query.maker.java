@@ -8,8 +8,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -135,6 +133,7 @@ public class DaoManager
         return querySql;
     }
 
+    @SuppressWarnings("unchecked")
     private String criteriaSql (Map<String, Object> criteria, StringBuilder criteriaSql, String operator)
     {
         for (String key: criteria.keySet()){
@@ -142,14 +141,7 @@ public class DaoManager
             String patternNot = "(_not$)";
 
             if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, Object> orValue = new HashMap<String, Object>();
-
-                try {
-                    BeanUtils.populate(orValue, (Map) criteria.get(key));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                Map<String, Object> orValue = (Map) criteria.get(key);
                 criteriaSql = operator(criteriaSql, key);
                 criteriaSql.append("(")
                         .append(this.criteriaSql(orValue, new StringBuilder(), key))
@@ -218,6 +210,7 @@ public class DaoManager
         return querySql;
     }
 
+    @SuppressWarnings("unchecked")
     private List<Entity> query(Map<String, Object> criteria, Integer limit, String queryString)
     {
         Session session = this.session();
@@ -231,32 +224,22 @@ public class DaoManager
             query.setMaxResults(limit);
         }
 
-
-        List<Entity> queryList = new ArrayList<Entity>();
-        for (Object o : query.list()) queryList.add((Entity) o);
-
-        if (queryList.isEmpty()) {
+        List<Entity> queryList = (List) query.list();
+        if (queryList == null || queryList.isEmpty()) {
             session.clear();
             return null;
         } else {
             session.clear();
             return queryList;
         }
-
     }
 
+    @SuppressWarnings("unchecked")
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
         for (String key: criteria.keySet()){
             if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, Object> map = new HashMap<String, Object>();
-
-                try {
-                    BeanUtils.populate(map, (Map) criteria.get(key));
-                    query = this.setParameters(query, map);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                query = this.setParameters(query, (Map) criteria.get(key));
             } else if (criteria.get(key) != null) {
                 query.setParameter(key, criteria.get(key));
             }
