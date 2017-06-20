@@ -7,7 +7,7 @@ public class Input
 {
     private Map<String, Object> values;
 
-    public Input() { this.values = new HashMap(); }
+    public Input() { this.values = new HashMap<String, Object>(); }
 
     public Input addValue(String key, Object value)
     {
@@ -15,7 +15,7 @@ public class Input
         return this;
     }
 
-    public Map<String, Object> getValues()
+    Map<String, Object> getValues()
     {
         return this.values;
     }
@@ -24,11 +24,11 @@ public class Input
 
     public Input clear()
     {
-        this.values = new HashMap();
+        this.values = new HashMap<String, Object>();
         return this;
     }
 
-    public Object get(String name)
+    Object get(String name)
     {
         return this.values.get(name);
     }

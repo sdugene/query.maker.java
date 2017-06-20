@@ -10,8 +10,8 @@ public class QueryCore {
     protected String className = null;
     protected String method = null;
     protected Criteria criteria = null;
-    protected Input input = null;
     protected Group group = null;
+    protected Order order = null;
     protected int limit = 50;
 
     protected void clean()

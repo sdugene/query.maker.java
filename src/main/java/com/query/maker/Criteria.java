@@ -1,11 +1,13 @@
 package com.query.maker;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Criteria
 {
-    private Map<String, Object> values = new HashMap();
+    private Map<String, Object> values = new HashMap<String, Object>();
 
     public Criteria addValue(String key, Object value)
     {
@@ -30,9 +32,13 @@ public class Criteria
 
     private Criteria addArrayValue(String key, Object value, String operator)
     {
-        Map<String, Object> notValue = new HashMap();
+        Map<String, Object> notValue = new HashMap<String, Object>();
         if (this.values.get(operator) != null) {
-            notValue = (Map) this.values.get(operator);
+            try {
+                BeanUtils.populate(notValue, (Map) this.values.get(operator));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         notValue.put("KEY"+notValue.size()+key, value);
@@ -40,7 +46,7 @@ public class Criteria
         return this;
     }
 
-    public Map<String, Object> getValues()
+    Map<String, Object> getValues()
     {
         return this.values;
     }
@@ -49,7 +55,7 @@ public class Criteria
 
     public Criteria clear()
     {
-        this.values = new HashMap();
+        this.values = new HashMap<String, Object>();
         return this;
     }
 }

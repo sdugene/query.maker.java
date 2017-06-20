@@ -8,8 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
-
-import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +20,9 @@ public class DaoManager
     private String entityName = null;
     private SessionFactory sessionFactory = null;
 
-    public DaoManager setEntityName(String entityName)
+    public void setEntityName(String entityName)
     {
         this.entityName = capitalize(entityName);
-        return this;
     }
 
     public Entity delete(long id)
@@ -116,103 +115,105 @@ public class DaoManager
 
     private List<Entity> queryExec (Map<String, Object> criteria, Integer limit)
     {
-        String querySql = "";
-        querySql = criteria(criteria, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+        StringBuilder querySql = new StringBuilder();
+        criteria(criteria, querySql);
+        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
     }
 
     private List<Entity> queryExec (Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
-        String querySql = "";
+        StringBuilder querySql = new StringBuilder();
         querySql = criteria(criteria, querySql);
         querySql = group(group, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
     }
 
-    private String criteria (Map<String, Object> criteria, String querySql)
+    private StringBuilder criteria (Map<String, Object> criteria, StringBuilder querySql)
     {
-        querySql += criteriaSql(criteria, "", "and");
-        return "where "+querySql;
+        querySql.append(criteriaSql(criteria, new StringBuilder(), "and"));
+        querySql.insert(0, "where ");
+        return querySql;
     }
 
-    private String criteriaSql (Map<String, Object> criteria, String criteriaSql, String operator)
+    private String criteriaSql (Map<String, Object> criteria, StringBuilder criteriaSql, String operator)
     {
         for (String key: criteria.keySet()){
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
             String patternNot = "(_not$)";
 
             if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, Object> orValue;
-                orValue = (Map) criteria.get(key);
-                criteriaSql = operator(criteriaSql, key.toString());
-                criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
+                Map<String, Object> orValue = new HashMap<String, Object>();
+
+                try {
+                    BeanUtils.populate(orValue, (Map) criteria.get(key));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                criteriaSql = operator(criteriaSql, key);
+                criteriaSql.append("(")
+                        .append(this.criteriaSql(orValue, new StringBuilder(), key))
+                        .append(")");
             } else if (criteria.get(key) == null && operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql += "s." + keyName.toString() + " is not null";
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" is not null");
             } else if (criteria.get(key) == null) {
                 criteriaSql = operator(criteriaSql, operator);
-                criteriaSql += "s." + keyName.toString() + " is null";
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" is null");
             } else if (operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql += "s." + keyName.toString() + " != :" + key.toString();
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" != :")
+                        .append(key);
             } else {
                 criteriaSql = operator(criteriaSql, operator);
-                criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" = :")
+                        .append(key);
             }
+        }
+        return criteriaSql.toString();
+    }
+
+    private StringBuilder operator (StringBuilder criteriaSql, String operator)
+    {
+        if (!criteriaSql.toString().equals("")) {
+            criteriaSql.append(" ")
+                    .append(operator)
+                    .append(" ");
         }
         return criteriaSql;
     }
 
-    private String operator (String criteriaSql, String operator)
+    private StringBuilder group(Map<String, String> group, StringBuilder querySql)
     {
-        if (criteriaSql != "") {
-            criteriaSql += " "+operator+" ";
-        }
-        return criteriaSql;
-    }
-
-    private static boolean pregMatch(String pattern, String content, String matches) {
-        matches = content.replace(pattern, "");
-        return content.matches(pattern);
-    }
-
-    private String joinCriteria (Map<String, String> joinEntity, Map<String, Object> joinCriteria, String querySql)
-    {
-        String joinSql = "";
-        String EntityName = (String) joinEntity.keySet().toArray()[0];
-        String Entity = EntityName.substring(0, 1).toLowerCase() + EntityName.substring(1);
-        String method = joinEntity.get(EntityName);
-
-        for (Object key: joinCriteria.keySet()){
-            if (key != "ON" && key != "on") {
-                if (joinSql != "") {
-                    joinSql += " and ";
-                }
-                joinSql += "t." + key.toString() + " = :" + key.toString();
-            }
-        }
-        querySql += joinSql;
-        return method+" JOIN s."+Entity+" t where "+querySql;
-    }
-
-    private String group(Map<String, String> group, String querySql)
-    {
-        String groupSql = "";
-        for (Object key: group.keySet()){
-            if (groupSql != "") {
-                groupSql += ", ";
+        StringBuilder groupSql = new StringBuilder();
+        for (String key: group.keySet()){
+            if (!groupSql.toString().equals("")) {
+                groupSql.append(", ");
             }
 
             if (group.get(key) == null) {
-                groupSql += "s." + key.toString();
+                groupSql.append("s.")
+                        .append(key);
             } else {
-                groupSql += "s." + key.toString() + " " + group.get(key);
+                groupSql.append("s.")
+                        .append(key)
+                        .append(" ")
+                        .append(group.get(key));
             }
         }
-        if (!groupSql.equals("")) {
-            querySql += " group by " + groupSql;
+        if (!groupSql.toString().equals("")) {
+            querySql.append(" group by ")
+                    .append(groupSql.toString());
         }
         return querySql;
     }
@@ -230,40 +231,41 @@ public class DaoManager
             query.setMaxResults(limit);
         }
 
-        List queryList = query.list();
-        if (queryList != null && queryList.isEmpty()) {
+
+        List<Entity> queryList = new ArrayList<Entity>();
+        try {
+            BeanUtils.populate(queryList, (Map) query.list());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (queryList.isEmpty()) {
             session.clear();
             return null;
         } else {
             session.clear();
-            return (List<Entity>) queryList;
+            return queryList;
         }
 
     }
 
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
-        for (Object key: criteria.keySet()){
+        for (String key: criteria.keySet()){
             if (criteria.get(key) instanceof Map<?,?>) {
-                query = this.setParameters(query, (Map) criteria.get(key));
+                Map<String, Object> map = new HashMap<String, Object>();
+
+                try {
+                    BeanUtils.populate(map, (Map) criteria.get(key));
+                    query = this.setParameters(query, map);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (criteria.get(key) != null) {
-                query.setParameter(key.toString(), criteria.get(key));
+                query.setParameter(key, criteria.get(key));
             }
         }
         return query;
-    }
-
-    private String getAttribute(String name)
-    {
-        try {
-            Class entityName = Class.forName("com.siteoffice.Entities."+capitalize(this.entityName));
-            Field f_titre = entityName.getDeclaredField(name);
-            Class type = f_titre.getType();
-            return type.getName();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private Session session()
@@ -271,7 +273,7 @@ public class DaoManager
         return this.sessionFactory.openSession();
     }
 
-    public void createSession(Map<String, String> properties)
+    void createSession(Map<String, String> properties)
     {
         Configuration cfg = new Configuration().configure();
         cfg.setProperty("hibernate.connection.url", properties.get("url"));
@@ -280,7 +282,7 @@ public class DaoManager
         this.sessionFactory = cfg.buildSessionFactory();
     }
 
-    public void closeSession()
+    void closeSession()
     {
         this.sessionFactory.close();
     }

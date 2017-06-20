@@ -3,10 +3,11 @@ package com.query.maker;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Group {
+public class Group
+{
     private Map<String, String> values;
 
-    public Group() { this.values = new HashMap(); }
+    public Group() { this.values = new HashMap<String, String>(); }
 
     public Group addValue(String key, String value)
     {
@@ -14,14 +15,14 @@ public class Group {
         return this;
     }
 
-    public Map<String, String> getValues()
+    Map<String, String> getValues()
     {
         return this.values;
     }
 
     public Group clear()
     {
-        this.values = new HashMap();
+        this.values = new HashMap<String, String>();
         return this;
     }
 }

@@ -14,8 +14,7 @@ public class QueryMaker extends QueryCore
 
     public static QueryMaker getInstance()
     {
-        QueryMaker queryMaker = QueryMaker.SingletonHolder.instance;
-        return queryMaker;
+        return QueryMaker.SingletonHolder.instance;
     }
 
     public QueryMaker select(Entity entity)
@@ -46,12 +45,6 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-    public QueryMaker column(Column column)
-    {
-
-        return this;
-    }
-
     public QueryMaker where(Criteria criteria)
     {
         this.criteria = criteria;
@@ -66,19 +59,13 @@ public class QueryMaker extends QueryCore
 
     public QueryMaker order(Order order)
     {
-
+        this.order = order;
         return this;
     }
 
     public QueryMaker group(Group group)
     {
         this.group = group;
-        return this;
-    }
-
-    public QueryMaker groupOrder(Group group)
-    {
-
         return this;
     }
 
@@ -98,8 +85,8 @@ public class QueryMaker extends QueryCore
 
     public Entity exec(Long id)
     {
-        this.criteria = new Criteria();
-        this.criteria.addValue("id", id);
+        this.criteria = new Criteria()
+                .addValue("id", id);
         List<Entity> queryList = this.limit(1).exec();
 
         if (queryList == null) {
@@ -158,10 +145,5 @@ public class QueryMaker extends QueryCore
             this.entity = queryList.get(0);
             return this.entity;
         }
-    }
-
-    public String test()
-    {
-        return this.className;
     }
 }

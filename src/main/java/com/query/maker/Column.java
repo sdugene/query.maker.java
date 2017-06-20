@@ -1,4 +1,3 @@
 package com.query.maker;
 
-public class Column {
-}
+public class Column {}
