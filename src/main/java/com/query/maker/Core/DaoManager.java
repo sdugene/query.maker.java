@@ -1,5 +1,7 @@
 package com.query.maker.Core;
 
+import java.util.List;
+import java.util.Map;
 import com.query.maker.Entity;
 import com.query.maker.Result;
 import org.hibernate.Query;
@@ -8,11 +10,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
-import java.util.List;
-import java.util.Map;
-
 import static org.springframework.util.StringUtils.capitalize;
 
+/**
+ * Created by Sebastien Dugene on 12/25/2017.
+ */
 public class DaoManager
 {
     private String entityName = null;

@@ -3,19 +3,32 @@ package com.query.maker;
 import com.query.maker.Core.*;
 import java.util.List;
 
+/**
+ * Created by Sebastien Dugene on 12/23/2016.
+ */
 public class QueryMaker extends QueryCore
 {
+    /**
+     * Default constructor
+     */
     private QueryMaker() {}
 
+    /**
+     * Singleton holder
+     */
     private static class SingletonHolder
     {
         private final static QueryMaker instance = new QueryMaker();
     }
 
+    /**
+     * return QueryMaker instance
+     */
     public static QueryMaker getInstance()
     {
         return QueryMaker.SingletonHolder.instance;
     }
+
 
     public QueryMaker select(Entity entity)
     {
