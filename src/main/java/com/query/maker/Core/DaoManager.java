@@ -233,11 +233,7 @@ public class DaoManager
 
 
         List<Entity> queryList = new ArrayList<Entity>();
-        try {
-            BeanUtils.populate(queryList, (Map) query.list());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        for (Object o : query.list()) queryList.add((Entity) o);
 
         if (queryList.isEmpty()) {
             session.clear();
