@@ -20,11 +20,22 @@ public class DaoManager
     private String entityName = null;
     private SessionFactory sessionFactory = null;
 
+    /**
+     * Set the entity name
+     *
+     * @param entityName name of entity
+     */
     public void setEntityName(String entityName)
     {
         this.entityName = capitalize(entityName);
     }
 
+    /**
+     * Delete the line in database
+     *
+     * @param id line id
+     * @return Result Object with boolean
+     */
     public Entity delete(long id)
     {
         Result result = new Result();
@@ -42,6 +53,14 @@ public class DaoManager
         return result.setBool(false);
     }
 
+    /**
+     * Insert data in database
+     *
+     * @param entity entity to create
+     * @param input data inserted
+     *
+     * @return Entity created
+     */
     public Entity insert(Entity entity, Map<String, Object> input)
     {
         try {
@@ -61,6 +80,14 @@ public class DaoManager
         return null;
     }
 
+    /**
+     * update the line in the database
+     *
+     * @param entity entity to update
+     * @param input data inserted
+     *
+     * @return Entity updated
+     */
     public Entity update(Entity entity, Map<String, Object> input)
     {
         try {
@@ -78,6 +105,11 @@ public class DaoManager
         return entity;
     }
 
+    /**
+     * Select lines in the database
+     *
+     * @return Entity List
+     */
     public List<Entity> findAll()
     {
         try {
@@ -88,6 +120,14 @@ public class DaoManager
         }
     }
 
+    /**
+     * Select lines in the database
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     *
+     * @return Entity List
+     */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit)
     {
         try {
@@ -98,6 +138,15 @@ public class DaoManager
         }
     }
 
+    /**
+     * Select lines in the database
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     * @param group defined Group
+     *
+     * @return Entity List
+     */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
         try {
@@ -108,11 +157,24 @@ public class DaoManager
         }
     }
 
+    /**
+     * Finalise the findAll query
+     *
+     * @return Entity List
+     */
     private List<Entity> queryExec ()
     {
         return query(null, null, "from "+this.entityName+" s");
     }
 
+    /**
+     * Finalise the findByCriteria query
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     *
+     * @return Entity List
+     */
     private List<Entity> queryExec (Map<String, Object> criteria, Integer limit)
     {
         StringBuilder querySql = new StringBuilder();
@@ -120,6 +182,15 @@ public class DaoManager
         return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
     }
 
+    /**
+     * Finalise the findByCriteria query
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     * @param group defined Group
+     *
+     * @return Entity List
+     */
     private List<Entity> queryExec (Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
         StringBuilder querySql = new StringBuilder();
@@ -128,6 +199,14 @@ public class DaoManager
         return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
     }
 
+    /**
+     * Prepare the sql request
+     *
+     * @param criteria defined Criteria
+     * @param querySql request content
+     *
+     * @return StringBuilder request
+     */
     private StringBuilder criteria (Map<String, Object> criteria, StringBuilder querySql)
     {
         querySql.append(criteriaSql(criteria, new StringBuilder(), "and"));
@@ -135,6 +214,16 @@ public class DaoManager
         return querySql;
     }
 
+    /**
+     * Prepare the sql request
+     * with Criteria
+     *
+     * @param criteria defined Criteria
+     * @param criteriaSql request Criteria content
+     * @param operator defined operator between request parts
+     *
+     * @return String request part
+     */
     @SuppressWarnings("unchecked")
     private String criteriaSql (Map<String, Object> criteria, StringBuilder criteriaSql, String operator)
     {
@@ -177,6 +266,15 @@ public class DaoManager
         return criteriaSql.toString();
     }
 
+    /**
+     * Concatenate request
+     * with operator
+     *
+     * @param criteriaSql request Criteria content
+     * @param operator defined operator between request parts
+     *
+     * @return StringBuilder request part
+     */
     private StringBuilder operator (StringBuilder criteriaSql, String operator)
     {
         if (!criteriaSql.toString().equals("")) {
@@ -187,6 +285,15 @@ public class DaoManager
         return criteriaSql;
     }
 
+    /**
+     * Concatenate request
+     * with Group
+     *
+     * @param group defined Group
+     * @param querySql request content
+     *
+     * @return StringBuilder request
+     */
     private StringBuilder group(Map<String, String> group, StringBuilder querySql)
     {
         StringBuilder groupSql = new StringBuilder();
@@ -212,6 +319,15 @@ public class DaoManager
         return querySql;
     }
 
+    /**
+     * Run the database request
+     *
+     * @param criteria defined criteria
+     * @param limit defined limit
+     * @param queryString request content
+     *
+     * @return Entity List
+     */
     @SuppressWarnings("unchecked")
     private List<Entity> query(Map<String, Object> criteria, Integer limit, String queryString)
     {
@@ -236,6 +352,14 @@ public class DaoManager
         }
     }
 
+    /**
+     * Add value parameters
+     *
+     * @param query Query object
+     * @param criteria defined criteria
+     *
+     * @return updated Query
+     */
     @SuppressWarnings("unchecked")
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
@@ -249,11 +373,21 @@ public class DaoManager
         return query;
     }
 
+    /**
+     * Open the session with database
+     *
+     * @return Session object
+     */
     private Session session()
     {
         return this.sessionFactory.openSession();
     }
 
+    /**
+     * Create the session with database
+     *
+     * @param properties database properties
+     */
     void createSession(Map<String, String> properties)
     {
         Configuration cfg = new Configuration().configure();
@@ -263,6 +397,9 @@ public class DaoManager
         this.sessionFactory = cfg.buildSessionFactory();
     }
 
+    /**
+     * Close the session with database
+     */
     void closeSession()
     {
         this.sessionFactory.close();
