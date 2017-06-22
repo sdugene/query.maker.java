@@ -38,18 +38,18 @@ List<Entity> list = queryMaker.select(new Entity()).where(criteria).group(group)
 
 
 * insert :
-Input input = new Input().addValue("column", "value);
+Input input = new Input().addValue("column", "value");
 Entity entity = queryMaker.insert(new Entity()).exec(input);
 
 
 * update :
 Entity entity = queryMaker.select(new Entity).exec("id"); // Select entity to update
-Input input = new Input().addValue("column", "value);
+Input input = new Input().addValue("column", "value");
 Entity entity = queryMaker.update(entity).exec(input);
 
 
 * delete :
-Input input = new Input().addValue("column", "value);
+Input input = new Input().addValue("column", "value");
 Result result = (Result) queryMaker.delete(new Result()).exec(input);
 
 
