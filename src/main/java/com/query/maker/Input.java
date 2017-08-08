@@ -3,32 +3,67 @@ package com.query.maker;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by Sebastien Dugene on 03/11/2017.
+ */
 public class Input
 {
     private Map<String, Object> values;
 
-    public Input() { this.values = new HashMap(); }
+    /**
+     * Instantiate Input
+     * Set values as empty Map
+     */
+    public Input() { this.values = new HashMap<String, Object>(); }
 
+    /**
+     * Put a value into values
+     *
+     * @param key key of map
+     * @param value value put
+     *
+     * @return Input
+     */
     public Input addValue(String key, Object value)
     {
         this.values.put(key, value);
         return this;
     }
 
-    public Map<String, Object> getValues()
+    /**
+     * @return the content of values
+     */
+    Map<String, Object> getValues()
     {
         return this.values;
     }
 
+    /**
+     * Set values with Map
+     *
+     * @param values Map to set
+     *
+     * @return Input
+     */
     public Input setValues(Map<String, Object> values) { this.values = values; return this; }
 
+    /**
+     * clear values
+     *
+     * @return Input
+     */
     public Input clear()
     {
-        this.values = new HashMap();
+        this.values = new HashMap<String, Object>();
         return this;
     }
 
-    public Object get(String name)
+    /**
+     * @param name name of key returned
+     *
+     * @return the value from a defined key
+     */
+    Object get(String name)
     {
         return this.values.get(name);
     }

@@ -1,4 +1,6 @@
 package com.query.maker;
 
-public class Order {
-}
+/**
+ * Created by Sebastien Dugene on 12/23/2016.
+ */
+public class Order {}

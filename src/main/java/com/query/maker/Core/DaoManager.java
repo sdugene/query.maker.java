@@ -1,5 +1,7 @@
 package com.query.maker.Core;
 
+import java.util.List;
+import java.util.Map;
 import com.query.maker.Entity;
 import com.query.maker.Result;
 import org.hibernate.Query;
@@ -8,42 +10,57 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
-
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-
-import static org.hibernate.resource.transaction.spi.TransactionStatus.COMMITTED;
 import static org.springframework.util.StringUtils.capitalize;
 
+/**
+ * Created by Sebastien Dugene on 12/25/2017.
+ */
 public class DaoManager
 {
     private String entityName = null;
     private SessionFactory sessionFactory = null;
 
-    public DaoManager setEntityName(String entityName)
+    /**
+     * Set the entity name
+     *
+     * @param entityName name of entity
+     */
+    public void setEntityName(String entityName)
     {
         this.entityName = capitalize(entityName);
-        return this;
     }
 
+    /**
+     * Delete the line in database
+     *
+     * @param id line id
+     * @return Result Object with boolean
+     */
     public Entity delete(long id)
     {
         Result result = new Result();
-
-        Session session = this.session();
-        Transaction transaction = session.beginTransaction();
-        Query createQuery = session.createQuery("delete from "+this.entityName+" s where s.id =:id");
-        createQuery.setParameter("id", id);
-        createQuery.executeUpdate();
-        transaction.commit();
-
-        if (transaction.getStatus().equals(COMMITTED)) {
+        try {
+            Session session = this.session();
+            Transaction beginTransaction = session.beginTransaction();
+            Query createQuery = session.createQuery("delete from "+this.entityName+" s where s.id =:id");
+            createQuery.setParameter("id", id);
+            createQuery.executeUpdate();
+            beginTransaction.commit();
             return result.setBool(true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return result.setBool(false);
     }
 
+    /**
+     * Insert data in database
+     *
+     * @param entity entity to create
+     * @param input data inserted
+     *
+     * @return Entity created
+     */
     public Entity insert(Entity entity, Map<String, Object> input)
     {
         try {
@@ -63,6 +80,14 @@ public class DaoManager
         return null;
     }
 
+    /**
+     * update the line in the database
+     *
+     * @param entity entity to update
+     * @param input data inserted
+     *
+     * @return Entity updated
+     */
     public Entity update(Entity entity, Map<String, Object> input)
     {
         try {
@@ -80,6 +105,11 @@ public class DaoManager
         return entity;
     }
 
+    /**
+     * Select lines in the database
+     *
+     * @return Entity List
+     */
     public List<Entity> findAll()
     {
         try {
@@ -90,6 +120,14 @@ public class DaoManager
         }
     }
 
+    /**
+     * Select lines in the database
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     *
+     * @return Entity List
+     */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit)
     {
         try {
@@ -100,6 +138,15 @@ public class DaoManager
         }
     }
 
+    /**
+     * Select lines in the database
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     * @param group defined Group
+     *
+     * @return Entity List
+     */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
         try {
@@ -110,114 +157,178 @@ public class DaoManager
         }
     }
 
+    /**
+     * Finalise the findAll query
+     *
+     * @return Entity List
+     */
     private List<Entity> queryExec ()
     {
         return query(null, null, "from "+this.entityName+" s");
     }
 
+    /**
+     * Finalise the findByCriteria query
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     *
+     * @return Entity List
+     */
     private List<Entity> queryExec (Map<String, Object> criteria, Integer limit)
     {
-        String querySql = "";
-        querySql = criteria(criteria, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+        StringBuilder querySql = new StringBuilder();
+        criteria(criteria, querySql);
+        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
     }
 
+    /**
+     * Finalise the findByCriteria query
+     *
+     * @param criteria defined Criteria
+     * @param limit defined limit
+     * @param group defined Group
+     *
+     * @return Entity List
+     */
     private List<Entity> queryExec (Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
-        String querySql = "";
+        StringBuilder querySql = new StringBuilder();
         querySql = criteria(criteria, querySql);
         querySql = group(group, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql);
+        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
     }
 
-    private String criteria (Map<String, Object> criteria, String querySql)
+    /**
+     * Prepare the sql request
+     *
+     * @param criteria defined Criteria
+     * @param querySql request content
+     *
+     * @return StringBuilder request
+     */
+    private StringBuilder criteria (Map<String, Object> criteria, StringBuilder querySql)
     {
-        querySql += criteriaSql(criteria, "", "and");
-        return "where "+querySql;
+        querySql.append(criteriaSql(criteria, new StringBuilder(), "and"));
+        querySql.insert(0, "where ");
+        return querySql;
     }
 
-    private String criteriaSql (Map<String, Object> criteria, String criteriaSql, String operator)
+    /**
+     * Prepare the sql request
+     * with Criteria
+     *
+     * @param criteria defined Criteria
+     * @param criteriaSql request Criteria content
+     * @param operator defined operator between request parts
+     *
+     * @return String request part
+     */
+    @SuppressWarnings("unchecked")
+    private String criteriaSql (Map<String, Object> criteria, StringBuilder criteriaSql, String operator)
     {
         for (String key: criteria.keySet()){
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
             String patternNot = "(_not$)";
 
             if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, Object> orValue;
-                orValue = (Map) criteria.get(key);
-                criteriaSql = operator(criteriaSql, key.toString());
-                criteriaSql += "("+this.criteriaSql(orValue, "", key)+")";
+                Map<String, Object> orValue = (Map) criteria.get(key);
+                criteriaSql = operator(criteriaSql, key);
+                criteriaSql.append("(")
+                        .append(this.criteriaSql(orValue, new StringBuilder(), key))
+                        .append(")");
             } else if (criteria.get(key) == null && operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql += "s." + keyName.toString() + " is not null";
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" is not null");
             } else if (criteria.get(key) == null) {
                 criteriaSql = operator(criteriaSql, operator);
-                criteriaSql += "s." + keyName.toString() + " is null";
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" is null");
             } else if (operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql += "s." + keyName.toString() + " != :" + key.toString();
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" != :")
+                        .append(key);
             } else {
                 criteriaSql = operator(criteriaSql, operator);
-                criteriaSql += "s." + keyName.toString() + " = :" + key.toString();
+                criteriaSql.append("s.")
+                        .append(keyName)
+                        .append(" = :")
+                        .append(key);
             }
+        }
+        return criteriaSql.toString();
+    }
+
+    /**
+     * Concatenate request
+     * with operator
+     *
+     * @param criteriaSql request Criteria content
+     * @param operator defined operator between request parts
+     *
+     * @return StringBuilder request part
+     */
+    private StringBuilder operator (StringBuilder criteriaSql, String operator)
+    {
+        if (!criteriaSql.toString().equals("")) {
+            criteriaSql.append(" ")
+                    .append(operator)
+                    .append(" ");
         }
         return criteriaSql;
     }
 
-    private String operator (String criteriaSql, String operator)
+    /**
+     * Concatenate request
+     * with Group
+     *
+     * @param group defined Group
+     * @param querySql request content
+     *
+     * @return StringBuilder request
+     */
+    private StringBuilder group(Map<String, String> group, StringBuilder querySql)
     {
-        if (criteriaSql != "") {
-            criteriaSql += " "+operator+" ";
-        }
-        return criteriaSql;
-    }
-
-    private static boolean pregMatch(String pattern, String content, String matches) {
-        matches = content.replace(pattern, "");
-        return content.matches(pattern);
-    }
-
-    private String joinCriteria (Map<String, String> joinEntity, Map<String, Object> joinCriteria, String querySql)
-    {
-        String joinSql = "";
-        String EntityName = (String) joinEntity.keySet().toArray()[0];
-        String Entity = EntityName.substring(0, 1).toLowerCase() + EntityName.substring(1);
-        String method = joinEntity.get(EntityName);
-
-        for (Object key: joinCriteria.keySet()){
-            if (key != "ON" && key != "on") {
-                if (joinSql != "") {
-                    joinSql += " and ";
-                }
-                joinSql += "t." + key.toString() + " = :" + key.toString();
-            }
-        }
-        querySql += joinSql;
-        return method+" JOIN s."+Entity+" t where "+querySql;
-    }
-
-    private String group(Map<String, String> group, String querySql)
-    {
-        String groupSql = "";
-        for (Object key: group.keySet()){
-            if (groupSql != "") {
-                groupSql += ", ";
+        StringBuilder groupSql = new StringBuilder();
+        for (String key: group.keySet()){
+            if (!groupSql.toString().equals("")) {
+                groupSql.append(", ");
             }
 
             if (group.get(key) == null) {
-                groupSql += "s." + key.toString();
+                groupSql.append("s.")
+                        .append(key);
             } else {
-                groupSql += "s." + key.toString() + " " + group.get(key);
+                groupSql.append("s.")
+                        .append(key)
+                        .append(" ")
+                        .append(group.get(key));
             }
         }
-        if (!groupSql.equals("")) {
-            querySql += " group by " + groupSql;
+        if (!groupSql.toString().equals("")) {
+            querySql.append(" group by ")
+                    .append(groupSql.toString());
         }
         return querySql;
     }
 
+    /**
+     * Run the database request
+     *
+     * @param criteria defined criteria
+     * @param limit defined limit
+     * @param queryString request content
+     *
+     * @return Entity List
+     */
+    @SuppressWarnings("unchecked")
     private List<Entity> query(Map<String, Object> criteria, Integer limit, String queryString)
     {
         Session session = this.session();
@@ -231,48 +342,53 @@ public class DaoManager
             query.setMaxResults(limit);
         }
 
-        List queryList = query.list();
-        if (queryList != null && queryList.isEmpty()) {
+        List<Entity> queryList = (List) query.list();
+        if (queryList == null || queryList.isEmpty()) {
             session.clear();
             return null;
         } else {
             session.clear();
-            return (List<Entity>) queryList;
+            return queryList;
         }
-
     }
 
+    /**
+     * Add value parameters
+     *
+     * @param query Query object
+     * @param criteria defined criteria
+     *
+     * @return updated Query
+     */
+    @SuppressWarnings("unchecked")
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
-        for (Object key: criteria.keySet()){
+        for (String key: criteria.keySet()){
             if (criteria.get(key) instanceof Map<?,?>) {
                 query = this.setParameters(query, (Map) criteria.get(key));
             } else if (criteria.get(key) != null) {
-                query.setParameter(key.toString(), criteria.get(key));
+                query.setParameter(key, criteria.get(key));
             }
         }
         return query;
     }
 
-    private String getAttribute(String name)
-    {
-        try {
-            Class entityName = Class.forName("com.siteoffice.Entities."+capitalize(this.entityName));
-            Field f_titre = entityName.getDeclaredField(name);
-            Class type = f_titre.getType();
-            return type.getName();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
+    /**
+     * Open the session with database
+     *
+     * @return Session object
+     */
     private Session session()
     {
         return this.sessionFactory.openSession();
     }
 
-    public void createSession(Map<String, String> properties)
+    /**
+     * Create the session with database
+     *
+     * @param properties database properties
+     */
+    void createSession(Map<String, String> properties)
     {
         Configuration cfg = new Configuration().configure();
         cfg.setProperty("hibernate.connection.url", properties.get("url"));
@@ -281,7 +397,10 @@ public class DaoManager
         this.sessionFactory = cfg.buildSessionFactory();
     }
 
-    public void closeSession()
+    /**
+     * Close the session with database
+     */
+    void closeSession()
     {
         this.sessionFactory.close();
     }
