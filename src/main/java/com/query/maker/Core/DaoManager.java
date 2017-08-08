@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import static org.hibernate.resource.transaction.spi.TransactionStatus.COMMITTED;
 import static org.springframework.util.StringUtils.capitalize;
 
 public class DaoManager
@@ -29,16 +30,16 @@ public class DaoManager
     public Entity delete(long id)
     {
         Result result = new Result();
-        try {
-            Session session = this.session();
-            Transaction beginTransaction = session.beginTransaction();
-            Query createQuery = session.createQuery("delete from "+this.entityName+" s where s.id =:id");
-            createQuery.setParameter("id", id);
-            createQuery.executeUpdate();
-            beginTransaction.commit();
+
+        Session session = this.session();
+        Transaction transaction = session.beginTransaction();
+        Query createQuery = session.createQuery("delete from "+this.entityName+" s where s.id =:id");
+        createQuery.setParameter("id", id);
+        createQuery.executeUpdate();
+        transaction.commit();
+
+        if (transaction.getStatus().equals(COMMITTED)) {
             return result.setBool(true);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return result.setBool(false);
     }
