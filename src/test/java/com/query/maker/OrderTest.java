@@ -1,7 +1,15 @@
 package com.query.maker;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class OrderTest {
-
+public class OrderTest
+{
+    @Test
+    public void instantiateTest()
+    {
+        Order order = new Order();
+        if (!(order instanceof Order)) {
+            assert(false);
+        }
+    }
 }

@@ -1,11 +1,10 @@
 package com.query.maker;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Sebastien Dugene on 03/11/2017.
- */
 public class Input
 {
     private Map<String, Object> values;
@@ -36,6 +35,14 @@ public class Input
     Map<String, Object> getValues()
     {
         return this.values;
+    }
+
+    /**
+     * @return json string of values
+     */
+    public String toJSONString()
+    {
+        return new Gson().toJson(this);
     }
 
     /**

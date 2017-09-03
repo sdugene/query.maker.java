@@ -3,9 +3,6 @@ package com.query.maker;
 import com.query.maker.Core.*;
 import java.util.List;
 
-/**
- * Created by Sebastien Dugene on 12/23/2016.
- */
 public class QueryMaker extends QueryCore
 {
     /**
@@ -138,7 +135,7 @@ public class QueryMaker extends QueryCore
      */
     public List<Entity> exec()
     {
-        this.daoManager.setEntityName(this.className);
+        this.daoManager.setEntityName(this.entityClassName);
         List<Entity> queryList = getQueryList();
 
         this.clean();
@@ -165,8 +162,7 @@ public class QueryMaker extends QueryCore
         if (queryList == null) {
             return null;
         } else {
-            this.entity = queryList.get(0);
-            return this.entity;
+            return queryList.get(0);
         }
     }
 
@@ -183,15 +179,15 @@ public class QueryMaker extends QueryCore
         if (this.method.equals("insert") && input == null) { return null; }
 
         if (this.method.equals("insert")) {
-            result = this.daoManager.insert(this.entity, input.getValues());
+            result = this.daoManager.insert(this.entityClass, input.toJSONString());
         }
 
         if (this.method.equals("update")) {
-            result = this.daoManager.update(this.entity, input.getValues());
+            result = this.daoManager.update(this.entityClass, input.toJSONString());
         }
 
         if (this.method.equals("delete")) {
-            this.daoManager.setEntityName(this.className);
+            this.daoManager.setEntityName(this.entityClassName);
             result = this.daoManager.delete((Long) input.get("id"));
         }
 
@@ -232,8 +228,7 @@ public class QueryMaker extends QueryCore
         if (queryList == null) {
             return null;
         } else {
-            this.entity = queryList.get(0);
-            return this.entity;
+            return queryList.get(0);
         }
     }
 }

@@ -1,8 +1,5 @@
 package com.query.maker;
 
-/**
- * Created by Sebastien Dugene on 12/25/2017.
- */
 public abstract class Entity
 {
     /**

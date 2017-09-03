@@ -2,6 +2,8 @@ package com.query.maker.Core;
 
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
 import com.query.maker.Entity;
 import com.query.maker.Result;
 import org.hibernate.Query;
@@ -12,9 +14,6 @@ import org.hibernate.cfg.Configuration;
 import org.apache.commons.beanutils.BeanUtils;
 import static org.springframework.util.StringUtils.capitalize;
 
-/**
- * Created by Sebastien Dugene on 12/25/2017.
- */
 public class DaoManager
 {
     private String entityName = null;
@@ -39,16 +38,20 @@ public class DaoManager
     public Entity delete(long id)
     {
         Result result = new Result();
-        try {
-            Session session = this.session();
-            Transaction beginTransaction = session.beginTransaction();
-            Query createQuery = session.createQuery("delete from "+this.entityName+" s where s.id =:id");
-            createQuery.setParameter("id", id);
-            createQuery.executeUpdate();
-            beginTransaction.commit();
+        Session session = this.session();
+        Transaction beginTransaction = session.beginTransaction();
+        StringBuilder query = new StringBuilder()
+                .append("delete from ")
+                .append(this.entityName)
+                .append(" s where s.id =:id");
+        Query createQuery = session.createQuery(query.toString());
+        createQuery.setParameter("id", id);
+        int queryResult = createQuery.executeUpdate();
+        beginTransaction.commit();
+
+
+        if (queryResult > 0) {
             return result.setBool(true);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return result.setBool(false);
     }
@@ -56,18 +59,15 @@ public class DaoManager
     /**
      * Insert data in database
      *
-     * @param entity entity to create
+     * @param className entity to create
      * @param input data inserted
      *
      * @return Entity created
      */
-    public Entity insert(Entity entity, Map<String, Object> input)
+    public Entity insert(Class className, String input)
     {
-        try {
-            BeanUtils.populate(entity, input);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Entity entity = (Entity) new Gson()
+                .fromJson(input, className);
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
@@ -83,19 +83,15 @@ public class DaoManager
     /**
      * update the line in the database
      *
-     * @param entity entity to update
+     * @param className entity to update
      * @param input data inserted
      *
      * @return Entity updated
      */
-    public Entity update(Entity entity, Map<String, Object> input)
+    public Entity update(Class className, String input)
     {
-        try {
-            BeanUtils.populate(entity, input);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        Entity entity = (Entity) new Gson()
+                .fromJson(input, className);
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();

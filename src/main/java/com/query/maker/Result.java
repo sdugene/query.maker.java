@@ -1,8 +1,5 @@
 package com.query.maker;
 
-/**
- * Created by Sebastien Dugene on 04/20/2017.
- */
 public class Result extends Entity
 {
     private boolean bool = false;

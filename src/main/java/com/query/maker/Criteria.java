@@ -5,9 +5,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Sebastien Dugene on 12/23/2017.
- */
 public class Criteria
 {
     private Map<String, Object> values = new HashMap<String, Object>();
