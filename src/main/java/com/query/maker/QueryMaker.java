@@ -1,6 +1,8 @@
 package com.query.maker;
 
 import com.query.maker.Core.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class QueryMaker extends QueryCore
@@ -15,7 +17,7 @@ public class QueryMaker extends QueryCore
      */
     private static class SingletonHolder
     {
-        private final static QueryMaker instance = new QueryMaker();
+        private static final QueryMaker instance = new QueryMaker();
     }
 
     /**
@@ -129,7 +131,7 @@ public class QueryMaker extends QueryCore
         this.clean();
 
         if (queryList == null) {
-            return null;
+            return new ArrayList<Entity>();
         } else {
             return queryList;
         }
@@ -163,18 +165,22 @@ public class QueryMaker extends QueryCore
     public Entity exec(Input input)
     {
         Entity result = null;
-        if (this.method == null) { return null; }
-        if (this.method.equals("insert") && input == null) { return null; }
+        if (this.method == null) {
+            return null;
+        }
+        if ("insert".equals(this.method) && input == null) {
+            return null;
+        }
 
-        if (this.method.equals("insert")) {
+        if ("insert".equals(this.method)) {
             result = this.daoManager.insert(this.entityClass, input.toJSONString());
         }
 
-        if (this.method.equals("update")) {
+        if ("update".equals(this.method)) {
             result = this.daoManager.update(this.entityClass, input.toJSONString());
         }
 
-        if (this.method.equals("delete")) {
+        if ("delete".equals(this.method)) {
             this.daoManager.setEntityName(this.entityClassName);
             result = this.daoManager.delete((Long) input.get("id"));
         }
@@ -190,7 +196,9 @@ public class QueryMaker extends QueryCore
      */
     private List<Entity> getQueryList()
     {
-        if (this.method == null) { return null; }
+        if (this.method == null) {
+            return new ArrayList<Entity>();
+        }
 
         if (this.criteria != null && !this.criteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {

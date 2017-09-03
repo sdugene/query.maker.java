@@ -1,7 +1,6 @@
 package com.query.maker;
 
 import com.google.gson.Gson;
-import org.apache.commons.beanutils.BeanUtils;
 
 import java.util.HashMap;
 import java.util.Map;

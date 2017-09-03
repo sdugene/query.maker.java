@@ -1,5 +1,6 @@
 package com.query.maker.Core;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -257,7 +258,7 @@ public class DaoManager
      */
     private StringBuilder operator (StringBuilder criteriaSql, String operator)
     {
-        if (!criteriaSql.toString().equals("")) {
+        if (!"".equals(criteriaSql.toString())) {
             criteriaSql.append(" ")
                     .append(operator)
                     .append(" ");
@@ -278,7 +279,7 @@ public class DaoManager
     {
         StringBuilder groupSql = new StringBuilder();
         for (String key: group.keySet()){
-            if (!groupSql.toString().equals("")) {
+            if (!"".equals(groupSql.toString())) {
                 groupSql.append(", ");
             }
 
@@ -292,7 +293,7 @@ public class DaoManager
                         .append(group.get(key));
             }
         }
-        if (!groupSql.toString().equals("")) {
+        if (!"".equals(groupSql.toString())) {
             querySql.append(" group by ")
                     .append(groupSql.toString());
         }
@@ -325,7 +326,7 @@ public class DaoManager
         List<Entity> queryList = (List) query.list();
         if (queryList == null || queryList.isEmpty()) {
             session.clear();
-            return null;
+            return new ArrayList<Entity>();
         } else {
             session.clear();
             return queryList;
