@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.apache.commons.beanutils.BeanUtils;
 import static org.springframework.util.StringUtils.capitalize;
 
 public class DaoManager
@@ -108,12 +107,7 @@ public class DaoManager
      */
     public List<Entity> findAll()
     {
-        try {
-            return queryExec();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return queryExec();
     }
 
     /**
@@ -126,12 +120,7 @@ public class DaoManager
      */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit)
     {
-        try {
-            return queryExec(criteria, limit);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return queryExec(criteria, limit);
     }
 
     /**
@@ -145,12 +134,7 @@ public class DaoManager
      */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
-        try {
-            return queryExec(criteria, limit, group);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return queryExec(criteria, limit, group);
     }
 
     /**

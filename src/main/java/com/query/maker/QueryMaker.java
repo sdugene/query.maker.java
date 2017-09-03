@@ -106,18 +106,6 @@ public class QueryMaker extends QueryCore
     }
 
     /**
-     * Set the order
-     *
-     * @param order query Order
-     * @return QueryMaker
-     */
-    public QueryMaker order(Order order)
-    {
-        this.order = order;
-        return this;
-    }
-
-    /**
      * Set the group
      * @param group query Group
      * @return QueryMaker

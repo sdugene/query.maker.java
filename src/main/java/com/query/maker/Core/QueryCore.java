@@ -12,7 +12,6 @@ public class QueryCore
     protected String method = null;
     protected Criteria criteria = null;
     protected Group group = null;
-    protected Order order = null;
     protected int limit = 50;
 
     /**

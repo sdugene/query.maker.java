@@ -21,5 +21,9 @@ public class Result extends Entity
      *
      * @return Result
      */
-    public Result setBool(boolean bool) { this.bool = bool; return this;}
+    public Result setBool(boolean bool)
+    {
+        this.bool = bool;
+        return this;
+    }
 }

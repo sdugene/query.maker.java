@@ -52,7 +52,11 @@ public class Input
      *
      * @return Input
      */
-    public Input setValues(Map<String, Object> values) { this.values = values; return this; }
+    public Input setValues(Map<String, Object> values)
+    {
+        this.values = values;
+        return this;
+    }
 
     /**
      * clear values
