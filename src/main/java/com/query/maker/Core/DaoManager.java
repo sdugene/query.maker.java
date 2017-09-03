@@ -350,14 +350,15 @@ public class DaoManager
     @SuppressWarnings("unchecked")
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
+        Query newQuery = query;
         for (String key: criteria.keySet()){
             if (criteria.get(key) instanceof Map<?,?>) {
-                query = this.setParameters(query, (Map) criteria.get(key));
+                newQuery = this.setParameters(query, (Map) criteria.get(key));
             } else if (criteria.get(key) != null) {
-                query.setParameter(key, criteria.get(key));
+                newQuery.setParameter(key, criteria.get(key));
             }
         }
-        return query;
+        return newQuery;
     }
 
     /**
