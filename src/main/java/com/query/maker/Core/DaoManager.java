@@ -19,6 +19,8 @@ public class DaoManager
     private String entityName = null;
     private SessionFactory sessionFactory = null;
 
+    private static final String FROM = "from";
+
     /**
      * Set the entity name
      *
@@ -145,7 +147,7 @@ public class DaoManager
      */
     private List<Entity> queryExec ()
     {
-        return query(null, null, "from "+this.entityName+" s");
+        return query(null, null, FROM+" "+this.entityName+" s");
     }
 
     /**
@@ -160,7 +162,7 @@ public class DaoManager
     {
         StringBuilder querySql = new StringBuilder();
         criteria(criteria, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
+        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySql.toString());
     }
 
     /**
@@ -177,7 +179,7 @@ public class DaoManager
         StringBuilder querySql = new StringBuilder();
         querySql = criteria(criteria, querySql);
         querySql = group(group, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
+        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySql.toString());
     }
 
     /**
@@ -208,43 +210,47 @@ public class DaoManager
     @SuppressWarnings("unchecked")
     private String criteriaSql (Map<String, Object> criteria, StringBuilder criteriaSql, String operator)
     {
-        for (String key: criteria.keySet()){
+        StringBuilder newCriteriaSql = criteriaSql;
+        for (Map.Entry<String,Object> entry : criteria.entrySet()){
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
             String patternNot = "(_not$)";
 
-            if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, Object> orValue = (Map) criteria.get(key);
-                criteriaSql = operator(criteriaSql, key);
-                criteriaSql.append("(")
+            if (value instanceof Map<?,?>) {
+                Map<String, Object> orValue = (Map) value;
+                newCriteriaSql = operator(criteriaSql, key);
+                newCriteriaSql.append("(")
                         .append(this.criteriaSql(orValue, new StringBuilder(), key))
                         .append(")");
-            } else if (criteria.get(key) == null && operator.matches(".*"+patternNot)) {
+            } else if (value == null && operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
-                criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql.append("s.")
+                newCriteriaSql = operator(criteriaSql, operatorCut);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is not null");
-            } else if (criteria.get(key) == null) {
-                criteriaSql = operator(criteriaSql, operator);
-                criteriaSql.append("s.")
+            } else if (value == null) {
+                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is null");
             } else if (operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
-                criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql.append("s.")
+                newCriteriaSql = operator(criteriaSql, operatorCut);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" != :")
                         .append(key);
             } else {
-                criteriaSql = operator(criteriaSql, operator);
-                criteriaSql.append("s.")
+                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" = :")
                         .append(key);
             }
         }
-        return criteriaSql.toString();
+        return newCriteriaSql.toString();
     }
 
     /**

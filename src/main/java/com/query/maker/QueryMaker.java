@@ -7,10 +7,18 @@ import java.util.List;
 
 public class QueryMaker extends QueryCore
 {
+    private static final String SELECT = "select";
+    private static final String INSERT = "insert";
+    private static final String DELETE = "delete";
+    private static final String UPDATE = "update";
+
     /**
      * Default constructor
      */
-    private QueryMaker() {}
+    private QueryMaker()
+    {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Singleton holder
@@ -37,7 +45,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker select(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "select";
+        this.method = SELECT;
         return this;
     }
 
@@ -51,7 +59,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker delete(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "delete";
+        this.method = DELETE;
         return this;
     }
 
@@ -66,7 +74,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker update(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "update";
+        this.method = UPDATE;
         return this;
     }
 
@@ -79,7 +87,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker insert(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "insert";
+        this.method = INSERT;
         return this;
     }
 
@@ -168,19 +176,19 @@ public class QueryMaker extends QueryCore
         if (this.method == null) {
             return null;
         }
-        if ("insert".equals(this.method) && input == null) {
+        if (INSERT.equals(this.method) && input == null) {
             return null;
         }
 
-        if ("insert".equals(this.method)) {
+        if (INSERT.equals(this.method)) {
             result = this.daoManager.insert(this.entityClass, input.toJSONString());
         }
 
-        if ("update".equals(this.method)) {
+        if (UPDATE.equals(this.method)) {
             result = this.daoManager.update(this.entityClass, input.toJSONString());
         }
 
-        if ("delete".equals(this.method)) {
+        if (DELETE.equals(this.method)) {
             this.daoManager.setEntityName(this.entityClassName);
             result = this.daoManager.delete((Long) input.get("id"));
         }
