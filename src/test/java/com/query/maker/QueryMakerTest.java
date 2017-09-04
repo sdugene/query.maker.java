@@ -118,13 +118,11 @@ public class QueryMakerTest
         properties.put("password", "KS94nik7");
 
         List<Entity> list = QueryMaker.getInstance()
-                .clean()
                 .exec();
 
         assertEquals("[]", list.toString());
 
         List<Entity> list2 = QueryMaker.getInstance()
-                .clean()
                 .select(null)
                 .exec();
 
@@ -155,7 +153,6 @@ public class QueryMakerTest
         queryMaker.createSession(properties);
 
         User user = (User) QueryMaker.getInstance()
-                .clean()
                 .select(new User())
                 .exec(1L);
         assertEquals("Sebastien", user.getFirstName());
@@ -163,7 +160,6 @@ public class QueryMakerTest
         Criteria criteria2 = new Criteria();
 
         User user2 = (User) QueryMaker.getInstance()
-                .clean()
                 .select(new User())
                 .where(criteria2)
                 .exec(1l);
@@ -173,7 +169,6 @@ public class QueryMakerTest
         criteria3.addValue("firstName", "Sebastien");
 
         User user3 = (User) QueryMaker.getInstance()
-                .clean()
                 .select(new User())
                 .where(criteria3)
                 .exec(1l);
@@ -182,7 +177,6 @@ public class QueryMakerTest
         Group group = new Group();
 
         User user4 = (User) QueryMaker.getInstance()
-                .clean()
                 .select(new User())
                 .where(criteria3)
                 .group(group)
@@ -192,7 +186,6 @@ public class QueryMakerTest
         group.addValue("firstName", null);
 
         User user5 = (User) QueryMaker.getInstance()
-                .clean()
                 .select(new User())
                 .where(criteria3)
                 .group(group)
@@ -210,14 +203,14 @@ public class QueryMakerTest
         properties.put("username", "tests");
         properties.put("password", "KS94nik7");
 
+        QueryMaker.getInstance().clean();
+
         User user = (User) QueryMaker.getInstance()
-                .clean()
                 .exec(1L);
 
         assertEquals(null, user);
 
         User user2 = (User) QueryMaker.getInstance()
-                .clean()
                 .select(null)
                 .exec(1L);
 
@@ -240,16 +233,16 @@ public class QueryMakerTest
     @Test
     public void execInput()
     {
+        QueryMaker.getInstance().clean();
+
         Input input = new Input();
 
         User user = (User) QueryMaker.getInstance()
-                .clean()
                 .exec(input);
 
         assertEquals(null, user);
 
         User user2 = (User) QueryMaker.getInstance()
-                .clean()
                 .select(null)
                 .exec(input);
 
@@ -269,19 +262,19 @@ public class QueryMakerTest
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
 
-        User user = (User) queryMaker.clean()
+        User user = (User) queryMaker
                 .insert(new User())
                 .exec(input);
         assertEquals(null, user.getFirstName());
 
         Input inputError = null;
-        User userError = (User) queryMaker.clean()
+        User userError = (User) queryMaker
                 .insert(new User())
                 .exec(inputError);
         assertEquals(null, userError);
 
         input.addValue("firstName", "test");
-        User user2 = (User) queryMaker.clean()
+        User user2 = (User) queryMaker
                 .insert(new User())
                 .exec(input);
 
@@ -289,7 +282,7 @@ public class QueryMakerTest
 
         Input input2 = new Input();
         input2.addValue("firstName", "test2");
-        User user3 = (User) queryMaker.clean()
+        User user3 = (User) queryMaker
                 .update(user2)
                 .exec(input2);
 
@@ -297,7 +290,7 @@ public class QueryMakerTest
 
         Input input3 = new Input();
         input3.addValue("id", user3.getId());
-        Result result = (Result) queryMaker.clean()
+        Result result = (Result) queryMaker
             .delete(user2)
             .exec(input3);
 
@@ -305,7 +298,7 @@ public class QueryMakerTest
 
         Input input4 = new Input();
         input4.addValue("id", user.getId());
-        Result result2 = (Result) queryMaker.clean()
+        Result result2 = (Result) queryMaker
                 .delete(user)
                 .exec(input4);
         assertEquals(true, result2.isBool());
@@ -328,7 +321,6 @@ public class QueryMakerTest
         criteria.addValue("id", 0L);
 
         User user = (User) QueryMaker.getInstance()
-                .clean()
                 .select(new User())
                 .where(criteria)
                 .one();
@@ -339,7 +331,6 @@ public class QueryMakerTest
         criteria2.addValue("id", 1L);
 
         User user2 = (User) QueryMaker.getInstance()
-                .clean()
                 .select(new User())
                 .where(criteria2)
                 .one();

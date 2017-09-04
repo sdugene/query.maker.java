@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Criteria
 {
-    private Map<String, Object> values = new HashMap<String, Object>();
+    private Map<String, Object> values;
 
     /**
      * Instantiate Criteria

@@ -47,6 +47,7 @@ public class QueryMaker extends QueryCore
         super.clean();
         return this;
     }
+
     /**
      * Set the method as "select"
      *
@@ -55,11 +56,11 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker select(Entity entity)
     {
+        super.clean();
         this.setEntity(entity);
         this.method = SELECT;
         return this;
     }
-
 
     /**
      * Set the method as "delete"
@@ -69,6 +70,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker delete(Entity entity)
     {
+        super.clean();
         this.setEntity(entity);
         this.method = DELETE;
         return this;
@@ -84,6 +86,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker update(Entity entity)
     {
+        super.clean();
         this.setEntity(entity);
         this.method = UPDATE;
         return this;
@@ -97,6 +100,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker insert(Entity entity)
     {
+        super.clean();
         this.setEntity(entity);
         this.method = INSERT;
         return this;
