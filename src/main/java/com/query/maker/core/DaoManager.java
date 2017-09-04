@@ -1,4 +1,4 @@
-package com.query.maker.Core;
+package com.query.maker.core;
 
 import java.util.ArrayList;
 import java.util.List;

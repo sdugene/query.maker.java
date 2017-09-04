@@ -1,6 +1,6 @@
 package com.query.maker;
 
-import com.query.maker.Core.*;
+import com.query.maker.core.*;
 
 import java.util.ArrayList;
 import java.util.List;
