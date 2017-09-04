@@ -77,10 +77,7 @@ public class DaoManager
         Long id = (Long) session.save(entity);
         transaction.commit();
 
-        if (id != null && id > 0) {
-            return entity;
-        }
-        return null;
+        return entity;
     }
 
     /**
@@ -96,15 +93,15 @@ public class DaoManager
         Map<String, Object> map = entity.toMap();
         map.putAll(input);
 
-        Entity entityJr = new Gson()
+        Entity entityNew = new Gson()
                 .fromJson(new Gson().toJson(map), entity.getClass());
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
-        session.update(entityJr);
+        session.update(entityNew);
         transaction.commit();
 
-        return entityJr;
+        return entityNew;
     }
 
     /**

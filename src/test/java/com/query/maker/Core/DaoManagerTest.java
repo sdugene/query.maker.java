@@ -1,22 +1,19 @@
 package com.query.maker.Core;
 
+import com.query.maker.Entity;
 import com.query.maker.Input;
 import com.query.maker.Result;
 import com.query.maker.User;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
 public class DaoManagerTest
 {
-    @Test
-    public void setEntityName()
-    {
-    }
-
     @Test
     public void insertUpdateDelete()
     {
@@ -46,16 +43,26 @@ public class DaoManagerTest
 
         Result result2 = (Result) daoManager.delete(user2.getId());
         assertEquals(false, result2.isBool());
-    }
 
-    @Test
-    public void update()
-    {
+        daoManager.closeSession();
     }
 
     @Test
     public void findAll()
     {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        DaoManager daoManager = new DaoManager();
+        daoManager.createSession(properties);
+        daoManager.setEntityName(new User().getClassName());
+
+        List<Entity> users = daoManager.findAll();
+        assertEquals("Sebastien", ((User) users.get(0)).getFirstName());
+
+        daoManager.closeSession();
     }
 
     @Test
@@ -84,11 +91,6 @@ public class DaoManagerTest
         } catch (Exception e) {
             assert(false);
         }
-    }
-
-    @Test
-    public void closeSession()
-    {
     }
 
 }
