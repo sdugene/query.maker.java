@@ -179,13 +179,56 @@ public class QueryMakerTest
     }
 
     @Test
-    public void exec2()
+    public void execInput()
     {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        Input input = new Input();
+
+        User user = (User) QueryMaker.getInstance()
+                .clean()
+                .exec(input);
+
+        assertEquals(null, user);
     }
 
     @Test
     public void one()
     {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        QueryMaker queryMaker = QueryMaker.getInstance();
+        queryMaker.createSession(properties);
+
+        Criteria criteria = new Criteria();
+        criteria.addValue("id", 0L);
+
+        User user = (User) QueryMaker.getInstance()
+                .clean()
+                .select(new User())
+                .where(criteria)
+                .one();
+
+        assertEquals(null, user);
+
+        Criteria criteria2 = new Criteria();
+        criteria2.addValue("id", 1L);
+
+        User user2 = (User) QueryMaker.getInstance()
+                .clean()
+                .select(new User())
+                .where(criteria2)
+                .one();
+
+        assertEquals("Sebastien", user2.getFirstName());
+
+        queryMaker.closeSession();
     }
 
     @Test

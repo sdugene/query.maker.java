@@ -136,7 +136,10 @@ public class DaoManagerTest
         Map<String, Object> criteria = new HashMap<String, Object>();
         criteria.put("id", null);
 
-        List<Entity> users = daoManager.findByCriteria(criteria,1);
+        Map<String, String> group = new HashMap<String, String>();
+        group.put("firstName", "test");
+
+        List<Entity> users = daoManager.findByCriteria(criteria,1, group);
         if (users.isEmpty()) {
             assert(true);
         } else {
