@@ -25,12 +25,12 @@ public class QueryMaker extends QueryCore
      */
     private static class SingletonHolder
     {
+        private static final QueryMaker instance = new QueryMaker();
+
         private SingletonHolder()
         {
             throw new IllegalStateException("Utility class");
         }
-
-        private static final QueryMaker instance = new QueryMaker();
     }
 
     /**

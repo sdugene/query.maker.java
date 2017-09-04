@@ -284,19 +284,22 @@ public class DaoManager
     private StringBuilder group(Map<String, String> group, StringBuilder querySql)
     {
         StringBuilder groupSql = new StringBuilder();
-        for (String key: group.keySet()){
+        for (Map.Entry<String,String> entry : group.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
             if (!"".equals(groupSql.toString())) {
                 groupSql.append(", ");
             }
 
-            if (group.get(key) == null) {
+            if (value == null) {
                 groupSql.append("s.")
                         .append(key);
             } else {
                 groupSql.append("s.")
                         .append(key)
                         .append(" ")
-                        .append(group.get(key));
+                        .append(value);
             }
         }
         if (!"".equals(groupSql.toString())) {
@@ -351,11 +354,13 @@ public class DaoManager
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
         Query newQuery = query;
-        for (String key: criteria.keySet()){
-            if (criteria.get(key) instanceof Map<?,?>) {
-                newQuery = this.setParameters(query, (Map) criteria.get(key));
-            } else if (criteria.get(key) != null) {
-                newQuery.setParameter(key, criteria.get(key));
+        for (Map.Entry<String,Object> entry : criteria.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof Map<?,?>) {
+                newQuery = this.setParameters(query, (Map) value);
+            } else if (value != null) {
+                newQuery.setParameter(key, value);
             }
         }
         return newQuery;
