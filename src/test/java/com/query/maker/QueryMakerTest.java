@@ -24,6 +24,20 @@ public class QueryMakerTest
     }
 
     @Test
+    public void singletonHolderInstantiateTest()
+    {
+        Class<?> singletonHolder = QueryMaker.class.getDeclaredClasses()[0];
+
+        try {
+            Constructor<?> c = singletonHolder.getDeclaredConstructors()[0];
+            c.setAccessible(true);
+            c.newInstance();
+        } catch (Exception e) {
+            assert(true);
+        }
+    }
+
+    @Test
     public void getInstance()
     {
         QueryMaker queryMaker = QueryMaker.getInstance();
