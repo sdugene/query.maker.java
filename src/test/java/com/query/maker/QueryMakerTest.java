@@ -202,6 +202,16 @@ public class QueryMakerTest
                 .exec(1l);
         assertEquals("Sebastien", user5.getFirstName());
 
+        Group group2 = null;
+
+        User user6 = (User) QueryMaker.getInstance()
+                .clean()
+                .select(new User())
+                .where(criteria)
+                .group(group2)
+                .exec(1l);
+        assertEquals("Sebastien", user6.getFirstName());
+
         queryMaker.closeSession();
     }
 
