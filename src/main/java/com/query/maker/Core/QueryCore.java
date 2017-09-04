@@ -17,7 +17,7 @@ public class QueryCore
     /**
      * clear values
      */
-    protected void clean()
+    protected QueryCore clean()
     {
         this.entityClass = null;
         this.entityClassName = null;
@@ -25,6 +25,7 @@ public class QueryCore
         this.criteria = null;
         this.group = null;
         this.limit = 50;
+        return this;
     }
 
     /**

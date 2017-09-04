@@ -15,10 +15,7 @@ public class QueryMaker extends QueryCore
     /**
      * Default constructor
      */
-    private QueryMaker()
-    {
-        throw new IllegalStateException("Utility class");
-    }
+    private QueryMaker() {}
 
     /**
      * Singleton holder
@@ -41,6 +38,12 @@ public class QueryMaker extends QueryCore
         return QueryMaker.SingletonHolder.instance;
     }
 
+
+    public QueryMaker clean()
+    {
+        super.clean();
+        return this;
+    }
     /**
      * Set the method as "select"
      *
@@ -138,16 +141,16 @@ public class QueryMaker extends QueryCore
      */
     public List<Entity> exec()
     {
+        if (this.entityClassName == null
+                || this.method == null) {
+            return new ArrayList<Entity>();
+        }
+
         this.daoManager.setEntityName(this.entityClassName);
-        List<Entity> queryList = getQueryList();
+        List<Entity> queryList = this.getQueryList();
 
         this.clean();
-
-        if (queryList == null) {
-            return new ArrayList<Entity>();
-        } else {
-            return queryList;
-        }
+        return queryList;
     }
 
     /**
@@ -158,6 +161,11 @@ public class QueryMaker extends QueryCore
      */
     public Entity exec(Long id)
     {
+        if (this.entityClassName == null
+                || this.method == null) {
+            return null;
+        }
+
         this.criteria = new Criteria()
                 .addValue("id", id);
         List<Entity> queryList = this.limit(1).exec();
@@ -177,10 +185,12 @@ public class QueryMaker extends QueryCore
      */
     public Entity exec(Input input)
     {
-        Entity result = null;
-        if (this.method == null) {
+        if (this.entityClassName == null
+                || this.method == null) {
             return null;
         }
+
+        Entity result = null;
         if (INSERT.equals(this.method) && input == null) {
             return null;
         }
@@ -209,10 +219,6 @@ public class QueryMaker extends QueryCore
      */
     private List<Entity> getQueryList()
     {
-        if (this.method == null) {
-            return new ArrayList<Entity>();
-        }
-
         if (this.criteria != null && !this.criteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {
             return this.daoManager.findByCriteria(this.criteria.getValues(), this.limit, this.group.getValues());

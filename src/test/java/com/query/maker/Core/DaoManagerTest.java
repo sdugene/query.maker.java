@@ -4,7 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class DaoManagerTest {
+public class DaoManagerTest
+{
     @Test
     public void setEntityName()
     {

@@ -1,6 +1,6 @@
 package com.query.maker.Core;
 
-import com.query.maker.Entity;
+import com.query.maker.User;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -12,60 +12,49 @@ public class QueryCoreTest
 {
     private class QueryCoreAnon extends QueryCore
     {
-        public String getEntityClassName()
-        {
+        public String getEntityClassName() {
             return entityClassName;
         }
     }
 
-    private class EntityAnon extends Entity
-    {
-        public Long getId() {
-            return null;
-        }
-    }
-
     @Test
-    public void clean()
-    {
+    public void clean() {
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
-        queryCoreAnon.setEntity(new EntityAnon());
+        queryCoreAnon.setEntity(new User());
 
-        assertEquals("EntityAnon", queryCoreAnon.getEntityClassName());
+        assertEquals("User", queryCoreAnon.getEntityClassName());
 
         queryCoreAnon.clean();
         assertEquals(null, queryCoreAnon.getEntityClassName());
     }
 
     @Test
-    public void setEntity()
-    {
+    public void setEntity() {
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
-        queryCoreAnon.setEntity(new EntityAnon());
+        queryCoreAnon.setEntity(new User());
 
-        assertEquals("EntityAnon", queryCoreAnon.getEntityClassName());
+        assertEquals("User", queryCoreAnon.getEntityClassName());
     }
 
     @Test
-    public void createSession()
-    {
+    public void createSession() {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
         properties.put("username", "test");
-        properties.put("password","KS94nik7");
+        properties.put("password", "KS94nik7");
 
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
 
         try {
             queryCoreAnon.createSession(properties);
         } catch (Exception e) {
-            assert(true);
+            assert (true);
         }
 
         try {
             queryCoreAnon.closeSession();
         } catch (Exception e) {
-            assert(true);
+            assert (true);
         }
 
         properties.put("username", "tests");
@@ -74,14 +63,13 @@ public class QueryCoreTest
         try {
             queryCoreAnon.createSession(properties);
         } catch (Exception e) {
-            assert(false);
+            assert (false);
         }
 
         try {
             queryCoreAnon.closeSession();
         } catch (Exception e) {
-            assert(false);
+            assert (false);
         }
     }
-
 }
