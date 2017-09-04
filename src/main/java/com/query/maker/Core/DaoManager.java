@@ -289,7 +289,7 @@ public class DaoManager
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            if (!"".equals(groupSql.toString())) {
+            if (value == null && !"".equals(groupSql.toString())) {
                 groupSql.append(", ");
             }
 
@@ -329,7 +329,7 @@ public class DaoManager
         }
 
         List<Entity> queryList = (List) query.list();
-        if (queryList == null || queryList.isEmpty()) {
+        if (queryList.isEmpty()) {
             session.clear();
             return new ArrayList<Entity>();
         } else {

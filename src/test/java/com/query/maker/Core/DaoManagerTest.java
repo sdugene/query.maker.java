@@ -90,6 +90,8 @@ public class DaoManagerTest
         assertEquals("Sebastien", ((User) users2.get(0)).getFirstName());
 
         group.put("id", null);
+        group.put("firstName", null);
+        group.put("LastName", "test");
 
         Map<String, Object> criteria2 = new HashMap<String, Object>();
         criteria2.put("id", 1L);
@@ -103,11 +105,43 @@ public class DaoManagerTest
         Map<String, Object> criteria3 = new HashMap<String, Object>();
         criteria3.put("id", 1L);
         Map<String, Object> notValue3 = new HashMap<String, Object>();
-        notValue3.put("KEY"+notValue3.size()+"id", 2L);
-        criteria2.put("OR", notValue3);
+        notValue3.put("KEY"+notValue3.size()+"firstName", "Sebastien");
+        criteria3.put("OR", notValue3);
 
         List<Entity> users4 = daoManager.findByCriteria(criteria3,1);
         assertEquals("Sebastien", ((User) users4.get(0)).getFirstName());
+
+        Map<String, Object> criteria4 = new HashMap<String, Object>();
+        criteria4.put("id", 1L);
+        Map<String, Object> notValue4 = new HashMap<String, Object>();
+        notValue4.put("KEY"+notValue4.size()+"firstName", null);
+        criteria4.put("OR_not", notValue4);
+
+        List<Entity> users5 = daoManager.findByCriteria(criteria4,1);
+        assertEquals("Sebastien", ((User) users5.get(0)).getFirstName());
+    }
+
+    @Test
+    public void findByCriteriaError()
+    {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        DaoManager daoManager = new DaoManager();
+        daoManager.createSession(properties);
+        daoManager.setEntityName(new User().getClassName());
+
+        Map<String, Object> criteria = new HashMap<String, Object>();
+        criteria.put("id", null);
+
+        List<Entity> users = daoManager.findByCriteria(criteria,1);
+        if (users.isEmpty()) {
+            assert(true);
+        } else {
+            assert(false);
+        }
     }
 
     @Test
