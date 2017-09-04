@@ -152,44 +152,49 @@ public class QueryMakerTest
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
 
+        // Criteria == null
         User user = (User) QueryMaker.getInstance()
                 .select(new User())
-                .exec(1L);
+                .one();
         assertEquals("Sebastien", user.getFirstName());
 
+        // Criteria == empty
         Criteria criteria2 = new Criteria();
 
         User user2 = (User) QueryMaker.getInstance()
                 .select(new User())
                 .where(criteria2)
-                .exec(1l);
+                .one();
         assertEquals("Sebastien", user2.getFirstName());
 
+        // Criteria != empty
         Criteria criteria3 = new Criteria();
         criteria3.addValue("firstName", "Sebastien");
 
         User user3 = (User) QueryMaker.getInstance()
                 .select(new User())
                 .where(criteria3)
-                .exec(1l);
+                .one();
         assertEquals("Sebastien", user3.getFirstName());
 
+        // Criteria != empty & Group == empty
         Group group = new Group();
 
         User user4 = (User) QueryMaker.getInstance()
                 .select(new User())
                 .where(criteria3)
                 .group(group)
-                .exec(1l);
+                .one();
         assertEquals("Sebastien", user4.getFirstName());
 
+        // Criteria != empty & Group != empty
         group.addValue("firstName", null);
 
         User user5 = (User) QueryMaker.getInstance()
                 .select(new User())
                 .where(criteria3)
                 .group(group)
-                .exec(1l);
+                .one();
         assertEquals("Sebastien", user5.getFirstName());
 
         queryMaker.closeSession();
