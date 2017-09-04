@@ -76,6 +76,9 @@ public class DaoManagerTest
 
         Map<String, Object> criteria = new HashMap<String, Object>();
         criteria.put("id", 1L);
+        Map<String, Object> notValue = new HashMap<String, Object>();
+        notValue.put("KEY"+notValue.size()+"firstName", "error");
+        criteria.put("AND_not", notValue);
 
         List<Entity> users = daoManager.findByCriteria(criteria,1);
         assertEquals("Sebastien", ((User) users.get(0)).getFirstName());
@@ -85,6 +88,26 @@ public class DaoManagerTest
 
         List<Entity> users2 = daoManager.findByCriteria(criteria,1, group);
         assertEquals("Sebastien", ((User) users2.get(0)).getFirstName());
+
+        group.put("id", null);
+
+        Map<String, Object> criteria2 = new HashMap<String, Object>();
+        criteria2.put("id", 1L);
+        Map<String, Object> notValue2 = new HashMap<String, Object>();
+        notValue2.put("KEY"+notValue2.size()+"firstName", "error");
+        criteria2.put("OR_not", notValue2);
+
+        List<Entity> users3 = daoManager.findByCriteria(criteria2,1, group);
+        assertEquals("Sebastien", ((User) users3.get(0)).getFirstName());
+
+        Map<String, Object> criteria3 = new HashMap<String, Object>();
+        criteria3.put("id", 1L);
+        Map<String, Object> notValue3 = new HashMap<String, Object>();
+        notValue3.put("KEY"+notValue3.size()+"id", 2L);
+        criteria2.put("OR", notValue3);
+
+        List<Entity> users4 = daoManager.findByCriteria(criteria3,1);
+        assertEquals("Sebastien", ((User) users4.get(0)).getFirstName());
     }
 
     @Test

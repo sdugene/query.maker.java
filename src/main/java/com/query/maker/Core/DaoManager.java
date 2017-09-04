@@ -296,11 +296,6 @@ public class DaoManager
             if (value == null) {
                 groupSql.append("s.")
                         .append(key);
-            } else {
-                groupSql.append("s.")
-                        .append(key)
-                        .append(" ")
-                        .append(value);
             }
         }
         if (!"".equals(groupSql.toString())) {
