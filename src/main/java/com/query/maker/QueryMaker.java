@@ -240,7 +240,7 @@ public class QueryMaker extends QueryCore
     {
         List<Entity> queryList = this.limit(1).exec();
 
-        if (queryList == null) {
+        if (queryList.isEmpty()) {
             return null;
         } else {
             return queryList.get(0);
