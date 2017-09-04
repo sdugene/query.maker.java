@@ -193,6 +193,62 @@ public class QueryMakerTest
                 .exec(input);
 
         assertEquals(null, user);
+
+        User user2 = (User) QueryMaker.getInstance()
+                .clean()
+                .select(null)
+                .exec(input);
+
+        assertEquals(null, user2);
+    }
+
+    @Test
+    public void execInputInsertUpdateDelete()
+    {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        Input input = new Input();
+
+        QueryMaker queryMaker = QueryMaker.getInstance();
+        queryMaker.createSession(properties);
+
+        User user = (User) queryMaker.clean()
+                .insert(new User())
+                .exec(input);
+        assertEquals(null, user.getFirstName());
+
+        input.addValue("firstName", "test");
+        User user2 = (User) queryMaker.clean()
+                .insert(new User())
+                .exec(input);
+
+        assertEquals("test", user2.getFirstName());
+
+        Input input2 = new Input();
+        input2.addValue("firstName", "test2");
+        User user3 = (User) queryMaker.clean()
+                .update(user2)
+                .exec(input2);
+
+        assertEquals("test2", user3.getFirstName());
+
+        Input input3 = new Input();
+        input3.addValue("id", user3.getId());
+        Result result = (Result) queryMaker.clean()
+            .delete(user2)
+            .exec(input3);
+
+        assertEquals(true, result.isBool());
+
+        Input input4 = new Input();
+        input4.addValue("id", user.getId());
+        Result result2 = (Result) queryMaker.clean()
+                .delete(user)
+                .exec(input4);
+        assertEquals(true, result2.isBool());
     }
 
     @Test
