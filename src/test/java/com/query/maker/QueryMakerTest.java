@@ -201,6 +201,8 @@ public class QueryMakerTest
                 .group(group)
                 .exec(1l);
         assertEquals("Sebastien", user5.getFirstName());
+
+        queryMaker.closeSession();
     }
 
     @Test
@@ -241,11 +243,6 @@ public class QueryMakerTest
     @Test
     public void execInput()
     {
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
-
         Input input = new Input();
 
         User user = (User) QueryMaker.getInstance()
@@ -315,6 +312,8 @@ public class QueryMakerTest
                 .delete(user)
                 .exec(input4);
         assertEquals(true, result2.isBool());
+
+        queryMaker.closeSession();
     }
 
     @Test
@@ -351,25 +350,5 @@ public class QueryMakerTest
         assertEquals("Sebastien", user2.getFirstName());
 
         queryMaker.closeSession();
-    }
-
-    @Test
-    public void clean()
-    {
-    }
-
-    @Test
-    public void setEntity()
-    {
-    }
-
-    @Test
-    public void createSession()
-    {
-    }
-
-    @Test
-    public void closeSession()
-    {
     }
 }
