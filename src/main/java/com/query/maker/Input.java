@@ -42,7 +42,7 @@ public class Input
      */
     public String toJSONString()
     {
-        return new Gson().toJson(this);
+        return new Gson().toJson(this.values);
     }
 
     /**

@@ -25,6 +25,13 @@ public class InputTest {
     }
 
     @Test
+    public void toJSONString()
+    {
+        Input input = new Input();
+        assertEquals("{}", input.toJSONString());
+    }
+
+    @Test
     public void setValues()
     {
         Input input = new Input();
