@@ -10,30 +10,30 @@ public class EntityTest {
     @Test
     public void getClassName()
     {
-        User user = new User();
-        assertEquals("User", user.getClassName());
+        UserTest userTest = new UserTest();
+        assertEquals("User", userTest.getClassName());
     }
 
     @Test
     public void toMap()
     {
-        User user = new User();
-        user.setId(1L);
+        UserTest userTest = new UserTest();
+        userTest.setId(1L);
 
-        if (!(user.toMap() instanceof HashMap)) {
+        if (!(userTest.toMap() instanceof HashMap)) {
             assert(false);
         }
 
-        Long id = ((Double) user.toMap().get("id")).longValue();
+        Long id = ((Double) userTest.toMap().get("id")).longValue();
         assertEquals("1", String.valueOf(id));
     }
 
     @Test
     public void getId()
     {
-        User user = new User();
-        user.setId(1L);
-        assertEquals("1", String.valueOf(user.getId()));
+        UserTest userTest = new UserTest();
+        userTest.setId(1L);
+        assertEquals("1", String.valueOf(userTest.getId()));
     }
 
 }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @javax.persistence.Entity
 @Table(name = "user")
-public class User extends Entity
+public class UserTest extends Entity
 {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
