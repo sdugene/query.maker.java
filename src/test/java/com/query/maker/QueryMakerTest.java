@@ -154,12 +154,10 @@ public class QueryMakerTest
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
 
-        Criteria criteria = null;
-
         User user = (User) QueryMaker.getInstance()
                 .clean()
                 .select(new User())
-                .where(criteria)
+                .where(null)
                 .exec(1L);
         assertEquals("Sebastien", user.getFirstName());
 
@@ -202,13 +200,11 @@ public class QueryMakerTest
                 .exec(1l);
         assertEquals("Sebastien", user5.getFirstName());
 
-        Group group2 = null;
-
         User user6 = (User) QueryMaker.getInstance()
                 .clean()
                 .select(new User())
-                .where(criteria)
-                .group(group2)
+                .where(null)
+                .group(null)
                 .exec(1l);
         assertEquals("Sebastien", user6.getFirstName());
 

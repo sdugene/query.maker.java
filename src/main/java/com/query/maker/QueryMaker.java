@@ -223,19 +223,23 @@ public class QueryMaker extends QueryCore
      */
     private List<Entity> getQueryList()
     {
-        if (this.criteria != null
-                && this.group != null
-                && !this.criteria.getValues().isEmpty()
-                && !this.group.getValues().isEmpty()) {
-            return this.daoManager
-                    .findByCriteria(this.criteria.getValues(), this.limit, this.group.getValues());
-        } else if (this.criteria != null
-                && !this.criteria.getValues().isEmpty()) {
-            return this.daoManager
-                    .findByCriteria(this.criteria.getValues(), this.limit);
-        } else {
+        if (this.criteria == null) {
             return this.daoManager
                     .findAll();
+        } else if (this.criteria.getValues().isEmpty()) {
+            return this.daoManager
+                    .findAll();
+        } else {
+            if (this.group == null) {
+                return this.daoManager
+                        .findByCriteria(this.criteria.getValues(), this.limit);
+            } else if (this.group.getValues().isEmpty()) {
+                return this.daoManager
+                        .findByCriteria(this.criteria.getValues(), this.limit);
+            } else {
+                return this.daoManager
+                        .findByCriteria(this.criteria.getValues(), this.limit, this.group.getValues());
+            }
         }
     }
 
