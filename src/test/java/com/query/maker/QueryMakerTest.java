@@ -144,6 +144,37 @@ public class QueryMakerTest
     }
 
     @Test
+    public void getQueryListTest()
+    {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        QueryMaker queryMaker = QueryMaker.getInstance();
+        queryMaker.createSession(properties);
+
+        Criteria criteria = null;
+
+        User user = (User) QueryMaker.getInstance()
+                .clean()
+                .select(new User())
+                .where(criteria)
+                .exec(1L);
+        assertEquals("Sebastien", user.getFirstName());
+
+        Criteria criteria2 = new Criteria();
+
+        User user2 = (User) QueryMaker.getInstance()
+                .clean()
+                .select(new User())
+                .where(criteria2)
+                .exec(1l);
+        assertEquals("Sebastien", user2.getFirstName());
+
+    }
+
+    @Test
     public void execInt()
     {
         Map<String, String> properties = new HashMap<String, String>();
@@ -219,6 +250,12 @@ public class QueryMakerTest
                 .insert(new User())
                 .exec(input);
         assertEquals(null, user.getFirstName());
+
+        Input inputError = null;
+        User userError = (User) queryMaker.clean()
+                .insert(new User())
+                .exec(inputError);
+        assertEquals(null, userError);
 
         input.addValue("firstName", "test");
         User user2 = (User) queryMaker.clean()
