@@ -157,7 +157,6 @@ public class QueryMakerTest
         User user = (User) QueryMaker.getInstance()
                 .clean()
                 .select(new User())
-                .where(null)
                 .exec(1L);
         assertEquals("Sebastien", user.getFirstName());
 
@@ -199,14 +198,6 @@ public class QueryMakerTest
                 .group(group)
                 .exec(1l);
         assertEquals("Sebastien", user5.getFirstName());
-
-        User user6 = (User) QueryMaker.getInstance()
-                .clean()
-                .select(new User())
-                .where(null)
-                .group(null)
-                .exec(1l);
-        assertEquals("Sebastien", user6.getFirstName());
 
         queryMaker.closeSession();
     }
