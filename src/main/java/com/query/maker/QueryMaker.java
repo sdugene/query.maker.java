@@ -144,8 +144,8 @@ public class QueryMaker extends QueryCore
      */
     public List<Entity> exec()
     {
-        if (this.entityClassName == null
-                || this.method == null) {
+        if (this.method == null
+                || this.entityClassName == null) {
             return new ArrayList<Entity>();
         }
 
@@ -164,8 +164,8 @@ public class QueryMaker extends QueryCore
      */
     public Entity exec(Long id)
     {
-        if (this.entityClassName == null
-                || this.method == null) {
+        if (this.method == null
+                || this.entityClassName == null) {
             return null;
         }
 
@@ -188,8 +188,8 @@ public class QueryMaker extends QueryCore
      */
     public Entity exec(Input input)
     {
-        if (this.entityClassName == null
-                || this.method == null) {
+        if (this.method == null
+                || this.entityClassName == null) {
             return null;
         }
 

@@ -123,6 +123,13 @@ public class QueryMakerTest
 
         assertEquals("[]", list.toString());
 
+        List<Entity> list2 = QueryMaker.getInstance()
+                .clean()
+                .select(null)
+                .exec();
+
+        assertEquals("[]", list2.toString());
+
         Criteria criteria = new Criteria();
         criteria.addValue("id", 1L);
 
@@ -137,8 +144,38 @@ public class QueryMakerTest
     }
 
     @Test
-    public void exec1()
+    public void execInt()
     {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        User user = (User) QueryMaker.getInstance()
+                .clean()
+                .exec(1L);
+
+        assertEquals(null, user);
+
+        User user2 = (User) QueryMaker.getInstance()
+                .clean()
+                .select(null)
+                .exec(1L);
+
+        assertEquals(null, user2);
+
+        QueryMaker queryMaker = QueryMaker.getInstance();
+        queryMaker.createSession(properties);
+
+        User user3 = (User) queryMaker.select(new User())
+                .exec(2L);
+        assertEquals(null, user3);
+
+        User user4 = (User) queryMaker.select(new User())
+                .exec(1L);
+
+        queryMaker.closeSession();
+        assertEquals("1", String.valueOf(user4.getId()));
     }
 
     @Test

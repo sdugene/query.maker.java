@@ -37,9 +37,11 @@ public class QueryCore
      */
     protected void setEntity(Entity entity)
     {
-        this.entity = entity;
-        this.entityClass = entity.getClass();
-        this.entityClassName = entity.getClassName();
+        if (entity != null) {
+            this.entity = entity;
+            this.entityClass = entity.getClass();
+            this.entityClassName = entity.getClassName();
+        }
     }
 
     /**
