@@ -7,6 +7,7 @@ import java.util.Map;
 public class QueryCore
 {
     protected DaoManager daoManager = new DaoManager();
+    protected Entity entity = null;
     protected Class entityClass = null;
     protected String entityClassName = null;
     protected String method = null;
@@ -19,6 +20,7 @@ public class QueryCore
      */
     protected QueryCore clean()
     {
+        this.entity = null;
         this.entityClass = null;
         this.entityClassName = null;
         this.method = null;
@@ -35,6 +37,7 @@ public class QueryCore
      */
     protected void setEntity(Entity entity)
     {
+        this.entity = entity;
         this.entityClass = entity.getClass();
         this.entityClassName = entity.getClassName();
     }

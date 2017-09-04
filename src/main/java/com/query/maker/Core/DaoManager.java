@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.query.maker.Entity;
+import com.query.maker.Input;
 import com.query.maker.Result;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -66,10 +67,10 @@ public class DaoManager
      *
      * @return Entity created
      */
-    public Entity insert(Class className, String input)
+    public Entity insert(Class className, Input input)
     {
         Entity entity = (Entity) new Gson()
-                .fromJson(input, className);
+                .fromJson(input.toJSONString(), className);
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
@@ -85,22 +86,25 @@ public class DaoManager
     /**
      * update the line in the database
      *
-     * @param className entity to update
+     * @param entity Entity to update
      * @param input data inserted
      *
      * @return Entity updated
      */
-    public Entity update(Class className, String input)
+    public Entity update(Entity entity, Map<String, Object> input)
     {
-        Entity entity = (Entity) new Gson()
-                .fromJson(input, className);
+        Map<String, Object> map = entity.toMap();
+        map.putAll(input);
+
+        Entity entityJr = new Gson()
+                .fromJson(new Gson().toJson(map), entity.getClass());
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
-        session.update(entity);
+        session.update(entityJr);
         transaction.commit();
 
-        return entity;
+        return entityJr;
     }
 
     /**

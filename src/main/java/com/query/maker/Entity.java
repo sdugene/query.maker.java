@@ -1,5 +1,10 @@
 package com.query.maker;
 
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class Entity
 {
     /**
@@ -8,6 +13,13 @@ public abstract class Entity
     public String getClassName()
     {
         return this.getClass().getSimpleName();
+    }
+
+    public Map<String, Object> toMap()
+    {
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+        return gson.fromJson(json, HashMap.class);
     }
 
     /**

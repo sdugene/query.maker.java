@@ -196,11 +196,12 @@ public class QueryMaker extends QueryCore
         }
 
         if (INSERT.equals(this.method)) {
-            result = this.daoManager.insert(this.entityClass, input.toJSONString());
+            result = this.daoManager.insert(this.entityClass, input);
         }
 
         if (UPDATE.equals(this.method)) {
-            result = this.daoManager.update(this.entityClass, input.toJSONString());
+
+            result = this.daoManager.update(this.entity, input.getValues());
         }
 
         if (DELETE.equals(this.method)) {
