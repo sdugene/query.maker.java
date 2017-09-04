@@ -32,7 +32,7 @@ public class Input
     /**
      * @return the content of values
      */
-    Map<String, Object> getValues()
+    public Map<String, Object> getValues()
     {
         return this.values;
     }
