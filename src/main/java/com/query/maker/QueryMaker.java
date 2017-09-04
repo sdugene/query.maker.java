@@ -1,24 +1,36 @@
 package com.query.maker;
 
 import com.query.maker.Core.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Sebastien Dugene on 12/23/2016.
- */
 public class QueryMaker extends QueryCore
 {
+    private static final String SELECT = "select";
+    private static final String INSERT = "insert";
+    private static final String DELETE = "delete";
+    private static final String UPDATE = "update";
+
     /**
      * Default constructor
      */
-    private QueryMaker() {}
+    private QueryMaker()
+    {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Singleton holder
      */
     private static class SingletonHolder
     {
-        private final static QueryMaker instance = new QueryMaker();
+        private SingletonHolder()
+        {
+            throw new IllegalStateException("Utility class");
+        }
+
+        private static final QueryMaker instance = new QueryMaker();
     }
 
     /**
@@ -38,7 +50,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker select(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "select";
+        this.method = SELECT;
         return this;
     }
 
@@ -52,7 +64,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker delete(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "delete";
+        this.method = DELETE;
         return this;
     }
 
@@ -67,7 +79,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker update(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "update";
+        this.method = UPDATE;
         return this;
     }
 
@@ -80,7 +92,7 @@ public class QueryMaker extends QueryCore
     public QueryMaker insert(Entity entity)
     {
         this.setEntity(entity);
-        this.method = "insert";
+        this.method = INSERT;
         return this;
     }
 
@@ -109,18 +121,6 @@ public class QueryMaker extends QueryCore
     }
 
     /**
-     * Set the order
-     *
-     * @param order query Order
-     * @return QueryMaker
-     */
-    public QueryMaker order(Order order)
-    {
-        this.order = order;
-        return this;
-    }
-
-    /**
      * Set the group
      * @param group query Group
      * @return QueryMaker
@@ -138,13 +138,13 @@ public class QueryMaker extends QueryCore
      */
     public List<Entity> exec()
     {
-        this.daoManager.setEntityName(this.className);
+        this.daoManager.setEntityName(this.entityClassName);
         List<Entity> queryList = getQueryList();
 
         this.clean();
 
         if (queryList == null) {
-            return null;
+            return new ArrayList<Entity>();
         } else {
             return queryList;
         }
@@ -165,8 +165,7 @@ public class QueryMaker extends QueryCore
         if (queryList == null) {
             return null;
         } else {
-            this.entity = queryList.get(0);
-            return this.entity;
+            return queryList.get(0);
         }
     }
 
@@ -179,19 +178,23 @@ public class QueryMaker extends QueryCore
     public Entity exec(Input input)
     {
         Entity result = null;
-        if (this.method == null) { return null; }
-        if (this.method.equals("insert") && input == null) { return null; }
-
-        if (this.method.equals("insert")) {
-            result = this.daoManager.insert(this.entity, input.getValues());
+        if (this.method == null) {
+            return null;
+        }
+        if (INSERT.equals(this.method) && input == null) {
+            return null;
         }
 
-        if (this.method.equals("update")) {
-            result = this.daoManager.update(this.entity, input.getValues());
+        if (INSERT.equals(this.method)) {
+            result = this.daoManager.insert(this.entityClass, input.toJSONString());
         }
 
-        if (this.method.equals("delete")) {
-            this.daoManager.setEntityName(this.className);
+        if (UPDATE.equals(this.method)) {
+            result = this.daoManager.update(this.entityClass, input.toJSONString());
+        }
+
+        if (DELETE.equals(this.method)) {
+            this.daoManager.setEntityName(this.entityClassName);
             result = this.daoManager.delete((Long) input.get("id"));
         }
 
@@ -206,7 +209,9 @@ public class QueryMaker extends QueryCore
      */
     private List<Entity> getQueryList()
     {
-        if (this.method == null) { return null; }
+        if (this.method == null) {
+            return new ArrayList<Entity>();
+        }
 
         if (this.criteria != null && !this.criteria.getValues().isEmpty()
                 && this.group != null && !this.group.getValues().isEmpty()) {
@@ -232,8 +237,7 @@ public class QueryMaker extends QueryCore
         if (queryList == null) {
             return null;
         } else {
-            this.entity = queryList.get(0);
-            return this.entity;
+            return queryList.get(0);
         }
     }
 }

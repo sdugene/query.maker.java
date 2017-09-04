@@ -1,7 +1,10 @@
 package com.query.maker.Core;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
 import com.query.maker.Entity;
 import com.query.maker.Result;
 import org.hibernate.Query;
@@ -9,16 +12,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.apache.commons.beanutils.BeanUtils;
 import static org.springframework.util.StringUtils.capitalize;
 
-/**
- * Created by Sebastien Dugene on 12/25/2017.
- */
 public class DaoManager
 {
     private String entityName = null;
     private SessionFactory sessionFactory = null;
+
+    private static final String FROM = "from";
 
     /**
      * Set the entity name
@@ -39,16 +40,20 @@ public class DaoManager
     public Entity delete(long id)
     {
         Result result = new Result();
-        try {
-            Session session = this.session();
-            Transaction beginTransaction = session.beginTransaction();
-            Query createQuery = session.createQuery("delete from "+this.entityName+" s where s.id =:id");
-            createQuery.setParameter("id", id);
-            createQuery.executeUpdate();
-            beginTransaction.commit();
+        Session session = this.session();
+        Transaction beginTransaction = session.beginTransaction();
+        StringBuilder query = new StringBuilder()
+                .append("delete from ")
+                .append(this.entityName)
+                .append(" s where s.id =:id");
+        Query createQuery = session.createQuery(query.toString());
+        createQuery.setParameter("id", id);
+        int queryResult = createQuery.executeUpdate();
+        beginTransaction.commit();
+
+
+        if (queryResult > 0) {
             return result.setBool(true);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return result.setBool(false);
     }
@@ -56,18 +61,15 @@ public class DaoManager
     /**
      * Insert data in database
      *
-     * @param entity entity to create
+     * @param className entity to create
      * @param input data inserted
      *
      * @return Entity created
      */
-    public Entity insert(Entity entity, Map<String, Object> input)
+    public Entity insert(Class className, String input)
     {
-        try {
-            BeanUtils.populate(entity, input);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Entity entity = (Entity) new Gson()
+                .fromJson(input, className);
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
@@ -83,19 +85,15 @@ public class DaoManager
     /**
      * update the line in the database
      *
-     * @param entity entity to update
+     * @param className entity to update
      * @param input data inserted
      *
      * @return Entity updated
      */
-    public Entity update(Entity entity, Map<String, Object> input)
+    public Entity update(Class className, String input)
     {
-        try {
-            BeanUtils.populate(entity, input);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        Entity entity = (Entity) new Gson()
+                .fromJson(input, className);
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
@@ -112,12 +110,7 @@ public class DaoManager
      */
     public List<Entity> findAll()
     {
-        try {
-            return queryExec();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return queryExec();
     }
 
     /**
@@ -130,12 +123,7 @@ public class DaoManager
      */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit)
     {
-        try {
-            return queryExec(criteria, limit);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return queryExec(criteria, limit);
     }
 
     /**
@@ -149,12 +137,7 @@ public class DaoManager
      */
     public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit, Map<String, String> group)
     {
-        try {
-            return queryExec(criteria, limit, group);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return queryExec(criteria, limit, group);
     }
 
     /**
@@ -164,7 +147,7 @@ public class DaoManager
      */
     private List<Entity> queryExec ()
     {
-        return query(null, null, "from "+this.entityName+" s");
+        return query(null, null, FROM+" "+this.entityName+" s");
     }
 
     /**
@@ -179,7 +162,7 @@ public class DaoManager
     {
         StringBuilder querySql = new StringBuilder();
         criteria(criteria, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
+        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySql.toString());
     }
 
     /**
@@ -196,7 +179,7 @@ public class DaoManager
         StringBuilder querySql = new StringBuilder();
         querySql = criteria(criteria, querySql);
         querySql = group(group, querySql);
-        return query(criteria, limit, "from "+this.entityName+" s "+querySql.toString());
+        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySql.toString());
     }
 
     /**
@@ -227,43 +210,47 @@ public class DaoManager
     @SuppressWarnings("unchecked")
     private String criteriaSql (Map<String, Object> criteria, StringBuilder criteriaSql, String operator)
     {
-        for (String key: criteria.keySet()){
+        StringBuilder newCriteriaSql = criteriaSql;
+        for (Map.Entry<String,Object> entry : criteria.entrySet()){
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
             String patternNot = "(_not$)";
 
-            if (criteria.get(key) instanceof Map<?,?>) {
-                Map<String, Object> orValue = (Map) criteria.get(key);
-                criteriaSql = operator(criteriaSql, key);
-                criteriaSql.append("(")
+            if (value instanceof Map<?,?>) {
+                Map<String, Object> orValue = (Map) value;
+                newCriteriaSql = operator(criteriaSql, key);
+                newCriteriaSql.append("(")
                         .append(this.criteriaSql(orValue, new StringBuilder(), key))
                         .append(")");
-            } else if (criteria.get(key) == null && operator.matches(".*"+patternNot)) {
+            } else if (value == null && operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
-                criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql.append("s.")
+                newCriteriaSql = operator(criteriaSql, operatorCut);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is not null");
-            } else if (criteria.get(key) == null) {
-                criteriaSql = operator(criteriaSql, operator);
-                criteriaSql.append("s.")
+            } else if (value == null) {
+                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is null");
             } else if (operator.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
-                criteriaSql = operator(criteriaSql, operatorCut);
-                criteriaSql.append("s.")
+                newCriteriaSql = operator(criteriaSql, operatorCut);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" != :")
                         .append(key);
             } else {
-                criteriaSql = operator(criteriaSql, operator);
-                criteriaSql.append("s.")
+                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" = :")
                         .append(key);
             }
         }
-        return criteriaSql.toString();
+        return newCriteriaSql.toString();
     }
 
     /**
@@ -277,7 +264,7 @@ public class DaoManager
      */
     private StringBuilder operator (StringBuilder criteriaSql, String operator)
     {
-        if (!criteriaSql.toString().equals("")) {
+        if (!"".equals(criteriaSql.toString())) {
             criteriaSql.append(" ")
                     .append(operator)
                     .append(" ");
@@ -298,7 +285,7 @@ public class DaoManager
     {
         StringBuilder groupSql = new StringBuilder();
         for (String key: group.keySet()){
-            if (!groupSql.toString().equals("")) {
+            if (!"".equals(groupSql.toString())) {
                 groupSql.append(", ");
             }
 
@@ -312,7 +299,7 @@ public class DaoManager
                         .append(group.get(key));
             }
         }
-        if (!groupSql.toString().equals("")) {
+        if (!"".equals(groupSql.toString())) {
             querySql.append(" group by ")
                     .append(groupSql.toString());
         }
@@ -345,7 +332,7 @@ public class DaoManager
         List<Entity> queryList = (List) query.list();
         if (queryList == null || queryList.isEmpty()) {
             session.clear();
-            return null;
+            return new ArrayList<Entity>();
         } else {
             session.clear();
             return queryList;
@@ -363,14 +350,15 @@ public class DaoManager
     @SuppressWarnings("unchecked")
     private Query setParameters(Query query, Map<String, Object> criteria)
     {
+        Query newQuery = query;
         for (String key: criteria.keySet()){
             if (criteria.get(key) instanceof Map<?,?>) {
-                query = this.setParameters(query, (Map) criteria.get(key));
+                newQuery = this.setParameters(query, (Map) criteria.get(key));
             } else if (criteria.get(key) != null) {
-                query.setParameter(key, criteria.get(key));
+                newQuery.setParameter(key, criteria.get(key));
             }
         }
-        return query;
+        return newQuery;
     }
 
     /**

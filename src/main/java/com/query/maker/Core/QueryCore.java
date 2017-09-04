@@ -4,17 +4,14 @@ import com.query.maker.*;
 
 import java.util.Map;
 
-/**
- * Created by Sebastien Dugene on 12/25/2017.
- */
-public class QueryCore {
+public class QueryCore
+{
     protected DaoManager daoManager = new DaoManager();
-    protected Entity entity = null;
-    protected String className = null;
+    protected Class entityClass = null;
+    protected String entityClassName = null;
     protected String method = null;
     protected Criteria criteria = null;
     protected Group group = null;
-    protected Order order = null;
     protected int limit = 50;
 
     /**
@@ -22,7 +19,8 @@ public class QueryCore {
      */
     protected void clean()
     {
-        this.className = null;
+        this.entityClass = null;
+        this.entityClassName = null;
         this.method = null;
         this.criteria = null;
         this.group = null;
@@ -36,8 +34,8 @@ public class QueryCore {
      */
     protected void setEntity(Entity entity)
     {
-        this.entity = entity;
-        this.className = entity.getClassName();
+        this.entityClass = entity.getClass();
+        this.entityClassName = entity.getClassName();
     }
 
     /**

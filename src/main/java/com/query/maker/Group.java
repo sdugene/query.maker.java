@@ -3,9 +3,6 @@ package com.query.maker;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Sebastien Dugene on 12/23/2017.
- */
 public class Group
 {
     private Map<String, String> values;

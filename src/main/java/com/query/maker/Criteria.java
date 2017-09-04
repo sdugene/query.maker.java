@@ -1,13 +1,10 @@
 package com.query.maker;
 
-import org.apache.commons.beanutils.BeanUtils;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Sebastien Dugene on 12/23/2017.
- */
 public class Criteria
 {
     private Map<String, Object> values = new HashMap<String, Object>();
@@ -76,11 +73,8 @@ public class Criteria
     {
         Map<String, Object> notValue = new HashMap<String, Object>();
         if (this.values.get(operator) != null) {
-            try {
-                BeanUtils.populate(notValue, (Map) this.values.get(operator));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            String json = new Gson().toJson((Map) this.values.get(operator));
+            notValue = new Gson().fromJson(json, HashMap.class);
         }
 
         notValue.put("KEY"+notValue.size()+key, value);
@@ -102,7 +96,11 @@ public class Criteria
      *
      * @param values Map to set
      */
-    public Criteria setValues(Map<String, Object> values) { this.values = values; return this; }
+    public Criteria setValues(Map<String, Object> values)
+    {
+        this.values = values;
+        return this;
+    }
 
     /**
      * clear values
