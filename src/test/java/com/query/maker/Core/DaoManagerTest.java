@@ -1,9 +1,6 @@
 package com.query.maker.Core;
 
-import com.query.maker.Entity;
-import com.query.maker.Input;
-import com.query.maker.Result;
-import com.query.maker.User;
+import com.query.maker.*;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -68,11 +65,26 @@ public class DaoManagerTest
     @Test
     public void findByCriteria()
     {
-    }
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
 
-    @Test
-    public void findByCriteria1()
-    {
+        DaoManager daoManager = new DaoManager();
+        daoManager.createSession(properties);
+        daoManager.setEntityName(new User().getClassName());
+
+        Map<String, Object> criteria = new HashMap<String, Object>();
+        criteria.put("id", 1L);
+
+        List<Entity> users = daoManager.findByCriteria(criteria,1);
+        assertEquals("Sebastien", ((User) users.get(0)).getFirstName());
+
+        Map<String, String> group = new HashMap<String, String>();
+        group.put("firstName", null);
+
+        List<Entity> users2 = daoManager.findByCriteria(criteria,1, group);
+        assertEquals("Sebastien", ((User) users2.get(0)).getFirstName());
     }
 
     @Test

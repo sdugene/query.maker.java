@@ -74,7 +74,7 @@ public class DaoManager
 
         Session session = this.session();
         Transaction transaction = session.beginTransaction();
-        Long id = (Long) session.save(entity);
+        session.save(entity);
         transaction.commit();
 
         return entity;
