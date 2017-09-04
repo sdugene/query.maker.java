@@ -3,7 +3,9 @@ package com.query.maker;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -106,9 +108,15 @@ public class QueryMakerTest
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void exec()
     {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
         List<Entity> list = QueryMaker.getInstance()
                 .clean()
                 .exec();
@@ -116,11 +124,16 @@ public class QueryMakerTest
         assertEquals("[]", list.toString());
 
         Criteria criteria = new Criteria();
-        criteria.addValue("id", "1");
+        criteria.addValue("id", 1L);
 
-        /*QueryMaker.getInstance().select(new User())
+        QueryMaker queryMaker = QueryMaker.getInstance();
+        queryMaker.createSession(properties);
+        List<User> users = (List) queryMaker.select(new User())
                 .where(criteria)
-                .exec();*/
+                .exec();
+
+        queryMaker.closeSession();
+        assertEquals("1", String.valueOf(users.get(0).getId()));
     }
 
     @Test

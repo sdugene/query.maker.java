@@ -16,6 +16,7 @@ public class EntityTest {
     public void getId()
     {
         User user = new User();
+        user.setId(1L);
         assertEquals("1", String.valueOf(user.getId()));
     }
 

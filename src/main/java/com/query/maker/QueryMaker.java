@@ -38,7 +38,10 @@ public class QueryMaker extends QueryCore
         return QueryMaker.SingletonHolder.instance;
     }
 
-
+    /**
+     * clear values
+     */
+    @Override
     public QueryMaker clean()
     {
         super.clean();
