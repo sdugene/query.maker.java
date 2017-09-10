@@ -50,7 +50,7 @@ public class QueryMakerTest
     public void select()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
-                .select(new UserTest());
+                .select(new User());
         if (!(queryMaker instanceof QueryMaker)) {
             assert(false);
         }
@@ -60,7 +60,7 @@ public class QueryMakerTest
     public void delete()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
-                .delete(new UserTest());
+                .delete(new User());
         if (!(queryMaker instanceof QueryMaker)) {
             assert(false);
         }
@@ -70,7 +70,7 @@ public class QueryMakerTest
     public void update()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
-                .update(new UserTest());
+                .update(new User());
         if (!(queryMaker instanceof QueryMaker)) {
             assert(false);
         }
@@ -80,7 +80,7 @@ public class QueryMakerTest
     public void insert()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
-                .insert(new UserTest());
+                .insert(new User());
         if (!(queryMaker instanceof QueryMaker)) {
             assert(false);
         }
@@ -147,12 +147,12 @@ public class QueryMakerTest
 
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
-        List<UserTest> userTests = (List) queryMaker.select(new UserTest())
+        List<User> users = (List) queryMaker.select(new User())
                 .where(criteria)
                 .exec();
 
         queryMaker.closeSession();
-        assertEquals("1", String.valueOf(userTests.get(0).getId()));
+        assertEquals("1", String.valueOf(users.get(0).getId()));
     }
 
     @Test
@@ -167,49 +167,49 @@ public class QueryMakerTest
         queryMaker.createSession(properties);
 
         // Criteria == null
-        UserTest userTest = (UserTest) QueryMaker.getInstance()
-                .select(new UserTest())
+        User user = (User) QueryMaker.getInstance()
+                .select(new User())
                 .one();
-        assertEquals("Sebastien", userTest.getFirstName());
+        assertEquals("Sebastien", user.getFirstName());
 
         // Criteria == empty
         Criteria criteria2 = new Criteria();
 
-        UserTest userTest2 = (UserTest) QueryMaker.getInstance()
-                .select(new UserTest())
+        User user2 = (User) QueryMaker.getInstance()
+                .select(new User())
                 .where(criteria2)
                 .one();
-        assertEquals("Sebastien", userTest2.getFirstName());
+        assertEquals("Sebastien", user2.getFirstName());
 
         // Criteria != empty
         Criteria criteria3 = new Criteria();
         criteria3.addValue("firstName", "Sebastien");
 
-        UserTest userTest3 = (UserTest) QueryMaker.getInstance()
-                .select(new UserTest())
+        User user3 = (User) QueryMaker.getInstance()
+                .select(new User())
                 .where(criteria3)
                 .one();
-        assertEquals("Sebastien", userTest3.getFirstName());
+        assertEquals("Sebastien", user3.getFirstName());
 
         // Criteria != empty & Group == empty
         Group group = new Group();
 
-        UserTest userTest4 = (UserTest) QueryMaker.getInstance()
-                .select(new UserTest())
+        User user4 = (User) QueryMaker.getInstance()
+                .select(new User())
                 .where(criteria3)
                 .group(group)
                 .one();
-        assertEquals("Sebastien", userTest4.getFirstName());
+        assertEquals("Sebastien", user4.getFirstName());
 
         // Criteria != empty & Group != empty
         group.addValue("firstName", null);
 
-        UserTest userTest5 = (UserTest) QueryMaker.getInstance()
-                .select(new UserTest())
+        User user5 = (User) QueryMaker.getInstance()
+                .select(new User())
                 .where(criteria3)
                 .group(group)
                 .one();
-        assertEquals("Sebastien", userTest5.getFirstName());
+        assertEquals("Sebastien", user5.getFirstName());
 
         queryMaker.closeSession();
     }
@@ -224,29 +224,29 @@ public class QueryMakerTest
 
         QueryMaker.getInstance().clean();
 
-        UserTest userTest = (UserTest) QueryMaker.getInstance()
+        User user = (User) QueryMaker.getInstance()
                 .exec(1L);
 
-        assertEquals(null, userTest);
+        assertEquals(null, user);
 
-        UserTest userTest2 = (UserTest) QueryMaker.getInstance()
+        User user2 = (User) QueryMaker.getInstance()
                 .select(null)
                 .exec(1L);
 
-        assertEquals(null, userTest2);
+        assertEquals(null, user2);
 
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
 
-        UserTest userTest3 = (UserTest) queryMaker.select(new UserTest())
+        User user3 = (User) queryMaker.select(new User())
                 .exec(2L);
-        assertEquals(null, userTest3);
+        assertEquals(null, user3);
 
-        UserTest userTest4 = (UserTest) queryMaker.select(new UserTest())
+        User user4 = (User) queryMaker.select(new User())
                 .exec(1L);
 
         queryMaker.closeSession();
-        assertEquals("1", String.valueOf(userTest4.getId()));
+        assertEquals("1", String.valueOf(user4.getId()));
     }
 
     @Test
@@ -256,16 +256,16 @@ public class QueryMakerTest
 
         Input input = new Input();
 
-        UserTest userTest = (UserTest) QueryMaker.getInstance()
+        User user = (User) QueryMaker.getInstance()
                 .exec(input);
 
-        assertEquals(null, userTest);
+        assertEquals(null, user);
 
-        UserTest userTest2 = (UserTest) QueryMaker.getInstance()
+        User user2 = (User) QueryMaker.getInstance()
                 .select(null)
                 .exec(input);
 
-        assertEquals(null, userTest2);
+        assertEquals(null, user2);
     }
 
     @Test
@@ -281,44 +281,44 @@ public class QueryMakerTest
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
 
-        UserTest userTest = (UserTest) queryMaker
-                .insert(new UserTest())
+        User user = (User) queryMaker
+                .insert(new User())
                 .exec(input);
-        assertEquals(null, userTest.getFirstName());
+        assertEquals(null, user.getFirstName());
 
         Input inputError = null;
-        UserTest userTestError = (UserTest) queryMaker
-                .insert(new UserTest())
+        User userError = (User) queryMaker
+                .insert(new User())
                 .exec(inputError);
-        assertEquals(null, userTestError);
+        assertEquals(null, userError);
 
         input.addValue("firstName", "test");
-        UserTest userTest2 = (UserTest) queryMaker
-                .insert(new UserTest())
+        User user2 = (User) queryMaker
+                .insert(new User())
                 .exec(input);
 
-        assertEquals("test", userTest2.getFirstName());
+        assertEquals("test", user2.getFirstName());
 
         Input input2 = new Input();
         input2.addValue("firstName", "test2");
-        UserTest userTest3 = (UserTest) queryMaker
-                .update(userTest2)
+        User user3 = (User) queryMaker
+                .update(user2)
                 .exec(input2);
 
-        assertEquals("test2", userTest3.getFirstName());
+        assertEquals("test2", user3.getFirstName());
 
         Input input3 = new Input();
-        input3.addValue("id", userTest3.getId());
+        input3.addValue("id", user3.getId());
         Result result = (Result) queryMaker
-            .delete(userTest2)
+            .delete(user2)
             .exec(input3);
 
         assertEquals(true, result.isBool());
 
         Input input4 = new Input();
-        input4.addValue("id", userTest.getId());
+        input4.addValue("id", user.getId());
         Result result2 = (Result) queryMaker
-                .delete(userTest)
+                .delete(user)
                 .exec(input4);
         assertEquals(true, result2.isBool());
 
@@ -339,22 +339,22 @@ public class QueryMakerTest
         Criteria criteria = new Criteria();
         criteria.addValue("id", 0L);
 
-        UserTest userTest = (UserTest) QueryMaker.getInstance()
-                .select(new UserTest())
+        User user = (User) QueryMaker.getInstance()
+                .select(new User())
                 .where(criteria)
                 .one();
 
-        assertEquals(null, userTest);
+        assertEquals(null, user);
 
         Criteria criteria2 = new Criteria();
         criteria2.addValue("id", 1L);
 
-        UserTest userTest2 = (UserTest) QueryMaker.getInstance()
-                .select(new UserTest())
+        User user2 = (User) QueryMaker.getInstance()
+                .select(new User())
                 .where(criteria2)
                 .one();
 
-        assertEquals("Sebastien", userTest2.getFirstName());
+        assertEquals("Sebastien", user2.getFirstName());
 
         queryMaker.closeSession();
     }

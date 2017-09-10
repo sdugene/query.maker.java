@@ -1,6 +1,6 @@
 package com.query.maker.core;
 
-import com.query.maker.UserTest;
+import com.query.maker.User;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class QueryCoreTest
     @Test
     public void clean() {
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
-        queryCoreAnon.setEntity(new UserTest());
+        queryCoreAnon.setEntity(new User());
 
         assertEquals("User", queryCoreAnon.getEntityClassName());
 
@@ -31,7 +31,7 @@ public class QueryCoreTest
     @Test
     public void setEntity() {
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
-        queryCoreAnon.setEntity(new UserTest());
+        queryCoreAnon.setEntity(new User());
 
         assertEquals("User", queryCoreAnon.getEntityClassName());
     }

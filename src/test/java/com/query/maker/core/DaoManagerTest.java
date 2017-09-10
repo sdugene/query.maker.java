@@ -21,24 +21,24 @@ public class DaoManagerTest
 
         DaoManager daoManager = new DaoManager();
         daoManager.createSession(properties);
-        daoManager.setEntityName(new UserTest().getClassName());
+        daoManager.setEntityName(new User().getClassName());
 
         Input input = new Input();
         input.addValue("firstName", "test");
 
-        UserTest userTest = (UserTest) daoManager.insert(UserTest.class, input);
-        assertEquals("test", userTest.getFirstName());
+        User user = (User) daoManager.insert(User.class, input);
+        assertEquals("test", user.getFirstName());
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("firstName", "test2");
 
-        UserTest userTest2 = (UserTest) daoManager.update(userTest, map);
-        assertEquals("test2", userTest2.getFirstName());
+        User user2 = (User) daoManager.update(user, map);
+        assertEquals("test2", user2.getFirstName());
 
-        Result result = (Result) daoManager.delete(userTest2.getId());
+        Result result = (Result) daoManager.delete(user2.getId());
         assertEquals(true, result.isBool());
 
-        Result result2 = (Result) daoManager.delete(userTest2.getId());
+        Result result2 = (Result) daoManager.delete(user2.getId());
         assertEquals(false, result2.isBool());
 
         daoManager.closeSession();
@@ -54,10 +54,10 @@ public class DaoManagerTest
 
         DaoManager daoManager = new DaoManager();
         daoManager.createSession(properties);
-        daoManager.setEntityName(new UserTest().getClassName());
+        daoManager.setEntityName(new User().getClassName());
 
         List<Entity> users = daoManager.findAll();
-        assertEquals("Sebastien", ((UserTest) users.get(0)).getFirstName());
+        assertEquals("Sebastien", ((User) users.get(0)).getFirstName());
 
         daoManager.closeSession();
     }
@@ -72,7 +72,7 @@ public class DaoManagerTest
 
         DaoManager daoManager = new DaoManager();
         daoManager.createSession(properties);
-        daoManager.setEntityName(new UserTest().getClassName());
+        daoManager.setEntityName(new User().getClassName());
 
         Map<String, Object> criteria = new HashMap<String, Object>();
         criteria.put("id", 1L);
@@ -81,13 +81,13 @@ public class DaoManagerTest
         criteria.put("AND_not", notValue);
 
         List<Entity> users = daoManager.findByCriteria(criteria,1);
-        assertEquals("Sebastien", ((UserTest) users.get(0)).getFirstName());
+        assertEquals("Sebastien", ((User) users.get(0)).getFirstName());
 
         Map<String, String> group = new HashMap<String, String>();
         group.put("firstName", null);
 
         List<Entity> users2 = daoManager.findByCriteria(criteria,1, group);
-        assertEquals("Sebastien", ((UserTest) users2.get(0)).getFirstName());
+        assertEquals("Sebastien", ((User) users2.get(0)).getFirstName());
 
         group.put("id", null);
         group.put("firstName", null);
@@ -100,7 +100,7 @@ public class DaoManagerTest
         criteria2.put("OR_not", notValue2);
 
         List<Entity> users3 = daoManager.findByCriteria(criteria2,1, group);
-        assertEquals("Sebastien", ((UserTest) users3.get(0)).getFirstName());
+        assertEquals("Sebastien", ((User) users3.get(0)).getFirstName());
 
         Map<String, Object> criteria3 = new HashMap<String, Object>();
         criteria3.put("id", 1L);
@@ -109,7 +109,7 @@ public class DaoManagerTest
         criteria3.put("OR", notValue3);
 
         List<Entity> users4 = daoManager.findByCriteria(criteria3,1);
-        assertEquals("Sebastien", ((UserTest) users4.get(0)).getFirstName());
+        assertEquals("Sebastien", ((User) users4.get(0)).getFirstName());
 
         Map<String, Object> criteria4 = new HashMap<String, Object>();
         criteria4.put("id", 1L);
@@ -118,7 +118,7 @@ public class DaoManagerTest
         criteria4.put("OR_not", notValue4);
 
         List<Entity> users5 = daoManager.findByCriteria(criteria4,1);
-        assertEquals("Sebastien", ((UserTest) users5.get(0)).getFirstName());
+        assertEquals("Sebastien", ((User) users5.get(0)).getFirstName());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class DaoManagerTest
 
         DaoManager daoManager = new DaoManager();
         daoManager.createSession(properties);
-        daoManager.setEntityName(new UserTest().getClassName());
+        daoManager.setEntityName(new User().getClassName());
 
         Map<String, Object> criteria = new HashMap<String, Object>();
         criteria.put("id", null);

@@ -1,10 +1,14 @@
 package com.query.maker;
 
+import org.junit.Test;
+
 import javax.persistence.*;
+
+import static org.junit.Assert.assertEquals;
 
 @javax.persistence.Entity
 @Table(name = "user")
-public class UserTest extends Entity
+public class User extends Entity
 {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
