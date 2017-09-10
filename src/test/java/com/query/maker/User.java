@@ -1,10 +1,6 @@
 package com.query.maker;
 
-import org.junit.Test;
-
 import javax.persistence.*;
-
-import static org.junit.Assert.assertEquals;
 
 @javax.persistence.Entity
 @Table(name = "user")
