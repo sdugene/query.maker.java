@@ -275,6 +275,12 @@ public class QueryMakerTest
 
         assertEquals(null, result2);
 
+        Result result3 = (Result) QueryMaker.getInstance()
+                .tblOperations(new Mail())
+                .exec("test");
+
+        assertEquals(null, result3);
+
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
         properties.put("username", "tests");
@@ -283,10 +289,10 @@ public class QueryMakerTest
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
 
-        Result result3 = (Result) queryMaker
+        Result result4 = (Result) queryMaker
                 .tblOperations(new Mail())
                 .exec("truncate");
-        assertEquals(true, result3.isBool());
+        assertEquals(true, result4.isBool());
 
         queryMaker.closeSession();
 
