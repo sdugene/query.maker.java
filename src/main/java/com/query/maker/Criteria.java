@@ -69,17 +69,15 @@ public class Criteria
      * @param value value put
      * @param operator operator
      */
+    @SuppressWarnings("unchecked")
     private Criteria addArrayValue(String key, Object value, String operator)
     {
         System.out.println(this.values);
         Map<String, Object> notValue = new HashMap<String, Object>();
-        if (this.values.get(operator) != null) {
-            String json = new Gson().toJson((Map) this.values.get(operator));
-            notValue = new Gson().fromJson(json, HashMap.class);
-        }
+        notValue.putAll((Map) this.values.get(operator));
 
         notValue.put("KEY"+notValue.size()+key, value);
-        this.values.put(operator, new Gson().toJson(notValue));
+        this.values.put(operator, notValue);
         System.out.println(this.values);
         return this;
     }
