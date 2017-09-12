@@ -4,9 +4,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class GroupTest {
+public class GroupTest
+{
     @Test
-    public void addValue()
+    public void addValueTest()
     {
         Group group = new Group();
 
@@ -15,14 +16,14 @@ public class GroupTest {
     }
 
     @Test
-    public void getValues()
+    public void getValuesTest()
     {
         Group group = new Group();
         assertEquals("{}", group.getValues().toString());
     }
 
     @Test
-    public void clear()
+    public void clearTest()
     {
         Group group = new Group();
 

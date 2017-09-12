@@ -18,7 +18,7 @@ public class QueryCoreTest
     }
 
     @Test
-    public void clean() {
+    public void cleanTest() {
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
         queryCoreAnon.setEntity(new User());
 
@@ -29,7 +29,7 @@ public class QueryCoreTest
     }
 
     @Test
-    public void setEntity() {
+    public void setEntityTest() {
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
         queryCoreAnon.setEntity(new User());
 
@@ -37,7 +37,7 @@ public class QueryCoreTest
     }
 
     @Test
-    public void createSession() {
+    public void createSessionTest() {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
         properties.put("username", "test");

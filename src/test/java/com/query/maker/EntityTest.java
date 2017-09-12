@@ -6,16 +6,17 @@ import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
-public class EntityTest {
+public class EntityTest
+{
     @Test
-    public void getClassName()
+    public void getClassNameTest()
     {
         User user = new User();
         assertEquals("User", user.getClassName());
     }
 
     @Test
-    public void toMap()
+    public void toMapTest()
     {
         User user = new User();
         user.setId(1L);
@@ -29,7 +30,7 @@ public class EntityTest {
     }
 
     @Test
-    public void getId()
+    public void getIdTest()
     {
         User user = new User();
         user.setId(1L);

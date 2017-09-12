@@ -7,9 +7,10 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class InputTest {
+public class InputTest
+{
     @Test
-    public void addValue()
+    public void addValueTest()
     {
         Input input = new Input();
 
@@ -18,21 +19,21 @@ public class InputTest {
     }
 
     @Test
-    public void getValues()
+    public void getValuesTest()
     {
         Input input = new Input();
         assertEquals("{}", input.getValues().toString());
     }
 
     @Test
-    public void toJSONString()
+    public void toJSONStringTest()
     {
         Input input = new Input();
         assertEquals("{}", input.toJSONString());
     }
 
     @Test
-    public void setValues()
+    public void setValuesTest()
     {
         Input input = new Input();
 
@@ -44,7 +45,7 @@ public class InputTest {
     }
 
     @Test
-    public void clear()
+    public void clearTest()
     {
         Input input = new Input();
 
@@ -56,7 +57,7 @@ public class InputTest {
     }
 
     @Test
-    public void get()
+    public void getTest()
     {
         Input input = new Input();
 
@@ -65,5 +66,4 @@ public class InputTest {
 
         assertEquals("testValue3", input.get("test3"));
     }
-
 }

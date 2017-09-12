@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class CriteriaTest
 {
     @Test
-    public void addValue()
+    public void addValueTest()
     {
         Criteria criteria = new Criteria();
 
@@ -26,7 +26,7 @@ public class CriteriaTest
     }
 
     @Test
-    public void orValue()
+    public void orValueTest()
     {
         Criteria criteria = new Criteria();
 
@@ -35,7 +35,7 @@ public class CriteriaTest
     }
 
     @Test
-    public void notValue()
+    public void notValueTest()
     {
         Criteria criteria = new Criteria();
 
@@ -44,14 +44,14 @@ public class CriteriaTest
     }
 
     @Test
-    public void getValues()
+    public void getValuesTest()
     {
         Criteria criteria = new Criteria();
         assertEquals("{}", criteria.getValues().toString());
     }
 
     @Test
-    public void setValues()
+    public void setValuesTest()
     {
         Criteria criteria = new Criteria();
 
@@ -63,7 +63,7 @@ public class CriteriaTest
     }
 
     @Test
-    public void clear()
+    public void clearTest()
     {
         Criteria criteria = new Criteria();
 

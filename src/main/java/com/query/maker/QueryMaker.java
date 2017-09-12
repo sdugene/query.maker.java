@@ -211,7 +211,7 @@ public class QueryMaker extends QueryCore
             return null;
         }
 
-        Entity result = null;
+        Entity result = new Result();
         if (TRUNCATE.equals(operation)) {
             result = this.daoManager.truncate(this.entity);
         }
@@ -242,7 +242,6 @@ public class QueryMaker extends QueryCore
         }
 
         if (UPDATE.equals(this.method)) {
-
             result = this.daoManager.update(this.entity, input.getValues());
         }
 

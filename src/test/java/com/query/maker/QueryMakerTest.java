@@ -38,7 +38,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void getInstance()
+    public void getInstanceTest()
     {
         QueryMaker queryMaker = QueryMaker.getInstance();
         if (!(queryMaker instanceof QueryMaker)) {
@@ -47,7 +47,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void select()
+    public void selectTest()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
                 .select(new User());
@@ -57,7 +57,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void delete()
+    public void deleteTest()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
                 .delete(new User());
@@ -67,7 +67,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void update()
+    public void updateTest()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
                 .update(new User());
@@ -77,7 +77,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void insert()
+    public void insertTest()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
                 .insert(new User());
@@ -87,7 +87,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void tblOperations()
+    public void tblOperationsTest()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
                 .tblOperations(new Mail());
@@ -97,7 +97,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void where()
+    public void whereTest()
     {
         Criteria criteria = new Criteria()
                 .addValue("test", "testValue");
@@ -110,7 +110,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void limit()
+    public void limitTest()
     {
         QueryMaker queryMaker = QueryMaker.getInstance()
                 .limit(1);
@@ -120,7 +120,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void group()
+    public void groupTest()
     {
         Group group = new Group()
                 .addValue("test", "testValue");
@@ -134,7 +134,7 @@ public class QueryMakerTest
 
     @SuppressWarnings("unchecked")
     @Test
-    public void exec()
+    public void execTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
@@ -225,7 +225,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void execInt()
+    public void execIntTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
@@ -260,8 +260,21 @@ public class QueryMakerTest
     }
 
     @Test
-    public void execString()
+    public void execStringTest()
     {
+        QueryMaker.getInstance().clean();
+
+        Result result = (Result) QueryMaker.getInstance()
+                .exec("test");
+
+        assertEquals(null, result);
+
+        Result result2 = (Result) QueryMaker.getInstance()
+                .select(null)
+                .exec("test");
+
+        assertEquals(null, result2);
+
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
         properties.put("username", "tests");
@@ -270,17 +283,17 @@ public class QueryMakerTest
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
 
-        Result result = (Result) queryMaker
+        Result result3 = (Result) queryMaker
                 .tblOperations(new Mail())
                 .exec("truncate");
-        assertEquals(true, result.isBool());
+        assertEquals(true, result3.isBool());
 
         queryMaker.closeSession();
 
     }
 
     @Test
-    public void execInput()
+    public void execInputTest()
     {
         QueryMaker.getInstance().clean();
 
@@ -299,7 +312,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void execInputInsertUpdateDelete()
+    public void execInputInsertUpdateDeleteTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
@@ -356,7 +369,7 @@ public class QueryMakerTest
     }
 
     @Test
-    public void one()
+    public void oneTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
