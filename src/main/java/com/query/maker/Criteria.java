@@ -1,7 +1,5 @@
 package com.query.maker;
 
-import com.google.gson.Gson;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,21 +70,13 @@ public class Criteria
     @SuppressWarnings("unchecked")
     private Criteria addArrayValue(String key, Object value, String operator)
     {
-        System.out.println("75"+this.values);
         Map<String, Object> notValue = new HashMap<String, Object>();
         if (this.values.get(operator) != null) {
             notValue.putAll((Map) this.values.get(operator));
         }
-        System.out.println("77"+notValue);
 
-        int cursor = 0;
-        cursor += notValue.size();
-
-        notValue.put("KEY"+cursor+key, value);
-        System.out.println("81"+notValue);
-
+        notValue.put("KEY"+notValue.size()+key, value);
         this.values.put(operator, notValue);
-        System.out.println("84"+this.values);
         return this;
     }
 

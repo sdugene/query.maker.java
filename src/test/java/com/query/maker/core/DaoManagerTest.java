@@ -1,6 +1,8 @@
 package com.query.maker.core;
 
 import com.query.maker.*;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -11,17 +13,30 @@ import static org.junit.Assert.*;
 
 public class DaoManagerTest
 {
-    @Test
-    public void insertUpdateDelete()
-    {
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+    Map<String, String> properties = new HashMap<String, String>();
+    DaoManager daoManager = new DaoManager();
 
-        DaoManager daoManager = new DaoManager();
-        daoManager.createSession(properties);
-        daoManager.setEntityName(new User().getClassName());
+
+    @Before
+    public void setUp()
+    {
+        this.properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        this.properties.put("username", "tests");
+        this.properties.put("password", "KS94nik7");
+
+        this.daoManager.createSession(properties);
+    }
+
+    @After
+    public void tearDown()
+    {
+        daoManager.closeSession();
+    }
+
+    @Test
+    public void insertUpdateDeleteTest()
+    {
+        this.daoManager.setEntityName(new User().getClassName());
 
         Input input = new Input();
         input.addValue("firstName", "test");
@@ -40,39 +55,28 @@ public class DaoManagerTest
 
         Result result2 = (Result) daoManager.delete(user2.getId());
         assertEquals(false, result2.isBool());
-
-        daoManager.closeSession();
     }
 
     @Test
-    public void findAll()
+    public void truncateTest()
     {
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+        Result result = (Result) daoManager.truncate(new Mail());
+        assertEquals(true, result.isBool());
+    }
 
-        DaoManager daoManager = new DaoManager();
-        daoManager.createSession(properties);
-        daoManager.setEntityName(new User().getClassName());
+    @Test
+    public void findAllTest()
+    {
+        this.daoManager.setEntityName(new User().getClassName());
 
         List<Entity> users = daoManager.findAll();
         assertEquals("Sebastien", ((User) users.get(0)).getFirstName());
-
-        daoManager.closeSession();
     }
 
     @Test
-    public void findByCriteria()
+    public void findByCriteriaTest()
     {
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
-
-        DaoManager daoManager = new DaoManager();
-        daoManager.createSession(properties);
-        daoManager.setEntityName(new User().getClassName());
+        this.daoManager.setEntityName(new User().getClassName());
 
         Map<String, Object> criteria = new HashMap<String, Object>();
         criteria.put("id", 1L);
@@ -122,16 +126,9 @@ public class DaoManagerTest
     }
 
     @Test
-    public void findByCriteriaError()
+    public void findByCriteriaErrorTest()
     {
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
-
-        DaoManager daoManager = new DaoManager();
-        daoManager.createSession(properties);
-        daoManager.setEntityName(new User().getClassName());
+        this.daoManager.setEntityName(new User().getClassName());
 
         Map<String, Object> criteria = new HashMap<String, Object>();
         criteria.put("id", null);
@@ -148,17 +145,12 @@ public class DaoManagerTest
     }
 
     @Test
-    public void createSession()
+    public void createSessionTest()
     {
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
-
         DaoManager daoManager = new DaoManager();
 
         try {
-            daoManager.createSession(properties);
+            daoManager.createSession(this.properties);
             daoManager.closeSession();
         } catch (Exception e) {
             assert(false);

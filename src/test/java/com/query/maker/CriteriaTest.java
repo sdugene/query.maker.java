@@ -22,7 +22,7 @@ public class CriteriaTest
 
 
         criteria.addValue("test3", "testValue3", "OR");
-        assertEquals("{test=testValue, OR_not={KEY1test3=testValue3, KEY0test2=testValue2}}", criteria.getValues().toString());
+        assertEquals("{test=testValue, OR_not={KEY0test2=testValue2, KEY1test3=testValue3}}", criteria.getValues().toString());
     }
 
     @Test

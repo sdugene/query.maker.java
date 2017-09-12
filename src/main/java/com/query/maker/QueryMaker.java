@@ -11,6 +11,8 @@ public class QueryMaker extends QueryCore
     private static final String INSERT = "insert";
     private static final String DELETE = "delete";
     private static final String UPDATE = "update";
+    private static final String TRUNCATE = "truncate";
+    private static final String OPERATIONS = "operations";
 
     /**
      * Default constructor
@@ -76,8 +78,6 @@ public class QueryMaker extends QueryCore
         return this;
     }
 
-
-
     /**
      * Set the method as "update"
      *
@@ -103,6 +103,20 @@ public class QueryMaker extends QueryCore
         super.clean();
         this.setEntity(entity);
         this.method = INSERT;
+        return this;
+    }
+
+    /**
+     * Set the method as "operation"
+     *
+     * @param entity inserted Entity
+     * @return QueryMaker
+     */
+    public QueryMaker tblOperations(Entity entity)
+    {
+        super.clean();
+        this.setEntity(entity);
+        this.method = OPERATIONS;
         return this;
     }
 
@@ -182,6 +196,27 @@ public class QueryMaker extends QueryCore
         } else {
             return queryList.get(0);
         }
+    }
+
+    /**
+     * Execute a specific table operation query
+     *
+     * @param operation table operation to execute
+     * @return result Entity
+     */
+    public Entity exec(String operation)
+    {
+        if (this.method == null
+                || !OPERATIONS.equals(this.method)) {
+            return null;
+        }
+
+        Entity result = null;
+        if (TRUNCATE.equals(operation)) {
+            result = this.daoManager.truncate(this.entity);
+        }
+
+        return result;
     }
 
     /**

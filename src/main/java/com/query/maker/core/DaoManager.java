@@ -13,6 +13,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import javax.persistence.Table;
+
 import static org.springframework.util.StringUtils.capitalize;
 
 public class DaoManager
@@ -52,11 +55,30 @@ public class DaoManager
         int queryResult = createQuery.executeUpdate();
         beginTransaction.commit();
 
-
         if (queryResult > 0) {
             return result.setBool(true);
         }
         return result.setBool(false);
+    }
+
+    /**
+     * Truncate Table
+     *
+     * @return Result Object with boolean
+     */
+    public Entity truncate(Entity entity)
+    {
+        Class<?> c = entity.getClass();
+        Table table = c.getAnnotation(Table.class);
+
+        Result result = new Result();
+        Session session = this.session();
+        StringBuilder query = new StringBuilder();
+        query.append("truncate table ");
+        query.append(table.name());
+
+        session.createSQLQuery(query.toString()).executeUpdate();
+        return result.setBool(true);
     }
 
     /**

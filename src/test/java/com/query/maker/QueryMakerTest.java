@@ -87,6 +87,16 @@ public class QueryMakerTest
     }
 
     @Test
+    public void tblOperations()
+    {
+        QueryMaker queryMaker = QueryMaker.getInstance()
+                .tblOperations(new Mail());
+        if (!(queryMaker instanceof QueryMaker)) {
+            assert(false);
+        }
+    }
+
+    @Test
     public void where()
     {
         Criteria criteria = new Criteria()
@@ -247,6 +257,26 @@ public class QueryMakerTest
 
         queryMaker.closeSession();
         assertEquals("1", String.valueOf(user4.getId()));
+    }
+
+    @Test
+    public void execString()
+    {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
+        properties.put("username", "tests");
+        properties.put("password", "KS94nik7");
+
+        QueryMaker queryMaker = QueryMaker.getInstance();
+        queryMaker.createSession(properties);
+
+        Result result = (Result) queryMaker
+                .tblOperations(new Mail())
+                .exec("truncate");
+        assertEquals(true, result.isBool());
+
+        queryMaker.closeSession();
+
     }
 
     @Test
