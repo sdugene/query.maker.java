@@ -72,16 +72,16 @@ public class Criteria
     @SuppressWarnings("unchecked")
     private Criteria addArrayValue(String key, Object value, String operator)
     {
-        System.out.println(this.values);
+        System.out.println("75"+this.values);
         Map<String, Object> notValue = (Map) this.values.get(operator);
-        System.out.println(notValue);
+        System.out.println("77"+notValue);
         //notValue.putAll((Map) this.values.get(operator));
 
         notValue.put("KEY"+notValue.size()+key, value);
-        System.out.println(notValue);
+        System.out.println("81"+notValue);
 
         this.values.put(operator, notValue);
-        System.out.println(this.values);
+        System.out.println("84"+this.values);
         return this;
     }
 
