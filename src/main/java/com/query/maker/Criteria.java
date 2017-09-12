@@ -73,10 +73,13 @@ public class Criteria
     private Criteria addArrayValue(String key, Object value, String operator)
     {
         System.out.println(this.values);
-        Map<String, Object> notValue = new HashMap<String, Object>();
-        notValue.putAll((Map) this.values.get(operator));
+        Map<String, Object> notValue = (Map) this.values.get(operator);
+        System.out.println(notValue);
+        //notValue.putAll((Map) this.values.get(operator));
 
         notValue.put("KEY"+notValue.size()+key, value);
+        System.out.println(notValue);
+
         this.values.put(operator, notValue);
         System.out.println(this.values);
         return this;
