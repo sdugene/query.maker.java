@@ -281,7 +281,7 @@ public class QueryMakerTest
         queryMaker.createSession(properties);
 
         User user3 = (User) queryMaker.select(new User())
-                .exec(2L);
+                .exec(42L);
         assertEquals(null, user3);
 
         User user4 = (User) queryMaker.select(new User())
