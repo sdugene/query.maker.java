@@ -315,11 +315,18 @@ class DaoManager
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            if (value == null && !"".equals(groupSql.toString())) {
+            if ((value == null || "ASC".equals(value) || "DESC".equals(value)) && !"".equals(groupSql.toString())) {
                 groupSql.append(", ");
             }
 
-            if (value == null) {
+            if ("ASC".equals(value) || "DESC".equals(value)) {
+                groupSql.append("s.")
+                        .append(key)
+                        .append(" ")
+                        .append(value);
+            }
+
+            else if (value == null) {
                 groupSql.append("s.")
                         .append(key);
             }

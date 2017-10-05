@@ -23,7 +23,16 @@ public class Group
      */
     public Group addValue(String key, String value)
     {
-        this.values.put(key, value);
+        String valueUp = null;
+        if (value != null) {
+            valueUp = value.toUpperCase();
+        }
+
+        if ("ASC".equals(valueUp) || "DESC".equals(valueUp)) {
+            this.values.put(key, valueUp);
+        } else {
+            this.values.put(key, value);
+        }
         return this;
     }
 
