@@ -96,11 +96,15 @@ public class DaoManagerTest
         group.addValue("firstName", null);
         group.addValue("LastName", "test");
 
+        Order order2 = new Order();
+        order.addValue("id", "ASC");
+        order.addValue("firstName", "ASC");
+
         Criteria criteria2 = new Criteria();
         criteria2.addValue("id", 1L);
         criteria2.addValue("firstName", "error", "OR_not");
 
-        List<Entity> users3 = daoManager.findByCriteria(criteria2,1, group, null);
+        List<Entity> users3 = daoManager.findByCriteria(criteria2,1, group, order2);
         assertEquals("Sebastien", ((User) users3.get(0)).getFirstName());
 
         Criteria criteria3 = new Criteria();

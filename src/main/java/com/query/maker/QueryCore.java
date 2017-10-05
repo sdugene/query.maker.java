@@ -25,6 +25,7 @@ public class QueryCore
         this.method = null;
         this.criteria = null;
         this.group = null;
+        this.order = null;
         this.limit = 50;
         return this;
     }

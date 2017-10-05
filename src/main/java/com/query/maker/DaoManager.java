@@ -355,12 +355,10 @@ class DaoManager
                 orderSql.append(", ");
             }
 
-            if (value == null) {
-                orderSql.append("s.")
-                        .append(key)
-                        .append(" ")
-                        .append(value);
-            }
+            orderSql.append("s.")
+                    .append(key)
+                    .append(" ")
+                    .append(value);
         }
         if (!"".equals(orderSql.toString())) {
             querySql.append(" order by ")
