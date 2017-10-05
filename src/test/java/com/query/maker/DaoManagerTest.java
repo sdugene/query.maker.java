@@ -98,8 +98,8 @@ public class DaoManagerTest
         group.addValue("LastName", "test");
 
         Order order2 = new Order();
-        order.addValue("id", "ASC");
-        order.addValue("firstName", "ASC");
+        order2.addValue("id", "ASC");
+        order2.addValue("firstName", "ASC");
 
         Criteria criteria2 = new Criteria();
         criteria2.addValue("id", 1L);

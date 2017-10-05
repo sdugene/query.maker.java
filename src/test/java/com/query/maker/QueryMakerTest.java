@@ -224,15 +224,34 @@ public class QueryMakerTest
                 .one();
         assertEquals("Sebastien", user4.getFirstName());
 
-        // Criteria != empty & Group != empty
-        group.addValue("firstName", null);
+        // Criteria != empty & Order == empty
+        Order order = new Order();
 
         User user5 = (User) QueryMaker.getInstance()
                 .select(new User())
                 .where(criteria3)
-                .group(group)
+                .order(order)
                 .one();
         assertEquals("Sebastien", user5.getFirstName());
+
+        // Criteria != empty & Group == empty & Order == empty
+        User user6 = (User) QueryMaker.getInstance()
+                .select(new User())
+                .where(criteria3)
+                .group(group)
+                .order(order)
+                .one();
+        assertEquals("Sebastien", user6.getFirstName());
+
+        // Criteria != empty & Group != empty
+        group.addValue("firstName", null);
+
+        User user7 = (User) QueryMaker.getInstance()
+                .select(new User())
+                .where(criteria3)
+                .group(group)
+                .one();
+        assertEquals("Sebastien", user7.getFirstName());
 
         queryMaker.closeSession();
     }
