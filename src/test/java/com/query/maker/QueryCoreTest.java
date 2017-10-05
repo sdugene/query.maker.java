@@ -1,5 +1,6 @@
-package com.query.maker.core;
+package com.query.maker;
 
+import com.query.maker.QueryCore;
 import com.query.maker.User;
 import org.junit.Test;
 

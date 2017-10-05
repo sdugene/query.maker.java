@@ -1,13 +1,10 @@
-package com.query.maker.core;
+package com.query.maker;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.query.maker.Entity;
-import com.query.maker.Input;
-import com.query.maker.Result;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,7 +15,7 @@ import javax.persistence.Table;
 
 import static org.springframework.util.StringUtils.capitalize;
 
-public class DaoManager
+class DaoManager
 {
     private String entityName = null;
     private SessionFactory sessionFactory = null;
@@ -110,10 +107,10 @@ public class DaoManager
      *
      * @return Entity updated
      */
-    public Entity update(Entity entity, Map<String, Object> input)
+    public Entity update(Entity entity, Input input)
     {
         Map<String, Object> map = entity.toMap();
-        map.putAll(input);
+        map.putAll(input.getValues());
 
         Entity entityNew = new Gson()
                 .fromJson(new Gson().toJson(map), entity.getClass());
@@ -144,7 +141,7 @@ public class DaoManager
      *
      * @return Entity List
      */
-    public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit)
+    public List<Entity> findByCriteria(Criteria criteria, Integer limit)
     {
         return queryExec(criteria, limit);
     }
@@ -155,12 +152,14 @@ public class DaoManager
      * @param criteria defined Criteria
      * @param limit defined limit
      * @param group defined Group
+     * @param order defined Order
      *
      * @return Entity List
      */
-    public List<Entity> findByCriteria(Map<String, Object> criteria, Integer limit, Map<String, String> group)
+    public List<Entity> findByCriteria(Criteria criteria, Integer limit, Group group, Order order)
     {
-        return queryExec(criteria, limit, group);
+
+        return queryExec(criteria, limit, group, order);
     }
 
     /**
@@ -181,7 +180,7 @@ public class DaoManager
      *
      * @return Entity List
      */
-    private List<Entity> queryExec (Map<String, Object> criteria, Integer limit)
+    private List<Entity> queryExec (Criteria criteria, Integer limit)
     {
         StringBuilder querySql = new StringBuilder();
         criteria(criteria, querySql);
@@ -197,11 +196,12 @@ public class DaoManager
      *
      * @return Entity List
      */
-    private List<Entity> queryExec (Map<String, Object> criteria, Integer limit, Map<String, String> group)
+    private List<Entity> queryExec (Criteria criteria, Integer limit, Group group, Order order)
     {
         StringBuilder querySql = new StringBuilder();
         querySql = criteria(criteria, querySql);
         querySql = group(group, querySql);
+        querySql = order(order, querySql);
         return query(criteria, limit, FROM+" "+this.entityName+" s "+querySql.toString());
     }
 
@@ -213,7 +213,7 @@ public class DaoManager
      *
      * @return StringBuilder request
      */
-    private StringBuilder criteria (Map<String, Object> criteria, StringBuilder querySql)
+    private StringBuilder criteria (Criteria criteria, StringBuilder querySql)
     {
         querySql.append(criteriaSql(criteria, new StringBuilder(), "and"));
         querySql.insert(0, "where ");
@@ -231,10 +231,10 @@ public class DaoManager
      * @return String request part
      */
     @SuppressWarnings("unchecked")
-    private String criteriaSql (Map<String, Object> criteria, StringBuilder criteriaSql, String operator)
+    private String criteriaSql (Criteria criteria, StringBuilder criteriaSql, String operator)
     {
         StringBuilder newCriteriaSql = criteriaSql;
-        for (Map.Entry<String,Object> entry : criteria.entrySet()){
+        for (Map.Entry<String,Object> entry : criteria.getValues().entrySet()){
             String key = entry.getKey();
             Object value = entry.getValue();
 
@@ -242,7 +242,7 @@ public class DaoManager
             String patternNot = "(_not$)";
 
             if (value instanceof Map<?,?>) {
-                Map<String, Object> orValue = (Map) value;
+                Criteria orValue = new Criteria().setValues((Map) value);
                 newCriteriaSql = operator(criteriaSql, key);
                 newCriteriaSql.append("(")
                         .append(this.criteriaSql(orValue, new StringBuilder(), key))
@@ -304,10 +304,14 @@ public class DaoManager
      *
      * @return StringBuilder request
      */
-    private StringBuilder group(Map<String, String> group, StringBuilder querySql)
+    private StringBuilder group(Group group, StringBuilder querySql)
     {
+        if (group == null || group.getValues().isEmpty()) {
+            return querySql;
+        }
+
         StringBuilder groupSql = new StringBuilder();
-        for (Map.Entry<String,String> entry : group.entrySet()) {
+        for (Map.Entry<String,String> entry : group.getValues().entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
 
@@ -328,6 +332,44 @@ public class DaoManager
     }
 
     /**
+     * Concatenate request
+     * with Order
+     *
+     * @param order defined Order
+     * @param querySql request content
+     *
+     * @return StringBuilder request
+     */
+    private StringBuilder order(Order order, StringBuilder querySql)
+    {
+        if (order == null || order.getValues().isEmpty()) {
+            return querySql;
+        }
+
+        StringBuilder orderSql = new StringBuilder();
+        for (Map.Entry<String,String> entry : order.getValues().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            if (!"".equals(orderSql.toString())) {
+                orderSql.append(", ");
+            }
+
+            if (value == null) {
+                orderSql.append("s.")
+                        .append(key)
+                        .append(" ")
+                        .append(value);
+            }
+        }
+        if (!"".equals(orderSql.toString())) {
+            querySql.append(" order by ")
+                    .append(orderSql.toString());
+        }
+        return querySql;
+    }
+
+    /**
      * Run the database request
      *
      * @param criteria defined criteria
@@ -337,7 +379,7 @@ public class DaoManager
      * @return Entity List
      */
     @SuppressWarnings("unchecked")
-    private List<Entity> query(Map<String, Object> criteria, Integer limit, String queryString)
+    private List<Entity> query(Criteria criteria, Integer limit, String queryString)
     {
         Session session = this.session();
         Query query = session.createQuery(queryString);
@@ -369,14 +411,14 @@ public class DaoManager
      * @return updated Query
      */
     @SuppressWarnings("unchecked")
-    private Query setParameters(Query query, Map<String, Object> criteria)
+    private Query setParameters(Query query, Criteria criteria)
     {
         Query newQuery = query;
-        for (Map.Entry<String,Object> entry : criteria.entrySet()) {
+        for (Map.Entry<String,Object> entry : criteria.getValues().entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             if (value instanceof Map<?,?>) {
-                newQuery = this.setParameters(query, (Map) value);
+                newQuery = this.setParameters(query, new Criteria().setValues((Map) value));
             } else if (value != null) {
                 newQuery.setParameter(key, value);
             }

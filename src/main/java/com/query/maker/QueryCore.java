@@ -1,6 +1,4 @@
-package com.query.maker.core;
-
-import com.query.maker.*;
+package com.query.maker;
 
 import java.util.Map;
 
@@ -13,6 +11,7 @@ public class QueryCore
     protected String method = null;
     protected Criteria criteria = null;
     protected Group group = null;
+    protected Order order = null;
     protected int limit = 50;
 
     /**

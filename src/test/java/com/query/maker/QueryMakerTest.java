@@ -132,6 +132,19 @@ public class QueryMakerTest
         }
     }
 
+    @Test
+    public void orderTest()
+    {
+        Order order = new Order()
+                .addValue("test", "ASC");
+
+        QueryMaker queryMaker = QueryMaker.getInstance()
+                .order(order);
+        if (!(queryMaker instanceof QueryMaker)) {
+            assert(false);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void execTest()

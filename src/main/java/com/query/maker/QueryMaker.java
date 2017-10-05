@@ -1,11 +1,9 @@
 package com.query.maker;
 
-import com.query.maker.core.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueryMaker extends QueryCore
+class QueryMaker extends QueryCore
 {
     private static final String SELECT = "select";
     private static final String INSERT = "insert";
@@ -156,6 +154,17 @@ public class QueryMaker extends QueryCore
     }
 
     /**
+     * Set the group
+     * @param order query Group
+     * @return QueryMaker
+     */
+    public QueryMaker order(Order order)
+    {
+        this.order = order;
+        return this;
+    }
+
+    /**
      * Execute the query
      *
      * @return result List
@@ -242,7 +251,7 @@ public class QueryMaker extends QueryCore
         }
 
         if (UPDATE.equals(this.method)) {
-            result = this.daoManager.update(this.entity, input.getValues());
+            result = this.daoManager.update(this.entity, input);
         }
 
         if (DELETE.equals(this.method)) {
@@ -268,15 +277,12 @@ public class QueryMaker extends QueryCore
             return this.daoManager
                     .findAll();
         } else {
-            if (this.group == null) {
+            if (this.group == null && this.order == null) {
                 return this.daoManager
-                        .findByCriteria(this.criteria.getValues(), this.limit);
-            } else if (this.group.getValues().isEmpty()) {
-                return this.daoManager
-                        .findByCriteria(this.criteria.getValues(), this.limit);
+                        .findByCriteria(this.criteria, this.limit);
             } else {
                 return this.daoManager
-                        .findByCriteria(this.criteria.getValues(), this.limit, this.group.getValues());
+                        .findByCriteria(this.criteria, this.limit, this.group, this.order);
             }
         }
     }

@@ -1,6 +1,5 @@
-package com.query.maker.core;
+package com.query.maker;
 
-import com.query.maker.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,10 +43,10 @@ public class DaoManagerTest
         User user = (User) daoManager.insert(User.class, input);
         assertEquals("test", user.getFirstName());
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("firstName", "test2");
+        Input input2 = new Input();
+        input.addValue("firstName", "test2");
 
-        User user2 = (User) daoManager.update(user, map);
+        User user2 = (User) daoManager.update(user, input);
         assertEquals("test2", user2.getFirstName());
 
         Result result = (Result) daoManager.delete(user2.getId());
@@ -78,48 +77,40 @@ public class DaoManagerTest
     {
         this.daoManager.setEntityName(new User().getClassName());
 
-        Map<String, Object> criteria = new HashMap<String, Object>();
-        criteria.put("id", 1L);
-        Map<String, Object> notValue = new HashMap<String, Object>();
-        notValue.put("KEY"+notValue.size()+"firstName", "error");
-        criteria.put("AND_not", notValue);
+        Criteria criteria = new Criteria();
+        criteria.addValue("id", 1L);
+        criteria.addValue("firstName", "error", "AND_not");
 
         List<Entity> users = daoManager.findByCriteria(criteria,1);
         assertEquals("Sebastien", ((User) users.get(0)).getFirstName());
 
-        Map<String, String> group = new HashMap<String, String>();
-        group.put("firstName", null);
+        Group group = new Group();
+        group.addValue("firstName", null);
 
-        List<Entity> users2 = daoManager.findByCriteria(criteria,1, group);
+        List<Entity> users2 = daoManager.findByCriteria(criteria,1, group, null);
         assertEquals("Sebastien", ((User) users2.get(0)).getFirstName());
 
-        group.put("id", null);
-        group.put("firstName", null);
-        group.put("LastName", "test");
+        group.addValue("id", null);
+        group.addValue("firstName", null);
+        group.addValue("LastName", "test");
 
-        Map<String, Object> criteria2 = new HashMap<String, Object>();
-        criteria2.put("id", 1L);
-        Map<String, Object> notValue2 = new HashMap<String, Object>();
-        notValue2.put("KEY"+notValue2.size()+"firstName", "error");
-        criteria2.put("OR_not", notValue2);
+        Criteria criteria2 = new Criteria();
+        criteria2.addValue("id", 1L);
+        criteria2.addValue("firstName", "error", "OR_not");
 
-        List<Entity> users3 = daoManager.findByCriteria(criteria2,1, group);
+        List<Entity> users3 = daoManager.findByCriteria(criteria2,1, group, null);
         assertEquals("Sebastien", ((User) users3.get(0)).getFirstName());
 
-        Map<String, Object> criteria3 = new HashMap<String, Object>();
-        criteria3.put("id", 1L);
-        Map<String, Object> notValue3 = new HashMap<String, Object>();
-        notValue3.put("KEY"+notValue3.size()+"firstName", "Sebastien");
-        criteria3.put("OR", notValue3);
+        Criteria criteria3 = new Criteria();
+        criteria3.addValue("id", 1L);
+        criteria3.orValue("firstName", "Sebastien");
 
         List<Entity> users4 = daoManager.findByCriteria(criteria3,1);
         assertEquals("Sebastien", ((User) users4.get(0)).getFirstName());
 
-        Map<String, Object> criteria4 = new HashMap<String, Object>();
-        criteria4.put("id", 1L);
-        Map<String, Object> notValue4 = new HashMap<String, Object>();
-        notValue4.put("KEY"+notValue4.size()+"firstName", null);
-        criteria4.put("OR_not", notValue4);
+        Criteria criteria4 = new Criteria();
+        criteria4.addValue("id", 1L);
+        criteria4.addValue("firstName", null, "OR_not");
 
         List<Entity> users5 = daoManager.findByCriteria(criteria4,1);
         assertEquals("Sebastien", ((User) users5.get(0)).getFirstName());
@@ -130,13 +121,13 @@ public class DaoManagerTest
     {
         this.daoManager.setEntityName(new User().getClassName());
 
-        Map<String, Object> criteria = new HashMap<String, Object>();
-        criteria.put("id", null);
+        Criteria criteria = new Criteria();
+        criteria.addValue("id", null);
 
-        Map<String, String> group = new HashMap<String, String>();
-        group.put("firstName", "test");
+        Group group = new Group();
+        group.addValue("firstName", "test");
 
-        List<Entity> users = daoManager.findByCriteria(criteria,1, group);
+        List<Entity> users = daoManager.findByCriteria(criteria,1, group, null);
         if (users.isEmpty()) {
             assert(true);
         } else {
