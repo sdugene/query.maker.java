@@ -2,7 +2,7 @@ package com.query.maker;
 
 import java.util.Map;
 
-public class QueryCore
+class QueryCore
 {
     protected DaoManager daoManager = new DaoManager();
     protected Entity entity = null;

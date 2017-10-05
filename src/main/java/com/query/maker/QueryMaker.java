@@ -3,7 +3,7 @@ package com.query.maker;
 import java.util.ArrayList;
 import java.util.List;
 
-class QueryMaker extends QueryCore
+public class QueryMaker extends QueryCore
 {
     private static final String SELECT = "select";
     private static final String INSERT = "insert";
