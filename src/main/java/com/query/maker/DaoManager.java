@@ -360,10 +360,9 @@ class DaoManager
                     .append(" ")
                     .append(value);
         }
-        if (!"".equals(orderSql.toString())) {
-            querySql.append(" order by ")
-                    .append(orderSql.toString());
-        }
+        querySql.append(" order by ")
+                .append(orderSql.toString());
+
         return querySql;
     }
 

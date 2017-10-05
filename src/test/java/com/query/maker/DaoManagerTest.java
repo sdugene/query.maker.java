@@ -88,6 +88,7 @@ public class DaoManagerTest
         group.addValue("firstName", null);
 
         Order order = new Order();
+        order.addValue("id", "ASC");
 
         List<Entity> users2 = daoManager.findByCriteria(criteria,1, group, order);
         assertEquals("Sebastien", ((User) users2.get(0)).getFirstName());
@@ -131,10 +132,7 @@ public class DaoManagerTest
         criteria.addValue("id", null);
 
         Group group = new Group();
-        group.addValue("firstName", "test");
-
         Order order = new Order();
-        order.addValue("id", "ASC");
 
         List<Entity> users = daoManager.findByCriteria(criteria,1, group, order);
         if (users.isEmpty()) {
