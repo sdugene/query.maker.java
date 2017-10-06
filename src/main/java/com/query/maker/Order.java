@@ -23,11 +23,7 @@ public class Order
      */
     public Order addValue(String key, String value)
     {
-        String valueUp = null;
-        if (value != null) {
-            valueUp = value.toUpperCase();
-        }
-
+        String valueUp = value.toUpperCase();
         if (!"ASC".equals(valueUp) && !"DESC".equals(valueUp)) {
             this.values.put(key, "ASC");
         } else {
