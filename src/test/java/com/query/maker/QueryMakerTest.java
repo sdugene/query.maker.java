@@ -282,7 +282,7 @@ public class QueryMakerTest
 
         User user3 = (User) queryMaker.select(new User())
                 .exec(42L);
-        assertEquals(null, user3);
+        assertEquals(null, user3.getId());
 
         User user4 = (User) queryMaker.select(new User())
                 .exec(1L);
@@ -425,7 +425,7 @@ public class QueryMakerTest
                 .where(criteria)
                 .one();
 
-        assertEquals(null, user);
+        assertEquals(null, user.getId());
 
         Criteria criteria2 = new Criteria();
         criteria2.addValue("id", 1L);

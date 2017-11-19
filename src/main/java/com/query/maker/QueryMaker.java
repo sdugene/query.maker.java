@@ -35,7 +35,8 @@ public class QueryMaker extends QueryCore
      */
     public static QueryMaker getInstance()
     {
-        return QueryMaker.SingletonHolder.instance;
+        QueryMaker queryMaker = QueryMaker.SingletonHolder.instance;
+        return queryMaker.clean();
     }
 
     /**
@@ -56,8 +57,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker select(Entity entity)
     {
-        super.clean();
-        this.setEntity(entity);
+        this.clean().setEntity(entity);
         this.method = SELECT;
         return this;
     }
@@ -70,8 +70,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker delete(Entity entity)
     {
-        super.clean();
-        this.setEntity(entity);
+        this.clean().setEntity(entity);
         this.method = DELETE;
         return this;
     }
@@ -84,8 +83,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker update(Entity entity)
     {
-        super.clean();
-        this.setEntity(entity);
+        this.clean().setEntity(entity);
         this.method = UPDATE;
         return this;
     }
@@ -98,8 +96,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker insert(Entity entity)
     {
-        super.clean();
-        this.setEntity(entity);
+        this.clean().setEntity(entity);
         this.method = INSERT;
         return this;
     }
@@ -112,8 +109,7 @@ public class QueryMaker extends QueryCore
      */
     public QueryMaker tblOperations(Entity entity)
     {
-        super.clean();
-        this.setEntity(entity);
+        this.clean().setEntity(entity);
         this.method = OPERATIONS;
         return this;
     }
@@ -177,10 +173,7 @@ public class QueryMaker extends QueryCore
         }
 
         this.daoManager.setEntityName(this.entityClassName);
-        List<Entity> queryList = this.getQueryList();
-
-        this.clean();
-        return queryList;
+        return this.getQueryList();
     }
 
     /**
@@ -198,13 +191,7 @@ public class QueryMaker extends QueryCore
 
         this.criteria = new Criteria()
                 .addValue("id", id);
-        List<Entity> queryList = this.limit(1).exec();
-
-        if (queryList.isEmpty()) {
-            return null;
-        } else {
-            return queryList.get(0);
-        }
+        return this.one();
     }
 
     /**
@@ -296,8 +283,8 @@ public class QueryMaker extends QueryCore
     {
         List<Entity> queryList = this.limit(1).exec();
 
-        if (queryList.isEmpty()) {
-            return null;
+        if (queryList.isEmpty() || queryList.get(0) == null) {
+            return this.entity;
         } else {
             return queryList.get(0);
         }
