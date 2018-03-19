@@ -226,13 +226,14 @@ class DaoManager
      *
      * @param criteria defined Criteria
      * @param criteriaSql request Criteria content
-     * @param operator defined operator between request parts
+     * @param operatorCurrent defined operator between request parts
      *
      * @return String request part
      */
     @SuppressWarnings("unchecked")
-    private String criteriaSql (Criteria criteria, StringBuilder criteriaSql, String operator)
+    private String criteriaSql (Criteria criteria, StringBuilder criteriaSql, String operatorCurrent)
     {
+        System.out.println("toto");
         StringBuilder newCriteriaSql = criteriaSql;
         for (Map.Entry<String,Object> entry : criteria.getValues().entrySet()){
             String key = entry.getKey();
@@ -242,23 +243,24 @@ class DaoManager
             String patternNot = "(_not$)";
 
             if (value instanceof Map<?,?>) {
+                String operatorCut = key.replaceAll(patternNot, "");
                 Criteria orValue = new Criteria().setValues((Map) value);
-                newCriteriaSql = operator(criteriaSql, key);
+                newCriteriaSql = operator(criteriaSql, operatorCut);
                 newCriteriaSql.append("(")
-                        .append(this.criteriaSql(orValue, new StringBuilder(), key))
+                        .append(this.criteriaSql(orValue, new StringBuilder(), operatorCut))
                         .append(")");
-            } else if (value == null && operator.matches(".*"+patternNot)) {
+            } else if (value == null && operatorCurrent.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 newCriteriaSql = operator(criteriaSql, operatorCut);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is not null");
             } else if (value == null) {
-                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql = operator(criteriaSql, operatorCurrent);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is null");
-            } else if (operator.matches(".*"+patternNot)) {
+            } else if (operatorCurrent.matches(".*"+patternNot)) {
                 String operatorCut = key.replaceAll(patternNot, "");
                 newCriteriaSql = operator(criteriaSql, operatorCut);
                 newCriteriaSql.append("s.")
@@ -266,7 +268,7 @@ class DaoManager
                         .append(" != :")
                         .append(key);
             } else {
-                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql = operator(criteriaSql, operatorCurrent);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" = :")
@@ -281,15 +283,15 @@ class DaoManager
      * with operator
      *
      * @param criteriaSql request Criteria content
-     * @param operator defined operator between request parts
+     * @param operatorCurrent defined operator between request parts
      *
      * @return StringBuilder request part
      */
-    private StringBuilder operator (StringBuilder criteriaSql, String operator)
+    private StringBuilder operator (StringBuilder criteriaSql, String operatorCurrent)
     {
         if (!"".equals(criteriaSql.toString())) {
             criteriaSql.append(" ")
-                    .append(operator)
+                    .append(operatorCurrent)
                     .append(" ");
         }
         return criteriaSql;
