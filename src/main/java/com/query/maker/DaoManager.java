@@ -19,6 +19,7 @@ class DaoManager
 {
     private String entityName = null;
     private SessionFactory sessionFactory = null;
+    private String patternNot = "(_not$)";
 
     private static final String FROM = "from";
 
@@ -233,25 +234,21 @@ class DaoManager
     @SuppressWarnings("unchecked")
     private String criteriaSql (Criteria criteria, StringBuilder criteriaSql, String operatorCurrent)
     {
-        System.out.println("toto");
         StringBuilder newCriteriaSql = criteriaSql;
         for (Map.Entry<String,Object> entry : criteria.getValues().entrySet()){
             String key = entry.getKey();
             Object value = entry.getValue();
-
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
-            String patternNot = "(_not$)";
 
             if (value instanceof Map<?,?>) {
-                String operatorCut = key.replaceAll(patternNot, "");
+
                 Criteria orValue = new Criteria().setValues((Map) value);
-                newCriteriaSql = operator(criteriaSql, operatorCut);
+                newCriteriaSql = operator(criteriaSql, key);
                 newCriteriaSql.append("(")
-                        .append(this.criteriaSql(orValue, new StringBuilder(), operatorCut))
+                        .append(this.criteriaSql(orValue, new StringBuilder(), key))
                         .append(")");
             } else if (value == null && operatorCurrent.matches(".*"+patternNot)) {
-                String operatorCut = key.replaceAll(patternNot, "");
-                newCriteriaSql = operator(criteriaSql, operatorCut);
+                newCriteriaSql = operator(criteriaSql, key);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is not null");
@@ -261,8 +258,7 @@ class DaoManager
                         .append(keyName)
                         .append(" is null");
             } else if (operatorCurrent.matches(".*"+patternNot)) {
-                String operatorCut = key.replaceAll(patternNot, "");
-                newCriteriaSql = operator(criteriaSql, operatorCut);
+                newCriteriaSql = operator(criteriaSql, key);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" != :")
@@ -290,8 +286,9 @@ class DaoManager
     private StringBuilder operator (StringBuilder criteriaSql, String operatorCurrent)
     {
         if (!"".equals(criteriaSql.toString())) {
+            String operatorCut = operatorCurrent.replaceAll(patternNot, "");
             criteriaSql.append(" ")
-                    .append(operatorCurrent)
+                    .append(operatorCut)
                     .append(" ");
         }
         return criteriaSql;
