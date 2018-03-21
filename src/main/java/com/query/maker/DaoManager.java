@@ -19,6 +19,7 @@ class DaoManager
 {
     private String entityName = null;
     private SessionFactory sessionFactory = null;
+    private String patternNot = "(_not$)";
 
     private static final String FROM = "from";
 
@@ -199,10 +200,10 @@ class DaoManager
     private List<Entity> queryExec (Criteria criteria, Integer limit, Group group, Order order)
     {
         StringBuilder querySql = new StringBuilder();
-        querySql = criteria(criteria, querySql);
-        querySql = group(group, querySql);
-        querySql = order(order, querySql);
-        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySql.toString());
+        StringBuilder querySqlCriteria = criteria(criteria, querySql);
+        StringBuilder querySqlGroup = group(group, querySqlCriteria);
+        StringBuilder querySqlOrder = order(order, querySqlGroup);
+        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySqlOrder.toString());
     }
 
     /**
@@ -226,20 +227,18 @@ class DaoManager
      *
      * @param criteria defined Criteria
      * @param criteriaSql request Criteria content
-     * @param operator defined operator between request parts
+     * @param operatorCurrent defined operator between request parts
      *
      * @return String request part
      */
     @SuppressWarnings("unchecked")
-    private String criteriaSql (Criteria criteria, StringBuilder criteriaSql, String operator)
+    private String criteriaSql (Criteria criteria, StringBuilder criteriaSql, String operatorCurrent)
     {
-        StringBuilder newCriteriaSql = criteriaSql;
+        StringBuilder newCriteriaSql = new StringBuilder();
         for (Map.Entry<String,Object> entry : criteria.getValues().entrySet()){
             String key = entry.getKey();
             Object value = entry.getValue();
-
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
-            String patternNot = "(_not$)";
 
             if (value instanceof Map<?,?>) {
                 Criteria orValue = new Criteria().setValues((Map) value);
@@ -247,26 +246,24 @@ class DaoManager
                 newCriteriaSql.append("(")
                         .append(this.criteriaSql(orValue, new StringBuilder(), key))
                         .append(")");
-            } else if (value == null && operator.matches(".*"+patternNot)) {
-                String operatorCut = key.replaceAll(patternNot, "");
-                newCriteriaSql = operator(criteriaSql, operatorCut);
+            } else if (value == null && operatorCurrent.matches(".*"+patternNot)) {
+                newCriteriaSql = operator(criteriaSql, key);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is not null");
             } else if (value == null) {
-                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql = operator(criteriaSql, operatorCurrent);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" is null");
-            } else if (operator.matches(".*"+patternNot)) {
-                String operatorCut = key.replaceAll(patternNot, "");
-                newCriteriaSql = operator(criteriaSql, operatorCut);
+            } else if (operatorCurrent.matches(".*"+patternNot)) {
+                newCriteriaSql = operator(criteriaSql, key);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" != :")
                         .append(key);
             } else {
-                newCriteriaSql = operator(criteriaSql, operator);
+                newCriteriaSql = operator(criteriaSql, operatorCurrent);
                 newCriteriaSql.append("s.")
                         .append(keyName)
                         .append(" = :")
@@ -281,15 +278,16 @@ class DaoManager
      * with operator
      *
      * @param criteriaSql request Criteria content
-     * @param operator defined operator between request parts
+     * @param operatorCurrent defined operator between request parts
      *
      * @return StringBuilder request part
      */
-    private StringBuilder operator (StringBuilder criteriaSql, String operator)
+    private StringBuilder operator (StringBuilder criteriaSql, String operatorCurrent)
     {
         if (!"".equals(criteriaSql.toString())) {
+            String operatorCut = operatorCurrent.replaceAll(patternNot, "");
             criteriaSql.append(" ")
-                    .append(operator)
+                    .append(operatorCut)
                     .append(" ");
         }
         return criteriaSql;
