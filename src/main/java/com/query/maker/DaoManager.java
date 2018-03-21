@@ -200,10 +200,10 @@ class DaoManager
     private List<Entity> queryExec (Criteria criteria, Integer limit, Group group, Order order)
     {
         StringBuilder querySql = new StringBuilder();
-        querySql = criteria(criteria, querySql);
-        querySql = group(group, querySql);
-        querySql = order(order, querySql);
-        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySql.toString());
+        StringBuilder querySqlCriteria = criteria(criteria, querySql);
+        StringBuilder querySqlGroup = group(group, querySqlCriteria);
+        StringBuilder querySqlOrder = order(order, querySqlGroup);
+        return query(criteria, limit, FROM+" "+this.entityName+" s "+querySqlOrder.toString());
     }
 
     /**
@@ -234,14 +234,13 @@ class DaoManager
     @SuppressWarnings("unchecked")
     private String criteriaSql (Criteria criteria, StringBuilder criteriaSql, String operatorCurrent)
     {
-        StringBuilder newCriteriaSql = criteriaSql;
+        StringBuilder newCriteriaSql = new StringBuilder();
         for (Map.Entry<String,Object> entry : criteria.getValues().entrySet()){
             String key = entry.getKey();
             Object value = entry.getValue();
             String keyName = key.replaceAll("(^KEY[0-9]+)", "");
 
             if (value instanceof Map<?,?>) {
-
                 Criteria orValue = new Criteria().setValues((Map) value);
                 newCriteriaSql = operator(criteriaSql, key);
                 newCriteriaSql.append("(")
