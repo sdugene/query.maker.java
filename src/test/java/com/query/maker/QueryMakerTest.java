@@ -2,6 +2,7 @@ package com.query.maker;
 
 import org.junit.Test;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+@Transactional
 public class QueryMakerTest
 {
     @Test
@@ -150,9 +152,9 @@ public class QueryMakerTest
     public void execTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+        properties.put("url", TestConfig.MYSQL_URL);
+        properties.put("username", TestConfig.MYSQL_USERNAME);
+        properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         List<Entity> list = QueryMaker.getInstance()
                 .exec();
@@ -182,9 +184,9 @@ public class QueryMakerTest
     public void getQueryListTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+        properties.put("url", TestConfig.MYSQL_URL);
+        properties.put("username", TestConfig.MYSQL_USERNAME);
+        properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
@@ -260,9 +262,9 @@ public class QueryMakerTest
     public void execIntTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+        properties.put("url", TestConfig.MYSQL_URL);
+        properties.put("username", TestConfig.MYSQL_USERNAME);
+        properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         QueryMaker.getInstance().clean();
 
@@ -314,9 +316,9 @@ public class QueryMakerTest
         assertEquals(null, result3);
 
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+        properties.put("url", TestConfig.MYSQL_URL);
+        properties.put("username", TestConfig.MYSQL_USERNAME);
+        properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);
@@ -353,9 +355,9 @@ public class QueryMakerTest
     public void execInputInsertUpdateDeleteTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+        properties.put("url", TestConfig.MYSQL_URL);
+        properties.put("username", TestConfig.MYSQL_USERNAME);
+        properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         Input input = new Input();
 
@@ -410,9 +412,9 @@ public class QueryMakerTest
     public void oneTest()
     {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "tests");
-        properties.put("password", "KS94nik7");
+        properties.put("url", TestConfig.MYSQL_URL);
+        properties.put("username", TestConfig.MYSQL_USERNAME);
+        properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         QueryMaker queryMaker = QueryMaker.getInstance();
         queryMaker.createSession(properties);

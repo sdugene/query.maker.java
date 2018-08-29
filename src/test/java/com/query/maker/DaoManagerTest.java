@@ -4,12 +4,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
+@Transactional
 public class DaoManagerTest
 {
     Map<String, String> properties = new HashMap<String, String>();
@@ -19,9 +21,9 @@ public class DaoManagerTest
     @Before
     public void setUp()
     {
-        this.properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        this.properties.put("username", "tests");
-        this.properties.put("password", "KS94nik7");
+        this.properties.put("url", TestConfig.MYSQL_URL);
+        this.properties.put("username", TestConfig.MYSQL_USERNAME);
+        this.properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         this.daoManager.createSession(properties);
     }

@@ -1,14 +1,14 @@
 package com.query.maker;
 
-import com.query.maker.QueryCore;
-import com.query.maker.User;
 import org.junit.Test;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
+@Transactional
 public class QueryCoreTest
 {
     private class QueryCoreAnon extends QueryCore
@@ -40,9 +40,9 @@ public class QueryCoreTest
     @Test
     public void createSessionTest() {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("url", "jdbc:mysql://91.121.66.115:3306/siteoffice_test");
-        properties.put("username", "test");
-        properties.put("password", "KS94nik7");
+        properties.put("url", TestConfig.MYSQL_URL);
+        properties.put(TestConfig.MYSQL_USERNAME, "tests");
+        properties.put("password", TestConfig.MYSQL_PASSWORD);
 
         QueryCoreAnon queryCoreAnon = new QueryCoreAnon();
 
